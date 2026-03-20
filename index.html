@@ -106,6 +106,8 @@
         .card-info h3 { font-size:.93rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .card-info p  { font-size:.7rem; color:var(--dim); margin-top:2px; }
         .card-action { flex-shrink:0; color:var(--primary); font-size:1.1rem; opacity:0; }
+        .fav-btn { flex-shrink:0; font-size:1.1rem; background:none; border:none; cursor:pointer; padding:0 4px; line-height:1; }
+        .fav-btn { flex-shrink:0; font-size:1.1rem; background:none; border:none; cursor:pointer; padding:0 4px; line-height:1; }
         .card.playing .card-action { opacity:1; animation:blink 1.3s infinite; }
         @keyframes blink { 0%,100%{opacity:.4} 50%{opacity:1} }
 
@@ -191,14 +193,15 @@
 <script>
 // ── Config ──
 const CATEGORIES = [
-    { label:'مصر',   query:'bycountry/Egypt?limit=40&hidebroken=true&order=votes&reverse=true' },
-    { label:'قرآن',  query:'search?tag=quran&language=arabic&limit=40&hidebroken=true&order=votes&reverse=true' },
-    { label:'أخبار', query:'search?tag=news&language=arabic&limit=40&hidebroken=true&order=votes&reverse=true' },
-    { label:'عربي',  query:'search?language=arabic&tag=music&limit=40&hidebroken=true&order=votes&reverse=true' },
-    { label:'دولي',  query:'search?tag=lofi&limit=40&hidebroken=true&order=votes&reverse=true' },
+    { label:'مصر',              query:'bycountry/Egypt?limit=100&hidebroken=true&order=votes&reverse=true' },
+    { label:'قرآن وإسلاميات',   query:'search?tag=quran&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
+    { label:'أخبار',            query:'search?tag=news&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
+    { label:'موسيقى عربية',     query:'search?tag=arabic music&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
+    { label:'رياضة',            query:'search?tag=sports&limit=100&hidebroken=true&order=votes&reverse=true' },
 ];
 const API = 'https://de1.api.radio-browser.info/json/stations/';
 
+// ── DOM refs ──
 const aud      = document.getElementById('aud');
 const player   = document.getElementById('player');
 const pName    = document.getElementById('pName');
@@ -209,23 +212,59 @@ const waves    = document.getElementById('waves');
 const playBtn  = document.getElementById('playBtn');
 const content  = document.getElementById('content');
 
-let allStations  = [];   // loaded for current tab
-let filtered     = [];
-let currentUrl   = '';
-let activeCat    = 0;
-let retryTimer   = null;
-let retryCount   = 0;
-const MAX_RETRY  = 5;
+let allStations = [];
+let filtered    = [];
+let currentUrl  = '';
+let activeCat   = 0;
+let retryTimer  = null;
+let retryCount  = 0;
+const MAX_RETRY = 5;
+
+// ── Favourites ──
+function getFavs()       { try { return JSON.parse(localStorage.getItem('favs') || '[]'); } catch(e) { return []; } }
+function saveFavs(f)     { localStorage.setItem('favs', JSON.stringify(f)); }
+function isFav(url)      { return getFavs().includes(url); }
+function toggleFav(url, e) {
+    e.stopPropagation();
+    let favs = getFavs();
+    favs = favs.includes(url) ? favs.filter(x => x !== url) : [...favs, url];
+    saveFavs(favs);
+    render(filtered);
+    if (activeCat === 99) renderFavTab();
+}
+function renderFavTab() {
+    const favUrls     = getFavs();
+    const favStations = JSON.parse(localStorage.getItem('favStations') || '[]');
+    const list        = favStations.filter(s => favUrls.includes(s.url_resolved));
+    allStations = list;
+    filtered    = [...list];
+    render(filtered);
+}
 
 // ── Tabs ──
 const tabsEl = document.getElementById('tabs');
-CATEGORIES.forEach((c, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'tab' + (i === 0 ? ' active' : '');
-    btn.textContent = c.label;
-    btn.onclick = () => switchTab(i);
-    tabsEl.appendChild(btn);
-});
+function initCats() {
+    CATEGORIES.forEach((c, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'tab' + (i === 0 ? ' active' : '');
+        btn.textContent = c.label;
+        btn.onclick = () => switchTab(i);
+        tabsEl.appendChild(btn);
+    });
+    // مفضلة
+    const favBtn = document.createElement('button');
+    favBtn.className = 'tab';
+    favBtn.id = 'favTab';
+    favBtn.textContent = '❤️ مفضلة';
+    favBtn.onclick = () => {
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        favBtn.classList.add('active');
+        activeCat = 99;
+        document.getElementById('searchInput').value = '';
+        renderFavTab();
+    };
+    tabsEl.appendChild(favBtn);
+}
 
 function switchTab(i) {
     document.querySelectorAll('.tab').forEach((b,j) => b.classList.toggle('active', i===j));
@@ -234,29 +273,34 @@ function switchTab(i) {
     loadStations(i);
 }
 
-// ── Fetch from Radio Browser ──
+// ── Fetch ──
 async function loadStations(i) {
     content.innerHTML = '<div class="loading"><div class="spinner"></div><span>جاري التحميل...</span></div>';
     const cat = CATEGORIES[i];
-    let url;
     try {
-        url = API + cat.query;
+        const url = API + cat.query;
         const res = await fetch(url, { headers:{ 'User-Agent':'RadioApp/2.0' } });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         allStations = data.filter(s => s.url_resolved);
 
-        // inject known good stations not always in API
-        const extras = {
-            2: [ // أخبار tab
-                { name:'الجزيرة عربي', url_resolved:'https://live-hls-v3-aja.getaj.net/AJA/v3/index.m3u8', favicon:'', tags:'news,arabic', country:'Qatar' },
-                { name:'الجزيرة مباشر', url_resolved:'https://live-hls-web-ajm.getaj.net/AJM/index.m3u8', favicon:'', tags:'news,arabic', country:'Qatar' },
-                { name:'RT Arabic',     url_resolved:'https://rt-arabicgo.rttv.com/live/rtarabic/playlist.m3u8', favicon:'', tags:'news,arabic', country:'Russia' },
-            ]
+        // محطات يدوية
+        const MANUAL = {
+            2: [
+                { name:'الجزيرة عربي',   url_resolved:'https://live-hls-v3-aja.getaj.net/AJA/v3/index.m3u8',      favicon:'', tags:'news,arabic',   country:'Qatar' },
+                { name:'الجزيرة مباشر',  url_resolved:'https://live-hls-web-ajm.getaj.net/AJM/index.m3u8',        favicon:'', tags:'news,arabic',   country:'Qatar' },
+                { name:'RT Arabic',      url_resolved:'https://rt-arabicgo.rttv.com/live/rtarabic/playlist.m3u8',  favicon:'', tags:'news,arabic',   country:'Russia' },
+            ],
+            4: [
+                { name:'ON Sport FM 93.7', url_resolved:'https://stream.zeno.fm/onsportfm',           favicon:'', tags:'sports,egypt',  country:'Egypt' },
+                { name:'beIN Sports Radio',url_resolved:'https://stream.zeno.fm/radio-bein-sport',    favicon:'', tags:'sports,arabic', country:'Qatar' },
+                { name:'راديو الأهلي',     url_resolved:'https://stream.zeno.fm/ahlyradio',           favicon:'', tags:'sports,egypt',  country:'Egypt' },
+            ],
         };
-        if (extras[i]) {
+        const manualList = MANUAL[i] || [];
+        if (manualList.length) {
             const urls = allStations.map(s => s.url_resolved);
-            extras[i].forEach(e => { if (!urls.includes(e.url_resolved)) allStations.unshift(e); });
+            manualList.forEach(e => { if (!urls.includes(e.url_resolved)) allStations.unshift(e); });
         }
 
         filtered = [...allStations];
@@ -274,7 +318,7 @@ async function loadStations(i) {
 // ── Render ──
 function render(list) {
     if (!list.length) {
-        content.innerHTML = '<div class="loading"><span>لا توجد نتائج</span></div>';
+        content.innerHTML = '<div class="loading"><span>' + (activeCat === 99 ? 'لا توجد محطات مفضلة بعد' : 'لا توجد نتائج') + '</span></div>';
         return;
     }
     content.innerHTML = '';
@@ -284,13 +328,17 @@ function render(list) {
         const isPlay = currentUrl === s.url_resolved;
         const div = document.createElement('div');
         div.className = 'card' + (isPlay ? ' playing' : '');
-        const icon = s.favicon ? `<img src="${s.favicon}" width="28" height="28" style="border-radius:5px;object-fit:cover" onerror="this.replaceWith(document.createTextNode('📻'))">` : '📻';
+        const icon = s.favicon
+            ? `<img src="${s.favicon}" width="28" height="28" style="border-radius:5px;object-fit:cover" onerror="this.replaceWith(document.createTextNode('📻'))">`
+            : '📻';
+        const favIcon = isFav(s.url_resolved) ? '❤️' : '🤍';
         div.innerHTML = `
             <div class="card-icon">${icon}</div>
             <div class="card-info">
                 <h3>${s.name.trim()}</h3>
                 <p>${s.country || ''} ${s.tags ? '· ' + s.tags.split(',').slice(0,2).join(', ') : ''}</p>
             </div>
+            <button class="fav-btn" onclick="toggleFav('${s.url_resolved}', event)">${favIcon}</button>
             <div class="card-action">🔊</div>
         `;
         div.onclick = () => playStation(s);
@@ -317,9 +365,7 @@ function loadAudio(url) {
         hlsInstance.loadSource(url);
         hlsInstance.attachMedia(aud);
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => aud.play().catch(() => {}));
-        hlsInstance.on(Hls.Events.ERROR, (e, data) => {
-            if (data.fatal) aud.dispatchEvent(new Event('error'));
-        });
+        hlsInstance.on(Hls.Events.ERROR, (_, data) => { if (data.fatal) aud.dispatchEvent(new Event('error')); });
     } else {
         aud.src = url;
         aud.load();
@@ -332,6 +378,13 @@ function playStation(s) {
     clearTimeout(retryTimer);
     retryCount = 0;
     currentUrl = s.url_resolved;
+
+    // save for favs & last played
+    let saved = JSON.parse(localStorage.getItem('favStations') || '[]');
+    if (!saved.find(x => x.url_resolved === s.url_resolved)) {
+        saved.push(s); localStorage.setItem('favStations', JSON.stringify(saved));
+    }
+    localStorage.setItem('lastStation', JSON.stringify(s));
 
     player.style.display = 'block';
     pName.textContent  = s.name.trim();
@@ -372,16 +425,23 @@ aud.addEventListener('playing', () => {
     playBtn.textContent = '⏸';
 });
 aud.addEventListener('waiting', () => { if(currentUrl) setDot('wait','جاري التحميل...'); });
-aud.addEventListener('error',   () => {
+aud.addEventListener('error', () => {
     if (!currentUrl) return;
     if (retryCount >= MAX_RETRY) { setDot('err','⚠️ تعذّر الاتصال'); waves.classList.add('off'); return; }
     retryCount++;
     setDot('wait', `إعادة الاتصال (${retryCount}/${MAX_RETRY})...`);
-    retryTimer = setTimeout(() => { if(currentUrl){ loadAudio(currentUrl); } }, retryCount * 3000);
+    retryTimer = setTimeout(() => { if(currentUrl) loadAudio(currentUrl); }, retryCount * 3000);
 });
 
 // ── Init ──
+initCats();
 loadStations(0);
+
+// استعادة آخر محطة
+try {
+    const last = JSON.parse(localStorage.getItem('lastStation'));
+    if (last && last.url_resolved) setTimeout(() => playStation(last), 1000);
+} catch(e) {}
 </script>
 <style>
 .update-bar {
