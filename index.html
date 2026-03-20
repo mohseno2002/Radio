@@ -121,6 +121,24 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
 .nav-item .ni{font-size:1.25rem;line-height:1}
 .nav-item.active{color:var(--primary)}
 
+/* ── Timer Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
+.modal-overlay.hidden{display:none}
+.modal-box{background:#18181b;border-radius:24px 24px 0 0;padding:24px 20px 36px;width:100%;max-width:500px;border-top:1px solid #2a2a2e}
+.modal-title{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:18px;text-align:center}
+.timer-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.timer-opt{padding:12px 8px;background:#27272a;border:1px solid #3f3f46;border-radius:14px;color:#fff;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;text-align:center;transition:.2s}
+.timer-opt:active{transform:scale(.95)}
+.timer-opt.active-opt{background:var(--primary);color:#000;border-color:var(--primary)}
+.timer-cancel{width:100%;padding:12px;background:transparent;border:1px solid #3f3f46;border-radius:14px;color:var(--dim);font-family:inherit;font-size:.9rem;cursor:pointer;margin-top:4px}
+
+/* ── Timer Badge ── */
+.timer-badge{background:var(--primary);color:#000;font-size:.65rem;font-weight:900;padding:2px 7px;border-radius:10px;margin-right:6px;vertical-align:middle}
+
+/* ── Toast ── */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:#27272a;color:#fff;padding:10px 20px;border-radius:14px;font-size:.85rem;font-weight:600;z-index:9998;transition:transform .35s ease;white-space:nowrap;border:1px solid #3f3f46}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
 /* ── Update bar ── */
 .update-bar{position:fixed;top:0;left:0;right:0;background:var(--primary);color:#000;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:700;z-index:9999;transform:translateY(-100%);transition:transform .35s ease}
 .update-bar.show{transform:translateY(0)}
@@ -161,6 +179,7 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
       <div class="waves off" id="pWaves"><b></b><b></b><b></b><b></b></div>
     </div>
     <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+    <button onclick="openTimer()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;padding:4px;margin-right:2px" title="نوم تايمر">⏱️</button>
   </div>
 </div>
 
@@ -172,6 +191,25 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
   <div class="nav-item"        id="nav3" onclick="switchNav(3)"><span class="ni">⚽</span>رياضة</div>
   <div class="nav-item"        id="nav4" onclick="showFavs()"><span class="ni">❤️</span>مفضلة</div>
 </nav>
+
+<!-- Timer Modal -->
+<div class="modal-overlay hidden" id="timerModal" onclick="closeTimer(event)">
+  <div class="modal-box">
+    <div class="modal-title">⏱️ نوم تايمر</div>
+    <div class="timer-options">
+      <button class="timer-opt" onclick="setTimer(15)">15 دقيقة</button>
+      <button class="timer-opt" onclick="setTimer(30)">30 دقيقة</button>
+      <button class="timer-opt" onclick="setTimer(45)">45 دقيقة</button>
+      <button class="timer-opt" onclick="setTimer(60)">ساعة</button>
+      <button class="timer-opt" onclick="setTimer(90)">ساعة ونص</button>
+      <button class="timer-opt" onclick="setTimer(0)">إلغاء</button>
+    </div>
+    <button class="timer-cancel" onclick="closeTimerModal()">إغلاق</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <audio id="aud"></audio>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
@@ -379,7 +417,13 @@ function togglePlay() {
 
 function setDot(state, text) { pDot.className='dot '+state; pStatus.textContent=text; }
 
-aud.addEventListener('playing', ()=>{ clearTimeout(retryTimer); retryCount=0; setDot('live','بث مباشر'); pWaves.classList.remove('off'); playBtn.textContent='⏸'; });
+aud.addEventListener('playing', ()=>{
+    clearTimeout(retryTimer); retryCount=0;
+    setDot('live','بث مباشر');
+    pWaves.classList.remove('off');
+    playBtn.textContent='⏸';
+    notifyPlaying(pName.textContent);
+});
 aud.addEventListener('waiting', ()=>{ if(currentUrl) setDot('wait','جاري التحميل...'); });
 aud.addEventListener('error',   ()=>{
   if(!currentUrl) return;
@@ -388,6 +432,99 @@ aud.addEventListener('error',   ()=>{
   setDot('wait',`إعادة الاتصال (${retryCount}/${MAX_RETRY})...`);
   retryTimer = setTimeout(()=>{ if(currentUrl) loadAudio(currentUrl); }, retryCount*3000);
 });
+
+// ── SLEEP TIMER ──
+let sleepTimer = null;
+let sleepEnd   = null;
+let timerTick  = null;
+
+function openTimer() {
+    if (!currentUrl) { showToast('شغّل محطة الأول'); return; }
+    document.getElementById('timerModal').classList.remove('hidden');
+    // mark active option
+    document.querySelectorAll('.timer-opt').forEach(b => b.classList.remove('active-opt'));
+}
+
+function closeTimerModal() { document.getElementById('timerModal').classList.add('hidden'); }
+
+function closeTimer(e) {
+    if (e.target.id === 'timerModal') closeTimerModal();
+}
+
+function setTimer(mins) {
+    clearTimeout(sleepTimer); clearInterval(timerTick);
+    sleepTimer = null; sleepEnd = null;
+    document.querySelectorAll('.timer-opt').forEach(b => b.classList.remove('active-opt'));
+
+    if (mins === 0) {
+        updateTimerBadge('');
+        showToast('تم إلغاء التايمر');
+        closeTimerModal();
+        return;
+    }
+
+    sleepEnd = Date.now() + mins * 60000;
+    sleepTimer = setTimeout(() => {
+        aud.pause();
+        clearInterval(timerTick);
+        updateTimerBadge('');
+        showToast('تم إيقاف الراديو 😴');
+        sendNotification('راديو مصر والعرب', 'تم إيقاف الراديو - نوم هنيء 😴');
+    }, mins * 60000);
+
+    // live countdown
+    timerTick = setInterval(() => {
+        const left = sleepEnd - Date.now();
+        if (left <= 0) { clearInterval(timerTick); return; }
+        const m = Math.floor(left/60000);
+        const s = Math.floor((left%60000)/1000).toString().padStart(2,'0');
+        updateTimerBadge(m+':'+s);
+    }, 1000);
+
+    updateTimerBadge(mins+'د');
+    showToast('التايمر: ' + mins + ' دقيقة ⏱️');
+    // mark button
+    event.target.classList.add('active-opt');
+    setTimeout(closeTimerModal, 600);
+}
+
+function updateTimerBadge(text) {
+    let badge = document.getElementById('timerBadge');
+    if (!badge) {
+        badge = document.createElement('span');
+        badge.id = 'timerBadge';
+        badge.className = 'timer-badge';
+        pName.parentElement.insertBefore(badge, pName);
+    }
+    badge.textContent = text;
+    badge.style.display = text ? 'inline' : 'none';
+}
+
+// ── TOAST ──
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── NOTIFICATIONS ──
+async function requestNotifPerm() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+    }
+}
+
+function sendNotification(title, body) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    new Notification(title, { body, icon: 'icon-192.png' });
+}
+
+// إشعار عند تشغيل محطة
+function notifyPlaying(name) {
+    sendNotification('📻 يُشغَّل الآن', name);
+}
 
 // ── INIT ──
 initTabs();
