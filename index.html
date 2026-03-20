@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#facc15">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="راديو مصر">
+<link rel="manifest" href="manifest.json">
+<title>راديو مصر والعرب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #facc15;
+  --primary-dim: rgba(250,204,21,0.15);
+  --bg: #09090b;
+  --card: #111113;
+  --card2: #1c1c1f;
+  --border: #2a2a2e;
+  --text: #ffffff;
+  --dim: #a1a1aa;
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #f97316;
+  --nav-h: 64px;
+  --player-h: 76px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;user-select:none}
+
+/* ── Layout ── */
+.page{max-width:500px;margin:0 auto;padding-bottom:calc(var(--nav-h) + var(--player-h) + 16px)}
+
+/* ── Header ── */
+header{padding:22px 16px 10px;text-align:center;background:linear-gradient(180deg,rgba(250,204,21,.08) 0%,transparent 100%)}
+header h1{font-size:1.55rem;font-weight:900;color:var(--primary);letter-spacing:-.5px}
+header p{font-size:.72rem;color:var(--dim);margin-top:2px}
+
+/* ── Search ── */
+.search-wrap{padding:8px 16px 4px;position:sticky;top:0;background:var(--bg);z-index:50}
+.search-inner{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:11px 14px;transition:.25s}
+.search-inner:focus-within{border-color:var(--primary);box-shadow:0 0 0 2px rgba(250,204,21,.15)}
+.search-inner input{background:none;border:none;color:#fff;width:100%;font-family:inherit;font-size:.9rem;outline:none}
+.search-inner input::placeholder{color:var(--dim)}
+
+/* ── Tabs ── */
+.tabs-scroll{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 6px;scrollbar-width:none}
+.tabs-scroll::-webkit-scrollbar{display:none}
+.tab{padding:7px 16px;border-radius:22px;border:1px solid var(--border);background:var(--card);color:var(--dim);font-family:inherit;font-size:.82rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s;flex-shrink:0}
+.tab.active{background:var(--primary);color:#000;border-color:var(--primary)}
+
+/* ── Stations ── */
+.stations{padding:8px 16px;display:grid;gap:10px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:.18s;animation:fadeUp .35s ease both}
+.scard:active{transform:scale(.97)}
+.scard.playing{border-color:var(--primary);background:rgba(250,204,21,.04)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.simg{width:50px;height:50px;border-radius:13px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;overflow:hidden}
+.simg img{width:100%;height:100%;object-fit:cover;border-radius:13px}
+
+.sinfo{flex:1;min-width:0}
+.sinfo h3{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.sinfo p{font-size:.7rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.fav-btn{background:none;border:none;font-size:1.15rem;cursor:pointer;padding:4px;flex-shrink:0;line-height:1}
+.playing-icon{font-size:.9rem;color:var(--primary);flex-shrink:0;opacity:0}
+.scard.playing .playing-icon{opacity:1;animation:blink 1.3s infinite}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── Loading / Error ── */
+.center-msg{text-align:center;padding:40px 20px;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:14px}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.retry-btn{padding:10px 24px;background:var(--primary);color:#000;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-size:.88rem}
+
+/* ── Player Bar ── */
+.player-bar{
+  position:fixed;bottom:var(--nav-h);left:10px;right:10px;
+  background:rgba(20,20,22,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.08);border-radius:22px;
+  padding:10px 14px;display:none;z-index:200;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+  animation:slideUp .3s ease
+}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.player-row{display:flex;align-items:center;gap:12px}
+.p-thumb{width:44px;height:44px;border-radius:12px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;overflow:hidden}
+.p-thumb img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.p-info{flex:1;min-width:0}
+.p-name{font-size:.88rem;font-weight:700;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-status{display:flex;align-items:center;gap:5px;margin-top:2px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot.live{background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 1.4s infinite}
+.dot.wait{background:var(--orange);box-shadow:0 0 6px var(--orange)}
+.dot.err {background:var(--red);box-shadow:0 0 6px var(--red)}
+.dot.off {background:#444}
+.p-status span{font-size:.7rem;color:var(--dim)}
+.waves{display:flex;align-items:flex-end;gap:2px;height:14px;margin-top:4px}
+.waves b{display:block;width:3px;background:var(--primary);border-radius:2px;animation:wav 1s ease-in-out infinite alternate}
+.waves b:nth-child(1){animation-delay:.0s}
+.waves b:nth-child(2){animation-delay:.2s}
+.waves b:nth-child(3){animation-delay:.1s}
+.waves b:nth-child(4){animation-delay:.3s}
+@keyframes wav{0%{height:3px}100%{height:14px}}
+.waves.off b{animation-play-state:paused;height:3px;opacity:.35}
+.play-btn{width:46px;height:46px;border-radius:50%;background:var(--primary);border:none;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .13s;box-shadow:0 4px 14px rgba(250,204,21,.3)}
+.play-btn:active{transform:scale(.91)}
+
+/* ── Bottom Nav ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(10,10,12,.97);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;
+  z-index:300;padding:0 8px
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);cursor:pointer;padding:6px 16px;border-radius:12px;transition:.2s;font-size:.65rem;font-weight:600;min-width:60px}
+.nav-item .ni{font-size:1.25rem;line-height:1}
+.nav-item.active{color:var(--primary)}
+
+/* ── Update bar ── */
+.update-bar{position:fixed;top:0;left:0;right:0;background:var(--primary);color:#000;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:700;z-index:9999;transform:translateY(-100%);transition:transform .35s ease}
+.update-bar.show{transform:translateY(0)}
+.update-bar button{background:#000;color:var(--primary);border:none;border-radius:8px;padding:5px 14px;cursor:pointer;font-family:inherit;font-weight:700;font-size:.8rem}
+</style>
+</head>
+<body>
+
+<div class="update-bar" id="updateBar">
+  <span>🔄 يوجد تحديث جديد</span>
+  <button onclick="location.reload()">تحديث</button>
+</div>
+
+<div class="page">
+  <header>
+    <h1>📻 راديو مصر والعرب</h1>
+    <p>محطات مباشرة · Radio Browser</p>
+  </header>
+
+  <div class="search-wrap">
+    <div class="search-inner">
+      <span style="color:var(--dim);font-size:.9rem">🔍</span>
+      <input id="searchInput" type="text" placeholder="ابحث عن محطة..." oninput="onSearch()">
+    </div>
+  </div>
+
+  <div class="tabs-scroll" id="tabs"></div>
+  <div class="stations" id="content"></div>
+</div>
+
+<!-- Player -->
+<div class="player-bar" id="playerBar">
+  <div class="player-row">
+    <div class="p-thumb" id="pThumb">📻</div>
+    <div class="p-info">
+      <div class="p-name" id="pName">—</div>
+      <div class="p-status"><div class="dot off" id="pDot"></div><span id="pStatus">—</span></div>
+      <div class="waves off" id="pWaves"><b></b><b></b><b></b><b></b></div>
+    </div>
+    <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="nav-item active" id="nav0" onclick="switchNav(0)"><span class="ni">🏠</span>الرئيسية</div>
+  <div class="nav-item"        id="nav1" onclick="switchNav(1)"><span class="ni">🕌</span>قرآن</div>
+  <div class="nav-item"        id="nav2" onclick="switchNav(2)"><span class="ni">🗞️</span>أخبار</div>
+  <div class="nav-item"        id="nav3" onclick="switchNav(3)"><span class="ni">⚽</span>رياضة</div>
+  <div class="nav-item"        id="nav4" onclick="showFavs()"><span class="ni">❤️</span>مفضلة</div>
+</nav>
+
+<audio id="aud"></audio>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
+<script>
+// ── CATEGORIES ──
+const CATS = [
+  { label:'مصر',            query:'bycountry/Egypt?limit=100&hidebroken=true&order=votes&reverse=true' },
+  { label:'قرآن وإسلاميات', query:'search?tag=quran&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
+  { label:'أخبار',          query:'search?tag=news&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
+  { label:'موسيقى عربية',   query:'search?tag=arabic music&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
+  { label:'رياضة',          query:'search?tag=sports&limit=100&hidebroken=true&order=votes&reverse=true' },
+  { label:'السعودية',       query:'bycountry/Saudi Arabia?limit=100&hidebroken=true&order=votes&reverse=true' },
+];
+const API = 'https://de1.api.radio-browser.info/json/stations/';
+
+// manual injections per tab index
+const MANUAL = {
+  2:[
+    {name:'الجزيرة عربي',  url_resolved:'https://live-hls-v3-aja.getaj.net/AJA/v3/index.m3u8',     favicon:'', tags:'news,arabic', country:'Qatar'},
+    {name:'الجزيرة مباشر', url_resolved:'https://live-hls-web-ajm.getaj.net/AJM/index.m3u8',       favicon:'', tags:'news,arabic', country:'Qatar'},
+    {name:'RT Arabic',     url_resolved:'https://rt-arabicgo.rttv.com/live/rtarabic/playlist.m3u8', favicon:'', tags:'news,arabic', country:'Russia'},
+  ],
+  4:[
+    {name:'ON Sport FM 93.7', url_resolved:'https://stream.zeno.fm/onsportfm',        favicon:'', tags:'sports,egypt', country:'Egypt'},
+    {name:'beIN Sports Radio',url_resolved:'https://stream.zeno.fm/radio-bein-sport', favicon:'', tags:'sports,arabic',country:'Qatar'},
+    {name:'راديو الأهلي',    url_resolved:'https://stream.zeno.fm/ahlyradio',         favicon:'', tags:'sports,egypt', country:'Egypt'},
+  ]
+};
+
+// ── STATE ──
+const aud       = document.getElementById('aud');
+const playerBar = document.getElementById('playerBar');
+const pThumb    = document.getElementById('pThumb');
+const pName     = document.getElementById('pName');
+const pDot      = document.getElementById('pDot');
+const pStatus   = document.getElementById('pStatus');
+const pWaves    = document.getElementById('pWaves');
+const playBtn   = document.getElementById('playBtn');
+const content   = document.getElementById('content');
+
+let allStations = [], filtered = [], currentUrl = '';
+let activeCatIdx = 0, showingFavs = false;
+let retryTimer = null, retryCount = 0;
+const MAX_RETRY = 5;
+let hlsInst = null;
+
+// ── FAVS ──
+function getFavs()    { try{return JSON.parse(localStorage.getItem('favs')||'[]')}catch(e){return[]} }
+function saveFavs(f)  { localStorage.setItem('favs', JSON.stringify(f)) }
+function isFav(url)   { return getFavs().includes(url) }
+function toggleFav(url, e) {
+  e.stopPropagation();
+  let f = getFavs();
+  f = f.includes(url) ? f.filter(x=>x!==url) : [...f, url];
+  saveFavs(f);
+  render(filtered);
+  if (showingFavs) showFavs();
+}
+
+// ── TABS ──
+function initTabs() {
+  const box = document.getElementById('tabs');
+  CATS.forEach((c,i) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (i===0?' active':'');
+    b.textContent = c.label;
+    b.onclick = () => switchCat(i);
+    box.appendChild(b);
+  });
+  // مفضلة tab
+  const fb = document.createElement('button');
+  fb.className = 'tab'; fb.id = 'favTabBtn'; fb.textContent = '❤️ مفضلة';
+  fb.onclick = showFavs;
+  box.appendChild(fb);
+}
+
+function switchCat(i) {
+  showingFavs = false;
+  activeCatIdx = i;
+  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('active',j===i));
+  document.getElementById('searchInput').value = '';
+  loadCat(i);
+}
+
+// ── NAV ──
+function switchNav(i) {
+  document.querySelectorAll('.nav-item').forEach((n,j)=>n.classList.toggle('active',j===i));
+  // map nav to cat
+  const map = [0,1,2,4,null];
+  if (map[i] === null) { showFavs(); return; }
+  // scroll tab into view
+  const tabs = document.querySelectorAll('.tab');
+  if (tabs[map[i]]) tabs[map[i]].click();
+}
+
+// ── LOAD ──
+async function loadCat(i) {
+  content.innerHTML = '<div class="center-msg"><div class="spinner"></div><span>جاري التحميل...</span></div>';
+  try {
+    const res  = await fetch(API + CATS[i].query, {headers:{'User-Agent':'RadioApp/3.0'}});
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    allStations = data.filter(s=>s.url_resolved);
+    // inject manual
+    const manuals = MANUAL[i] || [];
+    if (manuals.length) {
+      const urls = allStations.map(s=>s.url_resolved);
+      manuals.forEach(m=>{ if(!urls.includes(m.url_resolved)) allStations.unshift(m); });
+    }
+    filtered = [...allStations];
+    render(filtered);
+  } catch(e) {
+    content.innerHTML = `<div class="center-msg" style="color:var(--red)">⚠️ تعذّر التحميل<br><small style="color:var(--dim)">${e.message}</small><br><button class="retry-btn" onclick="loadCat(${i})">إعادة المحاولة</button></div>`;
+  }
+}
+
+// ── RENDER ──
+function render(list) {
+  if (!list.length) {
+    content.innerHTML = `<div class="center-msg"><span>${showingFavs?'لا توجد محطات مفضلة':'لا توجد نتائج'}</span></div>`;
+    return;
+  }
+  content.innerHTML = '';
+  list.forEach((s,i) => {
+    const isPlay = currentUrl === s.url_resolved;
+    const fv     = isFav(s.url_resolved);
+    const card   = document.createElement('div');
+    card.className = 'scard' + (isPlay?' playing':'');
+    card.style.animationDelay = (i*.03)+'s';
+    const img = s.favicon
+      ? `<img src="${s.favicon}" onerror="this.parentElement.textContent='📻'">`
+      : '📻';
+    card.innerHTML = `
+      <div class="simg">${img}</div>
+      <div class="sinfo"><h3>${s.name.trim()}</h3><p>${s.country||''} ${s.tags?'· '+s.tags.split(',').slice(0,2).join(', '):''}</p></div>
+      <button class="fav-btn" onclick="toggleFav('${s.url_resolved}',event)">${fv?'❤️':'🤍'}</button>
+      <span class="playing-icon">🔊</span>
+    `;
+    card.onclick = () => playStation(s);
+    content.appendChild(card);
+  });
+}
+
+// ── FAVS VIEW ──
+function showFavs() {
+  showingFavs = true;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  const fb = document.getElementById('favTabBtn');
+  if(fb) fb.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach((n,j)=>n.classList.toggle('active',j===4));
+  document.getElementById('searchInput').value = '';
+  const favUrls = getFavs();
+  const saved   = JSON.parse(localStorage.getItem('favStations')||'[]');
+  allStations   = saved.filter(s=>favUrls.includes(s.url_resolved));
+  filtered      = [...allStations];
+  render(filtered);
+}
+
+// ── SEARCH ──
+function onSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  filtered = q ? allStations.filter(s=>s.name.toLowerCase().includes(q)||(s.tags||'').toLowerCase().includes(q)) : [...allStations];
+  render(filtered);
+}
+
+// ── AUDIO ──
+function loadAudio(url) {
+  if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
+  if (url.includes('.m3u8') && Hls.isSupported()) {
+    hlsInst = new Hls({lowLatencyMode:true});
+    hlsInst.loadSource(url);
+    hlsInst.attachMedia(aud);
+    hlsInst.on(Hls.Events.MANIFEST_PARSED, ()=>aud.play().catch(()=>{}));
+    hlsInst.on(Hls.Events.ERROR, (_,d)=>{ if(d.fatal) aud.dispatchEvent(new Event('error')); });
+  } else {
+    aud.src = url; aud.load(); aud.play().catch(()=>{});
+  }
+}
+
+function playStation(s) {
+  if (currentUrl === s.url_resolved) { togglePlay(); return; }
+  clearTimeout(retryTimer); retryCount = 0;
+  currentUrl = s.url_resolved;
+
+  // save
+  let saved = JSON.parse(localStorage.getItem('favStations')||'[]');
+  if (!saved.find(x=>x.url_resolved===s.url_resolved)) { saved.push(s); localStorage.setItem('favStations',JSON.stringify(saved)); }
+  localStorage.setItem('lastStation', JSON.stringify(s));
+
+  playerBar.style.display = 'block';
+  pName.textContent = s.name.trim();
+  pThumb.innerHTML  = s.favicon ? `<img src="${s.favicon}" onerror="this.parentElement.textContent='📻'">` : '📻';
+  playBtn.textContent = '⏸';
+  pWaves.classList.remove('off');
+  setDot('wait','جاري التحميل...');
+  loadAudio(currentUrl);
+  render(filtered);
+}
+
+function togglePlay() {
+  if (!currentUrl) return;
+  if (aud.paused) { aud.play().catch(()=>{}); playBtn.textContent='⏸'; pWaves.classList.remove('off'); }
+  else { aud.pause(); playBtn.textContent='▶'; pWaves.classList.add('off'); setDot('off','متوقف'); }
+}
+
+function setDot(state, text) { pDot.className='dot '+state; pStatus.textContent=text; }
+
+aud.addEventListener('playing', ()=>{ clearTimeout(retryTimer); retryCount=0; setDot('live','بث مباشر'); pWaves.classList.remove('off'); playBtn.textContent='⏸'; });
+aud.addEventListener('waiting', ()=>{ if(currentUrl) setDot('wait','جاري التحميل...'); });
+aud.addEventListener('error',   ()=>{
+  if(!currentUrl) return;
+  if(retryCount>=MAX_RETRY){ setDot('err','⚠️ تعذّر الاتصال'); pWaves.classList.add('off'); return; }
+  retryCount++;
+  setDot('wait',`إعادة الاتصال (${retryCount}/${MAX_RETRY})...`);
+  retryTimer = setTimeout(()=>{ if(currentUrl) loadAudio(currentUrl); }, retryCount*3000);
+});
+
+// ── INIT ──
+initTabs();
+loadCat(0);
+try {
+  const last = JSON.parse(localStorage.getItem('lastStation'));
+  if (last && last.url_resolved) setTimeout(()=>playStation(last), 1200);
+} catch(e) {}
+
+// ── PWA ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.addEventListener('updatefound', ()=>{
+      const w = reg.installing;
+      w.addEventListener('statechange', ()=>{
+        if (w.state==='installed' && navigator.serviceWorker.controller)
+          document.getElementById('updateBar').classList.add('show');
+      });
+    });
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener('message', e=>{
+    if(e.data&&e.data.type==='SW_UPDATED') document.getElementById('updateBar').classList.add('show');
+  });
+}
+</script>
+</body>
+</html>
