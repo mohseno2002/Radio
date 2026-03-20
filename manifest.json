@@ -1,0 +1,16 @@
+{
+  "name": "راديو مصر والعرب",
+  "short_name": "راديو مصر",
+  "description": "محطات إذاعية مباشرة عربية ومصرية",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#eab308",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
