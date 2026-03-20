@@ -2,7 +2,7 @@
   "name": "راديو مصر والعرب",
   "short_name": "راديو مصر",
   "description": "محطات إذاعية مباشرة عربية ومصرية",
-  "start_url": "/index.html",
+  "start_url": "/Radio/index.html",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#eab308",
