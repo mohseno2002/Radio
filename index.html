@@ -179,8 +179,8 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
       <div class="waves off" id="pWaves"><b></b><b></b><b></b><b></b></div>
     </div>
     <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-    <button id="prevBtn" onclick="jalilPrev()" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;padding:4px;color:#fff" title="السورة السابقة">⏮</button>
-    <button id="nextBtn" onclick="jalilNext()" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;padding:4px;color:#fff" title="السورة التالية">⏭</button>
+    <button id="prevBtn" onclick="jalilActive?jalilPrev():tarabPrev()" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;padding:4px;color:#fff" title="السابقة">⏮</button>
+    <button id="nextBtn" onclick="jalilActive?jalilNext():tarabNext()" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;padding:4px;color:#fff" title="التالية">⏭</button>
     <button onclick="openTimer()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;padding:4px;margin-right:2px" title="نوم تايمر">⏱️</button>
   </div>
 </div>
@@ -224,6 +224,7 @@ const CATS = [
   { label:'موسيقى عربية',   query:'search?tag=arabic music&language=arabic&limit=100&hidebroken=true&order=votes&reverse=true' },
   { label:'رياضة',          query:'search?tag=sports&limit=100&hidebroken=true&order=votes&reverse=true' },
   { label:'السعودية',       query:'bycountry/Saudi Arabia?limit=100&hidebroken=true&order=votes&reverse=true' },
+  { label:'🎶 طرب زمان',    query:'search?tag=arabic&limit=1&hidebroken=true' }, // placeholder - manual only
 ];
 const API = 'https://de1.api.radio-browser.info/json/stations/';
 
@@ -232,6 +233,216 @@ const API = 'https://de1.api.radio-browser.info/json/stations/';
 const JALIL_BASE = 'https://server10.mp3quran.net/jleel/';
 let jalilIdx = 0;
 let jalilActive = false;
+
+// ── TARAB ── النظام يجيب أسماء الملفات من archive.org metadata API وقت التشغيل
+// كل مطرب: _identifiers = قائمة identifiers يتم جمع أغانيهم كلها
+const TARAB_ARTISTS = {
+
+  '__fairuz__': {
+    name: 'إذاعة فيروز', icon: '🌹',
+    // مجموعات فيروز على archive.org — فقط الأكثر موثوقية
+    _identifiers: [
+      '03-la-fleur-des-cites',        // 14 أغنية بأسماء إنجليزية — مضمون 100%
+      'Fairuz_201802',                // 13 أغنية بالعربي
+      'TheBestOfFairuz_201711',       // مجموعة أفضل أغاني
+      'TheBestOfFairuz_201709',       // مجموعة ثانية
+      'moharram1965_gmail_20171020',  // فيروزيات الصباح
+      'moharram1965_gmail_20171102',  // فيروزيات 2
+      'fairuz_yessad_sabahak',        // يسعد صباحك يا حلو
+      'fairuz_in_america_vinyl_lp',   // فيروز في أمريكا
+    ],
+    _playlist: null
+  },
+
+  '__omk__': {
+    name: 'إذاعة أم كلثوم', icon: '🌟',
+    _identifiers: [
+      'ArabicUmmKulthumSongs_201704',  // 78 أغنية — الأكبر
+      'oum_kalthoum_songs',            // مجموعة ثانية
+      '2.-track-02',                   // إنت عمري
+      'um-kulthum-tessgilette-zemene', // تسجيلات زمان
+    ],
+    _playlist: null
+  },
+
+  '__halim__': {
+    name: 'إذاعة عبد الحليم', icon: '🎤',
+    _identifiers: [
+      'halim-tessgilette-zemene',         // الجزء 1 — 95 ملف
+      'halim-tessgilette-zemene_201508',   // الجزء 2 — 44 ملف
+      'halim-tessgilette-zemene_20150817', // الجزء 4 — 50 ملف
+      '7alim6-tessgilette_zemene',         // الجزء 6 — 41 ملف
+    ],
+    _playlist: null
+  },
+
+  '__wahab__': {
+    name: 'إذاعة عبد الوهاب', icon: '🎵',
+    // كل identifier هنا = أغنية واحدة لعبد الوهاب
+    _single_identifiers: [
+      '3ala-ikbetloumouni-tessgilette-zemene',
+      'ahebbek-tessgilette-zemene',
+      'hejrani-lih-tessgilette-zemene',
+      'filba7r-tessgilette-zemene',
+      'wahab_al_nahr_al_khaled',
+      'siratelhoabdewahabmed-tessgilette--zemene',
+    ],
+    _playlist: null
+  },
+
+  '__warda__': {
+    name: 'إذاعة وردة الجزائرية', icon: '🌸',
+    _identifiers: [
+      'Album_WardaAlJazairia_Ahla_Songs_Original_Quality', // 65 أغنية
+      'MartinWin00_outlook_A7',                            // Arabic Warda songs
+      'ChansonsDeCocktailDeWardaAlJazairia_201711',        // كوكتيل وردة
+    ],
+    _playlist: null
+  },
+
+  '__fayza__': {
+    name: 'إذاعة فايزة أحمد', icon: '💐',
+    // كل identifier = أغنية واحدة
+    _single_identifiers: [
+      'asmar-ya-asmrany',
+      'laetak-feen',
+      'ala-bab-el-hob',
+      'aywa-tabny-hawak',
+      'feen-habiby',
+      'betsal-leeh-alaya',
+      'yamma-el-amar-al-bab-live',
+      'AlarabFayzaAhmedTaalWeshof',
+    ],
+    _playlist: null
+  },
+
+  '__nagat__': {
+    name: 'إذاعة نجاة الصغيرة', icon: '🎀',
+    _identifiers: [
+      'Album_NajatAlSaghira_beautiful_songs_Original_Quality', // 73 أغنية
+      'CocktailSongsNajatAlSaghira',                          // كوكتيل نجاة
+      'najat-al-saghira',                                     // أغاني إضافية
+      '20210308_20210308_2051',                               // تفرق كتير - حفل
+    ],
+    _playlist: null
+  },
+
+  '__shadia__': {
+    name: 'إذاعة شادية', icon: '🎶',
+    _identifiers: [
+      'AghaniChedya',           // 52 أغنية
+      'shadia.full',            // مجموعة كاملة
+    ],
+    _playlist: null
+  },
+
+};
+
+// جيب قائمة الأغاني من archive.org metadata API وقت التشغيل
+async function fetchArchivePlaylist(artistKey) {
+  const artist = TARAB_ARTISTS[artistKey];
+  if (artist._playlist && artist._playlist.length) return artist._playlist;
+
+  const seen = new Set(); // لتجنب التكرار
+  const list = [];
+
+  try {
+    // نوع 1: _single_identifiers — كل identifier = أغنية واحدة (وهاب، فايزة)
+    if (artist._single_identifiers) {
+      for (const id of artist._single_identifiers) {
+        try {
+          const res = await fetch(`https://archive.org/metadata/${id}/files`);
+          const json = await res.json();
+          const mp3 = (json.result||[]).find(f =>
+            f.name && f.name.toLowerCase().endsWith('.mp3') &&
+            (f.source === 'original' || f.source === 'derivative')
+          );
+          if (mp3 && !seen.has(mp3.name)) {
+            seen.add(mp3.name);
+            list.push({
+              url: `https://archive.org/download/${id}/${encodeURIComponent(mp3.name)}`,
+              label: mp3.name.replace(/\.mp3$/i,'').replace(/ - م[حمد]+ عبد الوهاب/,'').replace(/ - فايزة احمد/,'').substring(0,36)
+            });
+          }
+        } catch(e) {}
+      }
+      return artist._playlist = list;
+    }
+
+    // نوع 2: _identifiers — عدة identifiers كل واحد فيه ملفات متعددة
+    const identifiers = artist._identifiers || [];
+    for (const id of identifiers) {
+      try {
+        const res = await fetch(`https://archive.org/metadata/${id}/files`);
+        const json = await res.json();
+        const files = (json.result||[]).filter(f =>
+          f.name && f.name.toLowerCase().endsWith('.mp3') &&
+          (f.source === 'original' || f.source === 'derivative') &&
+          !f.name.includes('_vbr') && !f.name.includes('_64kb') &&
+          !f.name.includes('_128kb') && !f.name.includes('_256kb') &&
+          f.name !== `${id}.mp3` &&
+          f.name !== `${id}_archive.mp3`
+        );
+        for (const f of files) {
+          if (seen.has(f.name)) continue;
+          seen.add(f.name);
+          const label = f.name
+            .replace(/^The Best of Fairuz\//,'')
+            .replace(/\.mp3$/i,'')
+            .replace(/^\d+\s+/,'')
+            .replace(/ أغاني الحنين \( Fairuz \)/g,'')
+            .replace(/فيروز - /g,'')
+            .substring(0, 36);
+          list.push({
+            url: `https://archive.org/download/${id}/${encodeURIComponent(f.name)}`,
+            label
+          });
+          if (list.length >= 80) break; // حد أقصى 80 أغنية لكل مطرب
+        }
+        if (list.length >= 80) break;
+      } catch(e) {}
+    }
+    return artist._playlist = list;
+
+  } catch(e) { return []; }
+}
+
+let tarabKey = null, tarabIdx = 0, tarabActive = false;
+
+async function playTarab(key, idx) {
+  const artist = TARAB_ARTISTS[key];
+  tarabKey = key; tarabIdx = idx !== undefined ? idx : 0;
+  tarabActive = true; jalilActive = false;
+  currentUrl = key;
+  playerBar.style.display = 'block';
+  document.getElementById('prevBtn').style.display = 'inline';
+  document.getElementById('nextBtn').style.display = 'inline';
+  pName.textContent = artist.name + ' ' + artist.icon;
+  pThumb.innerHTML = artist.icon;
+  playBtn.textContent = '⏸';
+  pWaves.classList.remove('off');
+  setDot('wait', 'جاري تحميل القائمة...');
+  const playlist = await fetchArchivePlaylist(key);
+  if (!playlist.length) { setDot('err','⚠️ لا توجد أغاني'); return; }
+  const total = playlist.length;
+  if (tarabIdx >= total) tarabIdx = 0;
+  const { url, label } = playlist[tarabIdx];
+  setDot('wait', (tarabIdx+1) + '/' + total + ' · ' + label);
+  if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
+  aud.src = url; aud.load(); aud.play().catch(()=>{});
+}
+async function tarabPrev() {
+  if (!tarabKey) return;
+  const playlist = await fetchArchivePlaylist(tarabKey);
+  tarabIdx = tarabIdx <= 0 ? playlist.length - 1 : tarabIdx - 1;
+  playTarab(tarabKey, tarabIdx);
+}
+async function tarabNext() {
+  if (!tarabKey) return;
+  const playlist = await fetchArchivePlaylist(tarabKey);
+  tarabIdx = tarabIdx >= playlist.length - 1 ? 0 : tarabIdx + 1;
+  playTarab(tarabKey, tarabIdx);
+}
 
 // manual injections per tab index
 const MANUAL = {
@@ -247,7 +458,17 @@ const MANUAL = {
     {name:'ON Sport FM 93.7', url_resolved:'https://stream.zeno.fm/onsportfm',        favicon:'', tags:'sports,egypt', country:'Egypt'},
     {name:'beIN Sports Radio',url_resolved:'https://stream.zeno.fm/radio-bein-sport', favicon:'', tags:'sports,arabic',country:'Qatar'},
     {name:'راديو الأهلي',    url_resolved:'https://stream.zeno.fm/ahlyradio',         favicon:'', tags:'sports,egypt', country:'Egypt'},
-  ]
+  ],
+  6:[
+    {name:'إذاعة فيروز 🌹',              url_resolved:'__fairuz__', favicon:'', tags:'tarab,arabic', country:'Lebanon'},
+    {name:'إذاعة أم كلثوم 🌟',           url_resolved:'__omk__',    favicon:'', tags:'tarab,egypt',  country:'Egypt'},
+    {name:'إذاعة عبد الحليم 🎤',         url_resolved:'__halim__',  favicon:'', tags:'tarab,egypt',  country:'Egypt'},
+    {name:'إذاعة عبد الوهاب 🎵',         url_resolved:'__wahab__',  favicon:'', tags:'tarab,egypt',  country:'Egypt'},
+    {name:'إذاعة وردة الجزائرية 🌸',     url_resolved:'__warda__',  favicon:'', tags:'tarab,arabic', country:'Algeria'},
+    {name:'إذاعة فايزة أحمد 💐',         url_resolved:'__fayza__',  favicon:'', tags:'tarab,egypt',  country:'Egypt'},
+    {name:'إذاعة نجاة الصغيرة 🎀',       url_resolved:'__nagat__',  favicon:'', tags:'tarab,egypt',  country:'Egypt'},
+    {name:'إذاعة شادية 🎶',              url_resolved:'__shadia__', favicon:'', tags:'tarab,egypt',  country:'Egypt'},
+  ],
 };
 
 // ── STATE ──
@@ -427,8 +648,9 @@ function loadAudio(url) {
 }
 
 function playStation(s) {
-  if (s.url_resolved === '__jalil__') { jalilActive=false; jalilIdx=0; playJalil(); render(filtered); return; }
-  jalilActive = false;
+  if (s.url_resolved === '__jalil__') { tarabActive=false; jalilActive=false; jalilIdx=0; playJalil(); render(filtered); return; }
+  if (TARAB_ARTISTS[s.url_resolved]) { jalilActive=false; playTarab(s.url_resolved, 0); render(filtered); return; }
+  jalilActive = false; tarabActive = false; tarabKey = null;
   document.getElementById('prevBtn').style.display = 'none';
   document.getElementById('nextBtn').style.display = 'none';
   if (currentUrl === s.url_resolved) { togglePlay(); return; }
@@ -460,7 +682,16 @@ function setDot(state, text) { pDot.className='dot '+state; pStatus.textContent=
 
 aud.addEventListener('playing', ()=>{
     clearTimeout(retryTimer); retryCount=0;
-    setDot('live', jalilActive ? '🎙️ سورة ' + (jalilIdx + 1) + ' من 114' : 'بث مباشر');
+    let status = 'بث مباشر';
+    if (jalilActive) {
+      status = '🎙️ سورة ' + (jalilIdx + 1) + ' من 114';
+    } else if (tarabActive && tarabKey) {
+      const cached = TARAB_ARTISTS[tarabKey]?._playlist;
+      if (cached && cached[tarabIdx]) {
+        status = (tarabIdx+1) + '/' + cached.length + ' · ' + cached[tarabIdx].label;
+      }
+    }
+    setDot('live', status);
     pWaves.classList.remove('off');
     playBtn.textContent='⏸';
     notifyPlaying(pName.textContent);
@@ -469,6 +700,8 @@ aud.addEventListener('ended', ()=>{
   if (jalilActive) {
     jalilIdx = jalilIdx >= 113 ? 0 : jalilIdx + 1;
     playJalil();
+  } else if (tarabActive && tarabKey) {
+    tarabNext();
   }
 });
 aud.addEventListener('waiting', ()=>{ if(currentUrl) setDot('wait','جاري التحميل...'); });
@@ -478,6 +711,11 @@ aud.addEventListener('error',   ()=>{
     jalilIdx = jalilIdx >= 113 ? 0 : jalilIdx + 1;
     setDot('wait','جاري التحميل...');
     setTimeout(playJalil, 1500);
+    return;
+  }
+  if (tarabActive && tarabKey) {
+    setDot('wait','جاري التحميل...');
+    setTimeout(tarabNext, 1500);
     return;
   }
   if(retryCount>=MAX_RETRY){ setDot('err','⚠️ تعذّر الاتصال'); pWaves.classList.add('off'); return; }
