@@ -179,6 +179,8 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
       <div class="waves off" id="pWaves"><b></b><b></b><b></b><b></b></div>
     </div>
     <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+    <button id="prevBtn" onclick="jalilPrev()" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;padding:4px;color:#fff" title="السورة السابقة">⏮</button>
+    <button id="nextBtn" onclick="jalilNext()" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;padding:4px;color:#fff" title="السورة التالية">⏭</button>
     <button onclick="openTimer()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;padding:4px;margin-right:2px" title="نوم تايمر">⏱️</button>
   </div>
 </div>
@@ -225,8 +227,17 @@ const CATS = [
 ];
 const API = 'https://de1.api.radio-browser.info/json/stations/';
 
+// ── JALIL PLAYLIST RADIO ──
+// روابط مباشرة من server10.mp3quran.net - مضمونة ١٠٠٪
+const JALIL_BASE = 'https://server10.mp3quran.net/jleel/';
+let jalilIdx = 0;
+let jalilActive = false;
+
 // manual injections per tab index
 const MANUAL = {
+  1:[
+    {name:'إذاعة الشيخ خالد الجليل', url_resolved:'__jalil__', favicon:'', tags:'quran,arabic', country:'Saudi Arabia'},
+  ],
   2:[
     {name:'الجزيرة عربي',  url_resolved:'https://live-hls-v3-aja.getaj.net/AJA/v3/index.m3u8',     favicon:'', tags:'news,arabic', country:'Qatar'},
     {name:'الجزيرة مباشر', url_resolved:'https://live-hls-web-ajm.getaj.net/AJM/index.m3u8',       favicon:'', tags:'news,arabic', country:'Qatar'},
@@ -255,6 +266,32 @@ let activeCatIdx = 0, showingFavs = false;
 let retryTimer = null, retryCount = 0;
 const MAX_RETRY = 5;
 let hlsInst = null;
+
+function jalilPrev() {
+  jalilIdx = jalilIdx <= 0 ? 113 : jalilIdx - 1;
+  playJalil();
+}
+function jalilNext() {
+  jalilIdx = jalilIdx >= 113 ? 0 : jalilIdx + 1;
+  playJalil();
+}
+
+function playJalil() {
+  const num = String(jalilIdx + 1).padStart(3, '0');
+  const url = JALIL_BASE + num + '.mp3';
+  jalilActive = true;
+  currentUrl = '__jalil__';
+  playerBar.style.display = 'block';
+  document.getElementById('prevBtn').style.display = 'inline';
+  document.getElementById('nextBtn').style.display = 'inline';
+  pName.textContent = 'إذاعة الشيخ خالد الجليل 🎙️';
+  pThumb.innerHTML = '🕌';
+  playBtn.textContent = '⏸';
+  pWaves.classList.remove('off');
+  setDot('wait', 'سورة ' + (jalilIdx + 1) + ' من 114...');
+  if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
+  aud.src = url; aud.load(); aud.play().catch(()=>{});
+}
 
 // ── FAVS ──
 function getFavs()    { try{return JSON.parse(localStorage.getItem('favs')||'[]')}catch(e){return[]} }
@@ -390,6 +427,10 @@ function loadAudio(url) {
 }
 
 function playStation(s) {
+  if (s.url_resolved === '__jalil__') { jalilActive=false; jalilIdx=0; playJalil(); render(filtered); return; }
+  jalilActive = false;
+  document.getElementById('prevBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
   if (currentUrl === s.url_resolved) { togglePlay(); return; }
   clearTimeout(retryTimer); retryCount = 0;
   currentUrl = s.url_resolved;
@@ -419,14 +460,26 @@ function setDot(state, text) { pDot.className='dot '+state; pStatus.textContent=
 
 aud.addEventListener('playing', ()=>{
     clearTimeout(retryTimer); retryCount=0;
-    setDot('live','بث مباشر');
+    setDot('live', jalilActive ? '🎙️ سورة ' + (jalilIdx + 1) + ' من 114' : 'بث مباشر');
     pWaves.classList.remove('off');
     playBtn.textContent='⏸';
     notifyPlaying(pName.textContent);
 });
+aud.addEventListener('ended', ()=>{
+  if (jalilActive) {
+    jalilIdx = jalilIdx >= 113 ? 0 : jalilIdx + 1;
+    playJalil();
+  }
+});
 aud.addEventListener('waiting', ()=>{ if(currentUrl) setDot('wait','جاري التحميل...'); });
 aud.addEventListener('error',   ()=>{
   if(!currentUrl) return;
+  if (jalilActive) {
+    jalilIdx = jalilIdx >= 113 ? 0 : jalilIdx + 1;
+    setDot('wait','جاري التحميل...');
+    setTimeout(playJalil, 1500);
+    return;
+  }
   if(retryCount>=MAX_RETRY){ setDot('err','⚠️ تعذّر الاتصال'); pWaves.classList.add('off'); return; }
   retryCount++;
   setDot('wait',`إعادة الاتصال (${retryCount}/${MAX_RETRY})...`);
