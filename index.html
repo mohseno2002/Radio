@@ -234,177 +234,296 @@ const JALIL_BASE = 'https://server10.mp3quran.net/jleel/';
 let jalilIdx = 0;
 let jalilActive = false;
 
-// ── TARAB ── النظام يجيب أسماء الملفات من archive.org metadata API وقت التشغيل
-// كل مطرب: _identifiers = قائمة identifiers يتم جمع أغانيهم كلها
-const TARAB_ARTISTS = {
-
-  '__fairuz__': {
-    name: 'إذاعة فيروز', icon: '🌹',
-    // مجموعات فيروز على archive.org — فقط الأكثر موثوقية
-    _identifiers: [
-      '03-la-fleur-des-cites',        // 14 أغنية بأسماء إنجليزية — مضمون 100%
-      'Fairuz_201802',                // 13 أغنية بالعربي
-      'TheBestOfFairuz_201711',       // مجموعة أفضل أغاني
-      'TheBestOfFairuz_201709',       // مجموعة ثانية
-      'moharram1965_gmail_20171020',  // فيروزيات الصباح
-      'moharram1965_gmail_20171102',  // فيروزيات 2
-      'fairuz_yessad_sabahak',        // يسعد صباحك يا حلو
-      'fairuz_in_america_vinyl_lp',   // فيروز في أمريكا
-    ],
-    _playlist: null
-  },
-
-  '__omk__': {
-    name: 'إذاعة أم كلثوم', icon: '🌟',
-    _identifiers: [
-      'ArabicUmmKulthumSongs_201704',  // 78 أغنية — الأكبر
-      'oum_kalthoum_songs',            // مجموعة ثانية
-      '2.-track-02',                   // إنت عمري
-      'um-kulthum-tessgilette-zemene', // تسجيلات زمان
-    ],
-    _playlist: null
-  },
-
-  '__halim__': {
-    name: 'إذاعة عبد الحليم', icon: '🎤',
-    _identifiers: [
-      'halim-tessgilette-zemene',         // الجزء 1 — 95 ملف
-      'halim-tessgilette-zemene_201508',   // الجزء 2 — 44 ملف
-      'halim-tessgilette-zemene_20150817', // الجزء 4 — 50 ملف
-      '7alim6-tessgilette_zemene',         // الجزء 6 — 41 ملف
-    ],
-    _playlist: null
-  },
-
-  '__wahab__': {
-    name: 'إذاعة عبد الوهاب', icon: '🎵',
-    // كل identifier هنا = أغنية واحدة لعبد الوهاب
-    _single_identifiers: [
-      '3ala-ikbetloumouni-tessgilette-zemene',
-      'ahebbek-tessgilette-zemene',
-      'hejrani-lih-tessgilette-zemene',
-      'filba7r-tessgilette-zemene',
-      'wahab_al_nahr_al_khaled',
-      'siratelhoabdewahabmed-tessgilette--zemene',
-    ],
-    _playlist: null
-  },
-
-  '__warda__': {
-    name: 'إذاعة وردة الجزائرية', icon: '🌸',
-    _identifiers: [
-      'Album_WardaAlJazairia_Ahla_Songs_Original_Quality', // 65 أغنية
-      'MartinWin00_outlook_A7',                            // Arabic Warda songs
-      'ChansonsDeCocktailDeWardaAlJazairia_201711',        // كوكتيل وردة
-    ],
-    _playlist: null
-  },
-
-  '__fayza__': {
-    name: 'إذاعة فايزة أحمد', icon: '💐',
-    // كل identifier = أغنية واحدة
-    _single_identifiers: [
-      'asmar-ya-asmrany',
-      'laetak-feen',
-      'ala-bab-el-hob',
-      'aywa-tabny-hawak',
-      'feen-habiby',
-      'betsal-leeh-alaya',
-      'yamma-el-amar-al-bab-live',
-      'AlarabFayzaAhmedTaalWeshof',
-    ],
-    _playlist: null
-  },
-
-  '__nagat__': {
-    name: 'إذاعة نجاة الصغيرة', icon: '🎀',
-    _identifiers: [
-      'Album_NajatAlSaghira_beautiful_songs_Original_Quality', // 73 أغنية
-      'CocktailSongsNajatAlSaghira',                          // كوكتيل نجاة
-      'najat-al-saghira',                                     // أغاني إضافية
-      '20210308_20210308_2051',                               // تفرق كتير - حفل
-    ],
-    _playlist: null
-  },
-
-  '__shadia__': {
-    name: 'إذاعة شادية', icon: '🎶',
-    _identifiers: [
-      'AghaniChedya',           // 52 أغنية
-      'shadia.full',            // مجموعة كاملة
-    ],
-    _playlist: null
-  },
-
+// ── TARAB ── قوائم مختارة بأشهر الأغاني — أسماء الملفات الحقيقية من archive.org
+const ID = {
+  FAIRUZ:  '03-la-fleur-des-cites',
+  FAIRUZ2: 'Fairuz_201802',
+  OMK:     'ArabicUmmKulthumSongs_201704',
+  HALIM:   'halim-tessgilette-zemene_20150817',
+  HALIM1:  'halim-tessgilette-zemene',
+  HALIM6:  '7alim6-tessgilette_zemene',
+  WAHAB1:  '3ala-ikbetloumouni-tessgilette-zemene',
+  WAHAB2:  'ahebbek-tessgilette-zemene',
+  WAHAB3:  'hejrani-lih-tessgilette-zemene',
+  WAHAB4:  'filba7r-tessgilette-zemene',
+  WAHAB5:  'wahab_al_nahr_al_khaled',
+  WARDA:   'Album_WardaAlJazairia_Ahla_Songs_Original_Quality',
+  NAGAT:   'Album_NajatAlSaghira_beautiful_songs_Original_Quality',
+  SHADIA:  'AghaniChedya',
 };
 
-// جيب قائمة الأغاني من archive.org metadata API وقت التشغيل
+// [identifier_key, filename_on_archive, label_displayed]
+const TARAB_SONGS = {
+
+  '__fairuz__': [
+    // من identifier 03-la-fleur-des-cites — أسماء إنجليزية مضمونة
+    ['FAIRUZ', 'The Best of Fairuz/01 Habbaytak Bil Sayf.mp3',       'حبيتك بالصيف'],
+    ['FAIRUZ', 'The Best of Fairuz/02 Addaysh Kan Fi Nas.mp3',       'أديش كان في ناس'],
+    ['FAIRUZ', 'The Best of Fairuz/03 La Fleur Des Cites.mp3',       'زهرة المدائن'],
+    ['FAIRUZ', 'The Best of Fairuz/05 Shady.mp3',                    'شادي'],
+    ['FAIRUZ', 'The Best of Fairuz/06 Kaan Azzaman.mp3',             'كان الزمان'],
+    ['FAIRUZ', 'The Best of Fairuz/07 Al Kods Alatika.mp3',          'القدس العتيقة'],
+    ['FAIRUZ', 'The Best of Fairuz/08 Shayef El Bahr Shou Kbir.mp3', 'شايف البحر شو كبير'],
+    ['FAIRUZ', 'The Best of Fairuz/09 Ya Ana Ya Ana.mp3',            'يا أنا يا أنا'],
+    ['FAIRUZ', 'The Best of Fairuz/10 Aatini Nay.mp3',               'أعطني الناي وغنّ'],
+    ['FAIRUZ', 'The Best of Fairuz/11 Sanarjaou Yaoumann.mp3',       'سنرجع يوماً'],
+    ['FAIRUZ', 'The Best of Fairuz/12 Al Bint El Chalabiya.mp3',     'البنت الشلبية'],
+    ['FAIRUZ', 'The Best of Fairuz/13 Ya Tayr.mp3',                  'يا طير'],
+    ['FAIRUZ', 'The Best of Fairuz/14 Dabket Loubnan.mp3',           'دبكة لبنان'],
+    // من identifier Fairuz_201802
+    ['FAIRUZ2', 'فيروز - احترف الحزن والإنتظار أغاني الحنين ( Fairuz ).mp3',  'احترف الحزن'],
+    ['FAIRUZ2', 'فيروز - احكيلي عن بلدي احكيلي أغاني الحنين ( Fairuz ).mp3', 'احكيلي عن بلدي'],
+    ['FAIRUZ2', 'فيروز - اذكريني أغاني الحنين ( Fairuz ).mp3',                'اذكريني'],
+    ['FAIRUZ2', 'فيروز - اعطني الناي وغنّ أغاني الحنين ( Fairuz ).mp3',       'أعطني الناي (2)'],
+    ['FAIRUZ2', 'فيروز - بيتي انا بيتك أغاني الحنين ( Fairuz ).mp3',          'بيتي أنا بيتك'],
+    ['FAIRUZ2', 'فيروز - حبيتك بالصيف اغاني الحنين ( Fairuz ).mp3',           'حبيتك بالصيف (2)'],
+    ['FAIRUZ2', 'فيروز - دقيت أغاني الحنين ( Fairuz ).mp3',                   'دقيت'],
+    ['FAIRUZ2', 'فيروز - رجعت في المساء أغاني الحنين ( Fairuz ).mp3',          'رجعت في المساء'],
+    ['FAIRUZ2', 'فيروز - لا يدوم اغترابي أغاني الحنين ( Fairuz ).mp3',        'لا يدوم اغترابي'],
+    ['FAIRUZ2', 'فيروز - لبيروت أغاني الحنين ( Fairuz ).mp3',                 'لبيروت'],
+  ],
+
+  '__omk__': [
+    // من ArabicUmmKulthumSongs_201704 — أسماء إنجليزية مضمونة
+    ['OMK', 'Enta Omry.mp3',          'إنت عمري'],
+    ['OMK', 'Fakarouny.mp3',          'فكروني'],
+    ['OMK', 'Ala Balad El Mahbob.mp3','على بلد المحبوب'],
+    ['OMK', 'Haseebak Lel Zaman.mp3', 'حسيبك للزمن'],
+    ['OMK', 'Arouh Lmein.mp3',        'أروح لمين'],
+    ['OMK', 'Daleely Ehtar.mp3',      'دليلي اتهور'],
+    ['OMK', 'Amal Hayaty.mp3',        'أمل حياتي'],
+    ['OMK', 'Khassamatni.mp3',        'خصامني'],
+    ['OMK', 'Aghar Mn Nasmet.mp3',    'أغار من نسمة'],
+    ['OMK', 'Alf Lila W Lila.mp3',    'ألف ليلة وليلة'],
+    ['OMK', 'Aadeet hayati.mp3',      'عادت حياتي'],
+    ['OMK', 'Ala aini elhagr.mp3',    'على عيني الهجر'],
+    ['OMK', 'Ayoha El Raaeh.mp3',     'أيها الراحل'],
+    ['OMK', 'Haqabluh Bukrah.mp3',    'هقابله بكره'],
+    ['OMK', 'Ghani li cheway cheway.mp3', 'غني لي شوية شوية'],
+    ['OMK', 'Koli mayezdad.mp3',      'كلي مايزداد'],
+    ['OMK', 'Meen Elly Aal.mp3',      'مين اللي قال'],
+    ['OMK', 'Rohi wa rohek.mp3',      'روحي وروحك'],
+    ['OMK', 'Ya Bahget El Eid.mp3',   'يا بهجة العيد'],
+    ['OMK', 'Ya Ein Demouek.mp3',     'يا عين دموعك'],
+    ['OMK', 'Ya Sabah El Khair.mp3',  'يا صباح الخير'],
+    ['OMK', 'Daleely Ehtar.mp3',      'دليلي اتهور'],
+    ['OMK', 'Arouh Lmein.mp3',        'أروح لمين'],
+    ['OMK', 'Efrah Ya Qalby.mp3',     'افرح يا قلبي'],
+    ['OMK', 'Loghat El Zohor.mp3',    'لغة الزهور'],
+  ],
+
+  '__halim__': [
+    // من halim-tessgilette-zemene_20150817
+    ['HALIM', 'أبو عيون جريئة .. حليم .. حفلة عام 1958 .. دار الأوبرا.mp3', 'أبو عيون جريئة'],
+    ['HALIM', 'أحبك .. حليم .. حفلة  27 مارس  1969.mp3',                    'أحبك'],
+    ['HALIM', 'أنا لك على طول .. حليم .. حفلة  30 . أكتوبر . 1958.mp3',     'أنا لك على طول'],
+    ['HALIM', 'أهواك + أسمر يا أسمرانى .. حليم .. حفلة عام 1957.mp3',       'أهواك'],
+    ['HALIM', 'تخونوه .. حليم .. حفلة 1960.mp3',                            'تخونوه'],
+    ['HALIM', 'توبة .. حليم .. حفلة عام 1954.mp3',                          'توبة'],
+    ['HALIM', 'جواب .. حليم .. حفل.mp3',                                    'جواب'],
+    ['HALIM', 'حبك نار .. حليم .. حفلة 12 مايو 1960.mp3',                   'حبك نار'],
+    ['HALIM', 'صافينى مرة .. حليم .. حفلة.mp3',                             'صافيني مرة'],
+    ['HALIM', 'ظالم .. حليم .. حفلة عام 1954 .. مسرح الأذاعة العائم.mp3',   'ظالم'],
+    ['HALIM', 'فوق الشوك .. حليم .. حفلة عام 1961 .. سينما أوبرا.mp3',      'فوق الشوك'],
+    ['HALIM', 'فى يوم .. فى شهر .. فى سنة .. حليم .. حفلة يوم 25 يولية 1975.mp3', 'في يوم في شهر'],
+    ['HALIM', 'على قد الشوق .. حليم .. حفلة 25 يولية 1954 .. حديقة الأندلس.mp3', 'على قد الشوق'],
+    ['HALIM', 'بتقولى بكرة .. حليم .. حفلة.mp3',                           'بتقولي بكرة'],
+    ['HALIM', 'بعد ايه .. حليم ... حفل السودان عام  1960.mp3',               'بعد إيه'],
+    // من halim-tessgilette-zemene (الجزء 1 — أغاني مختلفة)
+    ['HALIM1','أسمر يا اسمراني - حفل السعودية.mp3',  'أسمر يا اسمراني'],
+    ['HALIM1','الهوى هوايا.تسجيل حفلة.mp3',          'الهوى هوايا'],
+    ['HALIM1','الليالى - ptgi.mp3',                   'الليالي'],
+    // من 7alim6-tessgilette_zemene (الجزء 6)
+    ['HALIM6','أسمر يا اسمراني - حفل السعودية.mp3',  'أسمر يا اسمراني (2)'],
+    ['HALIM6','-يا مولعين بالسهر.mp3',               'يا مولعين بالسهر'],
+  ],
+
+  '__wahab__': [
+    // كل identifier = أغنية واحدة — نأخذ أول mp3 منه
+    ['WAHAB1', null, 'على إيه بتلومني'],
+    ['WAHAB2', null, 'أحبك وانت فاكرني'],
+    ['WAHAB3', null, 'هاجراني ليه'],
+    ['WAHAB4', null, 'في البحر لما فتكم'],
+    ['WAHAB5', null, 'النهر الخالد'],
+  ],
+
+  '__warda__': [
+    // من Album_WardaAlJazairia_Ahla_Songs_Original_Quality — أسماء الملفات الحقيقية
+    ['WARDA', 'Batwanes.Beek.mp3',      'بتونس بيك'],
+    ['WARDA', 'Hob.Elhabeb.mp3',        'حب الحبيب'],
+    ['WARDA', 'Khalek.Hena.mp3',        'خليك هنا'],
+    ['WARDA', 'Geet.Fe.Wa2tk.mp3',      'جيت في وقتك'],
+    ['WARDA', 'B3omry.kolo.Habetk.mp3', 'بعمري كله حبيتك'],
+    ['WARDA', 'Fe.Youm.W.Leila.mp3',    'في يوم وليلة'],
+    ['WARDA', 'Lola.El.Mlama.mp3',      'لولا الملامة'],
+    ['WARDA', 'Law.Sa2lok.mp3',         'لو سألوك'],
+    ['WARDA', 'Mn.Ben.Alof.mp3',        'من بين الوف'],
+    ['WARDA', 'El3yon.Elsood.mp3',      'العيون السود'],
+    ['WARDA', 'Hanen.mp3',              'حنين'],
+    ['WARDA', 'Ahla.El.Lyaly.mp3',      'أحلى الليالي'],
+    ['WARDA', 'Safar.mp3',              'سفر'],
+    ['WARDA', 'Yama.Lyaly.mp3',         'ياما ليالي'],
+    ['WARDA', 'Bawad3k.mp3',            'بودّعك'],
+    ['WARDA', 'Akdb.3aleek.mp3',        'أكذب عليك'],
+    ['WARDA', 'Andh.3leek.mp3',         'انده عليك'],
+    ['WARDA', 'Aslak.Tn7b.mp3',         'أصلك تنحب'],
+    ['WARDA', 'Aw2aty.Bt7lw.mp3',       'أوقاتي بتحلو'],
+    ['WARDA', 'La.Msh.Kda.mp3',         'لأ مش كده'],
+    ['WARDA', 'Lazm.Nftr2.mp3',         'لازم نفترق'],
+    ['WARDA', 'Mdretosh.mp3',           'مدريتوش'],
+    ['WARDA', 'Sh3ory.Na7ytk.mp3',      'شعوري ناحيتك'],
+    ['WARDA', 'Ya.Habeby.La.T2oly.mp3', 'يا حبيبي لا تقولي'],
+    ['WARDA', 'Ya.Welad.El.Halal.mp3',  'يا ولاد الحلال'],
+    ['WARDA', 'Fe.Youm.W.Leila.mp3',    'في يوم وليلة (2)'],
+    ['WARDA', '2al.Eh.Bys2lony.mp3',    'قال إيه بيسألوني'],
+    ['WARDA', 'Bahebak.Sada2ny.mp3',    'بحبك صدّقني'],
+    ['WARDA', 'Ahlan.Ya.Hob.mp3',       'أهلاً يا حب'],
+    ['WARDA', 'Hekayty.M3.Elzman.mp3',  'حكايتي مع الزمان'],
+  ],
+
+  '__fayza__': [
+    // كل identifier = أغنية — نأخذ أول mp3
+    ['FAYZA1', null, 'أسمر يا اسمراني'],
+    ['FAYZA2', null, 'لقيتك فين'],
+    ['FAYZA3', null, 'على باب الحب'],
+    ['FAYZA4', null, 'أيوة تعبني هواك'],
+    ['FAYZA5', null, 'فين حبيبي'],
+    ['FAYZA6', null, 'بتسأل ليه عليا'],
+    ['FAYZA7', null, 'يامة القمر ع الباب'],
+    ['FAYZA8', null, 'تعال وشوف'],
+  ],
+
+  '__nagat__': [
+    // من Album_NajatAlSaghira_beautiful_songs_Original_Quality
+    ['NAGAT', 'M2drsh.Ansak.mp3',         'مقدرش أنساك'],
+    ['NAGAT', 'El.2reb.Mnk.B3eed.mp3',    'القريب منك بعيد'],
+    ['NAGAT', 'El.Ter.El.Msafer.mp3',     'الطير المسافر'],
+    ['NAGAT', 'Ya.Mersal.El.Hawa.mp3',    'يا مرسال الهوى'],
+    ['NAGAT', 'Saken.Osady.mp3',          'ساكن قصادي'],
+    ['NAGAT', 'Hobak.Hayaty.mp3',         'حبك حياتي'],
+    ['NAGAT', 'Tef2.Kteer.mp3',           'تفرق كتير'],
+    ['NAGAT', 'Enta.Elly.Zalem.mp3',      'أنت اللي ظالم'],
+    ['NAGAT', 'Ya.Zalmny.mp3',            'يا ظالمني'],
+    ['NAGAT', 'Kol.She2.Rah.mp3',         'كل شيء راح'],
+    ['NAGAT', 'As2alk.Elrahel.mp3',       'أسألك الرحيل'],
+    ['NAGAT', 'Sahran.Ya.Qmr.mp3',        'سهران يا قمر'],
+    ['NAGAT', 'Shakl.Tany.mp3',           'شكل تاني'],
+    ['NAGAT', 'Law.Ytol.Elbo3d.mp3',      'لو يطول البعد'],
+    ['NAGAT', 'Mata.St3rf.mp3',           'متى ستعرف'],
+    ['NAGAT', 'Hobak.El.Gabar.mp3',       'حبك الجبار'],
+    ['NAGAT', 'Leh.Khaltny.Ahebak.mp3',   'ليه خلتني أحبك'],
+    ['NAGAT', 'El.Sho2.W.Elhob.mp3',      'الشوق والحب'],
+    ['NAGAT', 'Seket.El3ashqen.mp3',      'سكة العاشقين'],
+    ['NAGAT', 'Ayzno.mp3',                'ايظن'],
+    ['NAGAT', 'Ya.Hager.Bhbk.mp3',        'يا هاجر بحبك'],
+    ['NAGAT', 'Ya.Khosara.Nese.mp3',      'يا خسارة نسي'],
+    ['NAGAT', 'Roba3yat.El.Khayam.mp3',   'رباعيات الخيام'],
+    ['NAGAT', 'Fe.West.El.Tare2.mp3',     'في وسط الطريق'],
+    ['NAGAT', '3esh.M3aya.mp3',           'عيش معايا'],
+  ],
+
+  '__shadia__': [
+    // من AghaniChedya — الأرقام هي أسماء الملفات الفعلية
+    ['SHADIA', '29.mp3', 'اتعودت عليك'],
+    ['SHADIA', '27.mp3', 'أنت أول حب'],
+    ['SHADIA', '37.mp3', 'خلاص مسافر'],
+    ['SHADIA', '23.mp3', 'أقوى من الزمان'],
+    ['SHADIA', '42.mp3', 'أهل الغرام'],
+    ['SHADIA', '43.mp3', 'ليالي العمر'],
+    ['SHADIA', '30.mp3', 'فارس أحلامي'],
+    ['SHADIA', '53.mp3', 'قالي الوداع'],
+    ['SHADIA', '6.mp3',  'أحبك أحبك'],
+    ['SHADIA', '59.mp3', 'شهر عسل'],
+    ['SHADIA', '52.mp3', 'قلبي معاك'],
+    ['SHADIA', '41.mp3', 'لا يا سي أحمد'],
+    ['SHADIA', '66.mp3', 'ودي فيها حاجة'],
+    ['SHADIA', '8.mp3',  'عين عسلية'],
+    ['SHADIA', '9.mp3',  'لجر واندهلك'],
+    ['SHADIA', '48.mp3', 'مين قالك تسكن'],
+    ['SHADIA', '36.mp3', 'فات عليك الهوى'],
+    ['SHADIA', '3.mp3',  'حب مين حب'],
+    ['SHADIA', '2-4.mp3','حب مين حب 2'],
+    ['SHADIA', '5.mp3',  'أحن قلب'],
+  ],
+};
+
+// map key → identifier string
+const ID_MAP = {
+  FAIRUZ:  '03-la-fleur-des-cites',
+  FAIRUZ2: 'Fairuz_201802',
+  OMK:     'ArabicUmmKulthumSongs_201704',
+  HALIM:   'halim-tessgilette-zemene_20150817',
+  HALIM1:  'halim-tessgilette-zemene',
+  HALIM6:  '7alim6-tessgilette_zemene',
+  WAHAB1:  '3ala-ikbetloumouni-tessgilette-zemene',
+  WAHAB2:  'ahebbek-tessgilette-zemene',
+  WAHAB3:  'hejrani-lih-tessgilette-zemene',
+  WAHAB4:  'filba7r-tessgilette-zemene',
+  WAHAB5:  'wahab_al_nahr_al_khaled',
+  WARDA:   'Album_WardaAlJazairia_Ahla_Songs_Original_Quality',
+  NAGAT:   'Album_NajatAlSaghira_beautiful_songs_Original_Quality',
+  SHADIA:  'AghaniChedya',
+  FAYZA1:  'asmar-ya-asmrany',
+  FAYZA2:  'laetak-feen',
+  FAYZA3:  'ala-bab-el-hob',
+  FAYZA4:  'aywa-tabny-hawak',
+  FAYZA5:  'feen-habiby',
+  FAYZA6:  'betsal-leeh-alaya',
+  FAYZA7:  'yamma-el-amar-al-bab-live',
+  FAYZA8:  'AlarabFayzaAhmedTaalWeshof',
+};
+
+const TARAB_ARTISTS = {
+  '__fairuz__': { name:'إذاعة فيروز',          icon:'🌹', _playlist:null },
+  '__omk__':    { name:'إذاعة أم كلثوم',        icon:'🌟', _playlist:null },
+  '__halim__':  { name:'إذاعة عبد الحليم',      icon:'🎤', _playlist:null },
+  '__wahab__':  { name:'إذاعة عبد الوهاب',      icon:'🎵', _playlist:null },
+  '__warda__':  { name:'إذاعة وردة الجزائرية',  icon:'🌸', _playlist:null },
+  '__fayza__':  { name:'إذاعة فايزة أحمد',      icon:'💐', _playlist:null },
+  '__nagat__':  { name:'إذاعة نجاة الصغيرة',    icon:'🎀', _playlist:null },
+  '__shadia__': { name:'إذاعة شادية',           icon:'🎶', _playlist:null },
+};
+
+// جيب قائمة الأغاني — من القائمة المختارة يدوياً
 async function fetchArchivePlaylist(artistKey) {
   const artist = TARAB_ARTISTS[artistKey];
   if (artist._playlist && artist._playlist.length) return artist._playlist;
 
-  const seen = new Set(); // لتجنب التكرار
+  const songs = TARAB_SONGS[artistKey] || [];
   const list = [];
 
-  try {
-    // نوع 1: _single_identifiers — كل identifier = أغنية واحدة (وهاب، فايزة)
-    if (artist._single_identifiers) {
-      for (const id of artist._single_identifiers) {
-        try {
+  // cache للـ identifiers اللي احتجنا نجيب أول mp3 منهم
+  const fetchedFirst = {};
+
+  for (const [idKey, filename, label] of songs) {
+    const id = ID_MAP[idKey];
+    if (!id) continue;
+    try {
+      if (filename) {
+        // الاسم محدد مسبقاً — رابط مباشر
+        list.push({
+          url: `https://archive.org/download/${id}/${encodeURIComponent(filename)}`,
+          label
+        });
+      } else {
+        // نجيب أول mp3 من الـ identifier (وهاب وفايزة)
+        if (!fetchedFirst[id]) {
           const res = await fetch(`https://archive.org/metadata/${id}/files`);
           const json = await res.json();
-          const mp3 = (json.result||[]).find(f =>
-            f.name && f.name.toLowerCase().endsWith('.mp3') &&
-            (f.source === 'original' || f.source === 'derivative')
-          );
-          if (mp3 && !seen.has(mp3.name)) {
-            seen.add(mp3.name);
-            list.push({
-              url: `https://archive.org/download/${id}/${encodeURIComponent(mp3.name)}`,
-              label: mp3.name.replace(/\.mp3$/i,'').replace(/ - م[حمد]+ عبد الوهاب/,'').replace(/ - فايزة احمد/,'').substring(0,36)
-            });
-          }
-        } catch(e) {}
-      }
-      return artist._playlist = list;
-    }
-
-    // نوع 2: _identifiers — عدة identifiers كل واحد فيه ملفات متعددة
-    const identifiers = artist._identifiers || [];
-    for (const id of identifiers) {
-      try {
-        const res = await fetch(`https://archive.org/metadata/${id}/files`);
-        const json = await res.json();
-        const files = (json.result||[]).filter(f =>
-          f.name && f.name.toLowerCase().endsWith('.mp3') &&
-          (f.source === 'original' || f.source === 'derivative') &&
-          !f.name.includes('_vbr') && !f.name.includes('_64kb') &&
-          !f.name.includes('_128kb') && !f.name.includes('_256kb') &&
-          f.name !== `${id}.mp3` &&
-          f.name !== `${id}_archive.mp3`
-        );
-        for (const f of files) {
-          if (seen.has(f.name)) continue;
-          seen.add(f.name);
-          const label = f.name
-            .replace(/^The Best of Fairuz\//,'')
-            .replace(/\.mp3$/i,'')
-            .replace(/^\d+\s+/,'')
-            .replace(/ أغاني الحنين \( Fairuz \)/g,'')
-            .replace(/فيروز - /g,'')
-            .substring(0, 36);
+          const mp3 = (json.result||[]).find(f => f.name && f.name.toLowerCase().endsWith('.mp3'));
+          fetchedFirst[id] = mp3 ? mp3.name : null;
+        }
+        if (fetchedFirst[id]) {
           list.push({
-            url: `https://archive.org/download/${id}/${encodeURIComponent(f.name)}`,
+            url: `https://archive.org/download/${id}/${encodeURIComponent(fetchedFirst[id])}`,
             label
           });
-          if (list.length >= 80) break; // حد أقصى 80 أغنية لكل مطرب
         }
-        if (list.length >= 80) break;
-      } catch(e) {}
-    }
-    return artist._playlist = list;
+      }
+    } catch(e) {}
+  }
 
-  } catch(e) { return []; }
+  return artist._playlist = list;
 }
 
 let tarabKey = null, tarabIdx = 0, tarabActive = false;
