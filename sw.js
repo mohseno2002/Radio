@@ -1,9 +1,10 @@
-const CACHE = 'radio-v7';
+const CACHE = 'radio-v8';
 const ASSETS = [
     '/',
     '/index.html',
     '/manifest.json',
     'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap',
+    'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap',
     'https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js'
 ];
 
@@ -31,8 +32,18 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
     const url = e.request.url;
-    // لا تعترض روابط البث
-    if (url.includes('api.radio-browser') || url.includes('.mp3') || url.includes('.m3u8') || url.includes('stream')) {
+    // لا تعترض روابط البث أو archive.org أو radio-browser API
+    if (
+        url.includes('api.radio-browser') ||
+        url.includes('archive.org') ||
+        url.includes('mp3quran.net') ||
+        url.includes('.mp3') ||
+        url.includes('.m3u8') ||
+        url.includes('stream') ||
+        url.includes('zeno.fm') ||
+        url.includes('getaj.net') ||
+        url.includes('rttv.com')
+    ) {
         return;
     }
     e.respondWith(

@@ -115,9 +115,9 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
   background:rgba(10,10,12,.97);backdrop-filter:blur(16px);
   border-top:1px solid var(--border);
   display:flex;justify-content:space-around;align-items:center;
-  z-index:300;padding:0 8px
+  z-index:300;padding:0 4px
 }
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);cursor:pointer;padding:6px 16px;border-radius:12px;transition:.2s;font-size:.65rem;font-weight:600;min-width:60px}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);cursor:pointer;padding:6px 10px;border-radius:12px;transition:.2s;font-size:.62rem;font-weight:600;min-width:0;flex:1}
 .nav-item .ni{font-size:1.25rem;line-height:1}
 .nav-item.active{color:var(--primary)}
 
@@ -143,6 +143,140 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
 .update-bar{position:fixed;top:0;left:0;right:0;background:var(--primary);color:#000;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:700;z-index:9999;transform:translateY(-100%);transition:transform .35s ease}
 .update-bar.show{transform:translateY(0)}
 .update-bar button{background:#000;color:var(--primary);border:none;border-radius:8px;padding:5px 14px;cursor:pointer;font-family:inherit;font-weight:700;font-size:.8rem}
+
+/* ══════════ TAFSEER SHARAWY SECTION ══════════ */
+#tafseer-section { display:none; }
+#tafseer-section.active { display:block; }
+
+.tafseer-section {
+  --gold:#c9a84c;--gl:#e8cc7a;--gd:#6b4f0e;
+  --tx2:#f0e6cc;--mu2:#7a6a4a;--gr2:#52b788;
+  font-family:'Cairo',sans-serif;
+  max-width:500px;margin:0 auto;
+  padding-bottom: calc(var(--nav-h) + 80px);
+  position:relative;
+}
+.tafseer-section::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 120% 35% at 50% 0%,rgba(201,168,76,.11) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+.ts-hdr{padding:30px 20px 10px;text-align:center;position:relative;z-index:1}
+.ts-badge{font-size:10px;letter-spacing:5px;color:#c9a84c;opacity:.45;text-transform:uppercase;margin-bottom:6px}
+.ts-bis{font-size:22px;color:#c9a84c;opacity:.8;line-height:1.5;margin-bottom:2px}
+.ts-h1{font-size:34px;font-weight:700;background:linear-gradient(150deg,#e8cc7a,#c9a84c,#6b4f0e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15}
+.ts-desc{font-size:11px;color:#7a6a4a;margin-top:3px}
+.ts-divider{display:flex;align-items:center;gap:10px;margin:10px 22px 0;opacity:.28}
+.ts-divider::before,.ts-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent)}
+.ts-gem{width:5px;height:5px;background:#c9a84c;transform:rotate(45deg);flex-shrink:0}
+
+.ts-top{padding:10px 14px 0;position:sticky;top:0;z-index:20;background:rgba(9,9,11,.96);backdrop-filter:blur(18px);border-bottom:1px solid rgba(201,168,76,.05)}
+.ts-sbox{position:relative;margin-bottom:0}
+.ts-sico{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:15px;color:#c9a84c;opacity:.65;pointer-events:none}
+.ts-si{width:100%;padding:12px 42px 12px 13px;background:#202020;border:1px solid rgba(201,168,76,.14);border-radius:12px;color:#f0e6cc;font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:all .25s}
+.ts-si::placeholder{color:#7a6a4a}
+.ts-si:focus{border-color:rgba(201,168,76,.42);background:#2a2a2a}
+
+.ts-ayah-btn{display:flex;align-items:center;justify-content:center;gap:7px;margin:8px 0 0;padding:9px 14px;border-radius:11px;border:1px solid rgba(201,168,76,.22);background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(201,168,76,.03));color:#c9a84c;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;width:100%}
+.ts-ayah-btn:active{background:rgba(201,168,76,.15);transform:scale(.98)}
+.ts-ab-badge{font-size:10px;background:rgba(201,168,76,.15);padding:2px 7px;border-radius:20px;color:#e8cc7a}
+
+.ts-tabs{display:flex;gap:6px;padding:8px 0;overflow-x:auto;scrollbar-width:none}
+.ts-tabs::-webkit-scrollbar{display:none}
+.ts-tbtn{padding:6px 14px;border-radius:25px;border:1px solid rgba(201,168,76,.13);background:transparent;color:#7a6a4a;font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
+.ts-tbtn.active{background:linear-gradient(135deg,#6b4f0e,#c9a84c);border-color:transparent;color:#060606}
+
+.ts-list{padding:6px 12px 20px;position:relative;z-index:1}
+.ts-card{display:flex;align-items:center;gap:11px;padding:12px 13px;background:#101010;border-radius:14px;margin-bottom:6px;cursor:pointer;transition:background .15s,border-color .15s,transform .1s;border:1px solid rgba(255,255,255,.03);animation:tsFadeIn .22s ease both}
+.ts-card:active{transform:scale(0.982)}
+.ts-card.active{border-color:rgba(201,168,76,.28);background:linear-gradient(135deg,rgba(201,168,76,.08),transparent)}
+@keyframes tsFadeIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+
+.ts-cnum{width:37px;height:37px;border-radius:9px;background:#202020;border:1px solid rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;color:#c9a84c;font-weight:700;font-size:13px;flex-shrink:0;transition:all .2s;position:relative;overflow:hidden}
+.ts-card.active .ts-cnum{background:linear-gradient(135deg,#6b4f0e,#c9a84c);color:#060606;border-color:transparent}
+.ts-eq{display:none;align-items:flex-end;justify-content:center;gap:2px;height:15px;width:100%}
+.ts-eq span{width:3px;border-radius:2px;background:#060606;display:block}
+.ts-eq span:nth-child(1){animation:tsEqA .7s ease-in-out infinite}
+.ts-eq span:nth-child(2){animation:tsEqB .95s ease-in-out infinite}
+.ts-eq span:nth-child(3){animation:tsEqA .82s ease-in-out infinite .18s}
+.ts-card.active .ts-nt{display:none}
+.ts-card.active .ts-eq{display:flex}
+@keyframes tsEqA{0%,100%{height:3px}50%{height:14px}}
+@keyframes tsEqB{0%,100%{height:11px}50%{height:3px}}
+
+.ts-ci{flex:1;min-width:0}
+.ts-cn{font-size:18px;font-weight:700;line-height:1.2;color:#f0e6cc}
+.ts-card.active .ts-cn{color:#e8cc7a}
+.ts-cm{display:flex;align-items:center;gap:7px;margin-top:2px}
+.ts-badge{padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.ts-makki{background:rgba(201,168,76,.1);color:#c9a84c}
+.ts-madani{background:rgba(82,183,136,.15);color:#52b788}
+.ts-cay{font-size:11px;color:#7a6a4a}
+.ts-fbtn{background:none;border:none;font-size:16px;cursor:pointer;padding:5px;flex-shrink:0;opacity:.22;transition:opacity .2s,transform .15s;line-height:1}
+.ts-fbtn.on{opacity:1}
+.ts-fbtn:active{transform:scale(1.35)}
+.ts-pia{font-size:16px;color:#7a6a4a;flex-shrink:0;transition:color .2s;width:20px;text-align:center}
+.ts-card.active .ts-pia{color:#c9a84c}
+.ts-empty{text-align:center;padding:60px 20px;color:#7a6a4a}
+
+/* Sharawy Player */
+.ts-player{
+  position:fixed;bottom:var(--nav-h);left:10px;right:10px;max-width:480px;margin:0 auto;z-index:250;
+  background:linear-gradient(180deg,rgba(16,12,0,.97),rgba(6,6,6,.98));
+  border:1px solid rgba(201,168,76,.22);border-radius:22px;
+  box-shadow:0 -8px 40px rgba(0,0,0,.7);
+  transform:translateY(120%);transition:transform .42s cubic-bezier(.4,0,.2,1);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  display:none;
+}
+.ts-player.show{transform:translateY(0);display:block}
+.ts-drag{width:32px;height:4px;background:rgba(201,168,76,.2);border-radius:2px;margin:10px auto 0;cursor:pointer}
+.ts-ph{display:flex;align-items:center;gap:11px;padding:11px 16px 0}
+.ts-pimg{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#6b4f0e,#c9a84c);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.ts-pi{flex:1;min-width:0}
+.ts-pt{font-size:17px;font-weight:700;color:#e8cc7a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ts-ps{font-size:11px;color:#7a6a4a;margin-top:1px;display:flex;align-items:center;gap:5px}
+.ts-pdot{width:5px;height:5px;border-radius:50%;background:#c9a84c;flex-shrink:0}
+.ts-pdot.playing{animation:blink 1.3s infinite}
+.ts-pdot.loading{animation:blink .5s infinite}
+.ts-pcl{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,.16);background:transparent;color:#7a6a4a;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ts-perr{display:none;align-items:center;gap:8px;margin:0 16px 8px;padding:8px 12px;background:rgba(180,30,30,.12);border:1px solid rgba(180,30,30,.25);border-radius:9px;font-size:12px;color:#ffaaaa}
+.ts-perr.show{display:flex}
+.ts-pp{padding:10px 16px 0}
+.ts-ptime{display:flex;justify-content:space-between;font-size:10px;color:#7a6a4a;margin-bottom:5px}
+.ts-pbar{height:5px;background:rgba(255,255,255,.08);border-radius:3px;cursor:pointer;position:relative}
+.ts-pfill{height:100%;background:linear-gradient(90deg,#6b4f0e,#e8cc7a);border-radius:3px;width:0;transition:width .5s linear;pointer-events:none}
+.ts-pc{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px 14px}
+.ts-cbtn{background:none;border:none;color:#f0e6cc;font-size:14px;cursor:pointer;padding:6px 10px;border-radius:8px;font-family:'Cairo',sans-serif;font-weight:700;opacity:.7;transition:all .18s;display:flex;align-items:center;gap:3px;flex-direction:column}
+.ts-cbtn span{font-size:9px;opacity:.6}
+.ts-cbtn:active{opacity:1;background:rgba(201,168,76,.08)}
+.ts-playbtn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#6b4f0e,#c9a84c);border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#060606;transition:transform .15s,opacity .15s;flex-shrink:0}
+.ts-playbtn:active{transform:scale(.92)}
+.ts-playbtn.loading{animation:spin .8s linear infinite}
+.ts-ytbtn{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 16px 14px;padding:9px;border-radius:10px;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.05);color:#7a6a4a;font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .2s}
+.ts-ytbtn:active{background:rgba(201,168,76,.1);color:#c9a84c}
+
+/* Ayah Modal */
+.ts-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:400;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px)}
+.ts-modal-bg.show{opacity:1;pointer-events:all}
+.ts-modal{background:linear-gradient(180deg,#181818,#101010);border-radius:22px 22px 0 0;border-top:1px solid rgba(201,168,76,.2);width:100%;max-width:500px;padding:0 0 env(safe-area-inset-bottom,16px);transform:translateY(60px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.ts-modal-bg.show .ts-modal{transform:translateY(0)}
+.ts-modal-drag{width:32px;height:4px;background:rgba(201,168,76,.2);border-radius:2px;margin:12px auto 0}
+.ts-modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px}
+.ts-modal-title{font-size:18px;color:#e8cc7a;font-weight:700}
+.ts-modal-close{background:none;border:1px solid rgba(201,168,76,.15);color:#7a6a4a;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ts-modal-body{padding:0 16px 16px}
+.ts-modal-hint{font-size:12px;color:#7a6a4a;margin-bottom:12px;line-height:1.7;background:rgba(201,168,76,.05);border-radius:9px;padding:9px 12px;border:1px solid rgba(201,168,76,.08)}
+.ts-modal-hint b{color:#c9a84c}
+.ts-ayah-input{width:100%;padding:13px 15px;background:#202020;border:1px solid rgba(201,168,76,.2);border-radius:12px;color:#f0e6cc;font-family:'Cairo',sans-serif;font-size:15px;outline:none;resize:none;line-height:1.6;transition:border-color .2s}
+.ts-ayah-input:focus{border-color:rgba(201,168,76,.45)}
+.ts-ayah-input::placeholder{color:#7a6a4a}
+.ts-modal-search-btn{width:100%;margin-top:10px;padding:13px;background:linear-gradient(135deg,#6b4f0e,#c9a84c);border:none;border-radius:12px;color:#060606;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.ts-modal-search-btn:disabled{opacity:.5;cursor:not-allowed}
+.ts-modal-result{margin-top:12px;padding:12px 14px;border-radius:11px;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.05);display:none}
+.ts-modal-result.show{display:block}
+.ts-mr-surah{font-size:17px;color:#e8cc7a;font-weight:700;margin-bottom:4px}
+.ts-mr-ayah{font-size:12.5px;color:#7a6a4a;margin-bottom:10px;line-height:1.6;font-style:italic}
+.ts-mr-goto{width:100%;padding:11px;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08));border:1px solid rgba(201,168,76,.25);border-radius:10px;color:#c9a84c;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.ts-mr-goto:active{background:rgba(201,168,76,.25)}
+
 </style>
 </head>
 <body>
@@ -192,7 +326,99 @@ header p{font-size:.72rem;color:var(--dim);margin-top:2px}
   <div class="nav-item"        id="nav2" onclick="switchNav(2)"><span class="ni">🗞️</span>أخبار</div>
   <div class="nav-item"        id="nav3" onclick="switchNav(3)"><span class="ni">⚽</span>رياضة</div>
   <div class="nav-item"        id="nav4" onclick="showFavs()"><span class="ni">❤️</span>مفضلة</div>
+  <div class="nav-item"        id="nav5" onclick="switchNav(5)"><span class="ni">📖</span>تفسير</div>
 </nav>
+
+
+<!-- ══ TAFSEER SHARAWY SECTION ══ -->
+<div id="tafseer-section">
+  <div class="tafseer-section">
+    <div class="ts-hdr">
+      <div class="ts-badge">✦ خواطر قرآنية ✦</div>
+      <div class="ts-bis">بسم الله الرحمن الرحيم</div>
+      <div class="ts-h1">تفسير الشعراوي</div>
+      <div class="ts-desc">فضيلة الشيخ محمد متولي الشعراوي رحمه الله</div>
+      <div class="ts-divider"><div class="ts-gem"></div></div>
+    </div>
+
+    <div class="ts-top">
+      <div class="ts-sbox">
+        <span class="ts-sico">🔍</span>
+        <input class="ts-si" type="text" id="ts-si" placeholder="ابحث باسم السورة أو رقمها أو عدد الآيات..." oninput="sh_render()">
+      </div>
+      <button class="ts-ayah-btn" onclick="sh_openAyahModal()">
+        <span>📖</span>
+        <span>ابحث بنص الآية</span>
+        <span class="ts-ab-badge">فوري</span>
+      </button>
+      <div class="ts-tabs">
+        <button class="ts-tbtn active" onclick="sh_setTab('all',this)">كل السور</button>
+        <button class="ts-tbtn" onclick="sh_setTab('makki',this)">مكية</button>
+        <button class="ts-tbtn" onclick="sh_setTab('madani',this)">مدنية</button>
+        <button class="ts-tbtn" onclick="sh_setTab('fav',this)">⭐ المفضلة</button>
+      </div>
+    </div>
+
+    <div class="ts-list" id="ts-list"></div>
+  </div>
+</div>
+
+<!-- Tafseer Player -->
+<div class="ts-player" id="ts-player">
+  <div class="ts-drag" id="ts-drag"></div>
+  <div class="ts-ph">
+    <div class="ts-pimg">🎙️</div>
+    <div class="ts-pi">
+      <div class="ts-pt" id="ts-ptitle">–</div>
+      <div class="ts-ps"><div class="ts-pdot" id="ts-pdot"></div><span id="ts-psub">جاهز</span></div>
+    </div>
+    <button class="ts-pcl" onclick="sh_closePlayer()">✕</button>
+  </div>
+  <div class="ts-perr" id="ts-perr">
+    <span>⚠️</span><span id="ts-perrTxt">تعذر التحميل</span>
+  </div>
+  <div class="ts-pp">
+    <div class="ts-ptime"><span id="ts-tel">0:00</span><span id="ts-tdur">–:––</span></div>
+    <div class="ts-pbar" id="ts-pbar" onclick="sh_seekBar(event)"><div class="ts-pfill" id="ts-pfill"></div></div>
+  </div>
+  <div class="ts-pc">
+    <button class="ts-cbtn" onclick="sh_prevS()">⏮<span>السابقة</span></button>
+    <button class="ts-cbtn" onclick="sh_skip(-30)">⏪<span>30-</span></button>
+    <button class="ts-playbtn" id="ts-pbtn" onclick="sh_togglePlay()">▶</button>
+    <button class="ts-cbtn" onclick="sh_skip(30)">⏩<span>30+</span></button>
+    <button class="ts-cbtn" onclick="sh_nextS()">⏭<span>التالية</span></button>
+  </div>
+  <button class="ts-ytbtn" onclick="sh_openYT()">
+    ▶ فتح على يوتيوب للمشاهدة
+  </button>
+</div>
+
+<!-- Tafseer Ayah Modal -->
+<div class="ts-modal-bg" id="ts-ayahModal" onclick="sh_closeAyahModal(event)">
+  <div class="ts-modal">
+    <div class="ts-modal-drag"></div>
+    <div class="ts-modal-hdr">
+      <div class="ts-modal-title">🔍 البحث بنص الآية</div>
+      <button class="ts-modal-close" onclick="sh_closeAyahModalDirect()">✕</button>
+    </div>
+    <div class="ts-modal-body">
+      <div class="ts-modal-hint">
+        اكتب جزء من الآية أو اسمها الشهير مثل:<br>
+        <b>«الله لا إله إلا هو الحي القيوم»</b><br>
+        أو <b>«آية الكرسي»</b> أو <b>«تطمئن القلوب»</b>
+      </div>
+      <textarea class="ts-ayah-input" id="ts-ayahInput" rows="3" placeholder="اكتب نص الآية هنا..."></textarea>
+      <button class="ts-modal-search-btn" id="ts-ayahSearchBtn" onclick="sh_searchAyah()">
+        🔍 ابحث
+      </button>
+      <div class="ts-modal-result" id="ts-modalResult">
+        <div class="ts-mr-surah" id="ts-mrSurah"></div>
+        <div class="ts-mr-ayah" id="ts-mrAyah"></div>
+        <button class="ts-mr-goto" id="ts-mrGoto" onclick="sh_gotoAyah()">▶ اذهب للتفسير</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Timer Modal -->
 <div class="modal-overlay hidden" id="timerModal" onclick="closeTimer(event)">
@@ -674,6 +900,20 @@ function switchCat(i) {
 // ── NAV ──
 function switchNav(i) {
   document.querySelectorAll('.nav-item').forEach((n,j)=>n.classList.toggle('active',j===i));
+  // show/hide main page vs tafseer
+  const mainPage = document.querySelector('.page');
+  const tafseerSection = document.getElementById('tafseer-section');
+  if (i === 5) {
+    mainPage.style.display = 'none';
+    tafseerSection.classList.add('active');
+    if (window.sh_render) window.sh_render();
+    return;
+  }
+  mainPage.style.display = '';
+  tafseerSection.classList.remove('active');
+  // Hide tafseer player when leaving tafseer tab
+  const tsPlayer = document.getElementById('ts-player');
+  if (tsPlayer) { tsPlayer.classList.remove('show'); }
   // map nav to cat
   const map = [0,1,2,4,null];
   if (map[i] === null) { showFavs(); return; }
@@ -732,6 +972,10 @@ function render(list) {
 
 // ── FAVS VIEW ──
 function showFavs() {
+  document.querySelector('.page').style.display = '';
+  document.getElementById('tafseer-section').classList.remove('active');
+  const tsPlayer = document.getElementById('ts-player');
+  if (tsPlayer) tsPlayer.classList.remove('show');
   showingFavs = true;
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   const fb = document.getElementById('favTabBtn');
@@ -935,6 +1179,835 @@ function sendNotification(title, body) {
 function notifyPlaying(name) {
     sendNotification('📻 يُشغَّل الآن', name);
 }
+
+// ══════════ TAFSEER SHARAWY JS (scoped) ══════════
+(function() {
+// ── اللينك الأساسي من archive.org ──
+// المصدر: Khwater.El-Sharawy.Fi.Tafsir.EL-Quran-Karim-Up-By-mUSLEm
+// هذه الملفات مجمعة من الأصل وبجودة عالية
+const BASE = 'https://archive.org/download/Khwater.El-Sharawy.Fi.Tafsir.EL-Quran-Karim-Up-By-mUSLEm/';
+
+const SURAHS = [
+  {id:1,  name:'الفاتحة',   ayat:7,   type:'makki',  f:'001_Al-Fatihah.mp3'},
+  {id:2,  name:'البقرة',    ayat:286, type:'madani', f:'002_Al-Baqarah.mp3'},
+  {id:3,  name:'آل عمران',  ayat:200, type:'madani', f:'003_Al-Imran.mp3'},
+  {id:4,  name:'النساء',    ayat:176, type:'madani', f:'004_An-Nisa.mp3'},
+  {id:5,  name:'المائدة',   ayat:120, type:'madani', f:'005_Al-Maidah.mp3'},
+  {id:6,  name:'الأنعام',   ayat:165, type:'makki',  f:'006_Al-Anam.mp3'},
+  {id:7,  name:'الأعراف',   ayat:206, type:'makki',  f:'007_Al-Araf.mp3'},
+  {id:8,  name:'الأنفال',   ayat:75,  type:'madani', f:'008_Al-Anfal.mp3'},
+  {id:9,  name:'التوبة',    ayat:129, type:'madani', f:'009_At-Taubah.mp3'},
+  {id:10, name:'يونس',      ayat:109, type:'makki',  f:'010_Yunus.mp3'},
+  {id:11, name:'هود',       ayat:123, type:'makki',  f:'011_Hud.mp3'},
+  {id:12, name:'يوسف',      ayat:111, type:'makki',  f:'012_Yusuf.mp3'},
+  {id:13, name:'الرعد',     ayat:43,  type:'madani', f:'013_Ar-Rad.mp3'},
+  {id:14, name:'إبراهيم',   ayat:52,  type:'makki',  f:'014_Ibrahim.mp3'},
+  {id:15, name:'الحجر',     ayat:99,  type:'makki',  f:'015_Al-Hijr.mp3'},
+  {id:16, name:'النحل',     ayat:128, type:'makki',  f:'016_An-Nahl.mp3'},
+  {id:17, name:'الإسراء',   ayat:111, type:'makki',  f:'017_Al-Isra.mp3'},
+  {id:18, name:'الكهف',     ayat:110, type:'makki',  f:'018_Al-Kahf.mp3'},
+  {id:19, name:'مريم',      ayat:98,  type:'makki',  f:'019_Maryam.mp3'},
+  {id:20, name:'طه',        ayat:135, type:'makki',  f:'020_Ta-Ha.mp3'},
+  {id:21, name:'الأنبياء',  ayat:112, type:'makki',  f:'021_Al-Anbiya.mp3'},
+  {id:22, name:'الحج',      ayat:78,  type:'madani', f:'022_Al-Haj.mp3'},
+  {id:23, name:'المؤمنون',  ayat:118, type:'makki',  f:'023_Al-Muminen.mp3'},
+  {id:24, name:'النور',     ayat:64,  type:'madani', f:'024_An-Nur.mp3'},
+  {id:25, name:'الفرقان',   ayat:77,  type:'makki',  f:'025_Al-Furqan.mp3'},
+  {id:26, name:'الشعراء',   ayat:227, type:'makki',  f:'026_Ash-Shuara.mp3'},
+  {id:27, name:'النمل',     ayat:93,  type:'makki',  f:'027_An-Naml.mp3'},
+  {id:28, name:'القصص',     ayat:88,  type:'makki',  f:'028_Al-Qasas.mp3'},
+  {id:29, name:'العنكبوت',  ayat:69,  type:'makki',  f:'029_Al-Ankabot.mp3'},
+  {id:30, name:'الروم',     ayat:60,  type:'makki',  f:'030_Ar-Rum.mp3'},
+  {id:31, name:'لقمان',     ayat:34,  type:'makki',  f:'031_Luqman.mp3'},
+  {id:32, name:'السجدة',    ayat:30,  type:'makki',  f:'032_As-Sajdah.mp3'},
+  {id:33, name:'الأحزاب',   ayat:73,  type:'madani', f:'033_Al-Ahzab.mp3'},
+  {id:34, name:'سبأ',       ayat:54,  type:'makki',  f:'034_Saba.mp3'},
+  {id:35, name:'فاطر',      ayat:45,  type:'makki',  f:'035_Fatir.mp3'},
+  {id:36, name:'يس',        ayat:83,  type:'makki',  f:'036_Ya-Seen.mp3'},
+  {id:37, name:'الصافات',   ayat:182, type:'makki',  f:'037_As-Saffat.mp3'},
+  {id:38, name:'ص',         ayat:88,  type:'makki',  f:'038_Sad.mp3'},
+  {id:39, name:'الزمر',     ayat:75,  type:'makki',  f:'039_Az-Zumar.mp3'},
+  {id:40, name:'غافر',      ayat:85,  type:'makki',  f:'040_Ghafir.mp3'},
+  {id:41, name:'فصلت',      ayat:54,  type:'makki',  f:'041_Fussilat.mp3'},
+  {id:42, name:'الشورى',    ayat:53,  type:'makki',  f:'042_Ash-Shura.mp3'},
+  {id:43, name:'الزخرف',    ayat:89,  type:'makki',  f:'043_Az-Zukhruf.mp3'},
+  {id:44, name:'الدخان',    ayat:59,  type:'makki',  f:'044_Ad-Dukhan.mp3'},
+  {id:45, name:'الجاثية',   ayat:37,  type:'makki',  f:'045_Al-Jasiyah.mp3'},
+  {id:46, name:'الأحقاف',   ayat:35,  type:'makki',  f:'046_Al-Ahqaf.mp3'},
+  {id:47, name:'محمد',      ayat:38,  type:'madani', f:'047_Muhammad.mp3'},
+  {id:48, name:'الفتح',     ayat:29,  type:'madani', f:'048_Al-Fath.mp3'},
+  {id:49, name:'الحجرات',   ayat:18,  type:'madani', f:'049_Al-Hujurat.mp3'},
+  {id:50, name:'ق',         ayat:45,  type:'makki',  f:'050_Qaf.mp3'},
+  {id:51, name:'الذاريات',  ayat:60,  type:'makki',  f:'051_Adh-Dhariyat.mp3'},
+  {id:52, name:'الطور',     ayat:49,  type:'makki',  f:'052_At-Tur.mp3'},
+  {id:53, name:'النجم',     ayat:62,  type:'makki',  f:'053_An-Najm.mp3'},
+  {id:54, name:'القمر',     ayat:55,  type:'makki',  f:'054_Al-Qamar.mp3'},
+  {id:55, name:'الرحمن',    ayat:78,  type:'madani', f:'055_Ar-Rahman.mp3'},
+  {id:56, name:'الواقعة',   ayat:96,  type:'makki',  f:'056_Al-Waqiah.mp3'},
+  {id:57, name:'الحديد',    ayat:29,  type:'madani', f:'057_Al-Hadid.mp3'},
+  {id:58, name:'المجادلة',  ayat:22,  type:'madani', f:'058_Al-Mujadila.mp3'},
+  {id:59, name:'الحشر',     ayat:24,  type:'madani', f:'059_Al-Hashr.mp3'},
+  {id:60, name:'الممتحنة',  ayat:13,  type:'madani', f:'060_Al-Mumtahana.mp3'},
+  {id:61, name:'الصف',      ayat:14,  type:'madani', f:'061_As-Saff.mp3'},
+  {id:62, name:'الجمعة',    ayat:11,  type:'madani', f:'062_Al-Jumuah.mp3'},
+  {id:63, name:'المنافقون', ayat:11,  type:'madani', f:'063_Al-Munafiqun.mp3'},
+  {id:64, name:'التغابن',   ayat:18,  type:'madani', f:'064_At-Taghabun.mp3'},
+  {id:65, name:'الطلاق',    ayat:12,  type:'madani', f:'065_At-Talaq.mp3'},
+  {id:66, name:'التحريم',   ayat:12,  type:'madani', f:'066_At-Tahrim.mp3'},
+  {id:67, name:'الملك',     ayat:30,  type:'makki',  f:'067_Al-Mulk.mp3'},
+  {id:68, name:'القلم',     ayat:52,  type:'makki',  f:'068_Al-Qalam.mp3'},
+  {id:69, name:'الحاقة',    ayat:52,  type:'makki',  f:'069_Al-Haqqah.mp3'},
+  {id:70, name:'المعارج',   ayat:44,  type:'makki',  f:'070_Al-Maarij.mp3'},
+  {id:71, name:'نوح',       ayat:28,  type:'makki',  f:'071_Nuh.mp3'},
+  {id:72, name:'الجن',      ayat:28,  type:'makki',  f:'072_Al-Jinn.mp3'},
+  {id:73, name:'المزمل',    ayat:20,  type:'makki',  f:'073_Al-Muzzammil.mp3'},
+  {id:74, name:'المدثر',    ayat:56,  type:'makki',  f:'074_Al-Muddassir.mp3'},
+  {id:75, name:'القيامة',   ayat:40,  type:'makki',  f:'075_Al-Qiyamah.mp3'},
+  {id:76, name:'الإنسان',   ayat:31,  type:'madani', f:'076_Al-Insan.mp3'},
+  {id:77, name:'المرسلات',  ayat:50,  type:'makki',  f:'077_Al-Mursalat.mp3'},
+  {id:78, name:'النبأ',     ayat:40,  type:'makki',  f:'078_An-Naba.mp3'},
+  {id:79, name:'النازعات',  ayat:46,  type:'makki',  f:'079_An-Naziat.mp3'},
+  {id:80, name:'عبس',       ayat:42,  type:'makki',  f:'080_Abasa.mp3'},
+  {id:81, name:'التكوير',   ayat:29,  type:'makki',  f:'081_At-Takwir.mp3'},
+  {id:82, name:'الانفطار',  ayat:19,  type:'makki',  f:'082_Al-Infitar.mp3'},
+  {id:83, name:'المطففين',  ayat:36,  type:'makki',  f:'083_Al-Mutaffifin.mp3'},
+  {id:84, name:'الانشقاق',  ayat:25,  type:'makki',  f:'084_Al-Inshiqaq.mp3'},
+  {id:85, name:'البروج',    ayat:22,  type:'makki',  f:'085_Al-Buruj.mp3'},
+  {id:86, name:'الطارق',    ayat:17,  type:'makki',  f:'086_At-Tariq.mp3'},
+  {id:87, name:'الأعلى',    ayat:19,  type:'makki',  f:'087_Al-Ala.mp3'},
+  {id:88, name:'الغاشية',   ayat:26,  type:'makki',  f:'088_Al-Ghashiyah.mp3'},
+  {id:89, name:'الفجر',     ayat:30,  type:'makki',  f:'089_Al-Fajr.mp3'},
+  {id:90, name:'البلد',     ayat:20,  type:'makki',  f:'090_Al-Balad.mp3'},
+  {id:91, name:'الشمس',     ayat:15,  type:'makki',  f:'091_Ash-Shams.mp3'},
+  {id:92, name:'الليل',     ayat:21,  type:'makki',  f:'092_Al-Layl.mp3'},
+  {id:93, name:'الضحى',     ayat:11,  type:'makki',  f:'093_Ad-Duha.mp3'},
+  {id:94, name:'الشرح',     ayat:8,   type:'makki',  f:'094_Al-Inshirah.mp3'},
+  {id:95, name:'التين',     ayat:8,   type:'makki',  f:'095_At-Tin.mp3'},
+  {id:96, name:'العلق',     ayat:19,  type:'makki',  f:'096_Al-Alaq.mp3'},
+  {id:97, name:'القدر',     ayat:5,   type:'makki',  f:'097_Al-Qadr.mp3'},
+  {id:98, name:'البينة',    ayat:8,   type:'madani', f:'098_Al-Bayyinah.mp3'},
+  {id:99, name:'الزلزلة',   ayat:8,   type:'madani', f:'099_Az-Zalzalah.mp3'},
+  {id:100,name:'العاديات',  ayat:11,  type:'makki',  f:'100_Al-Adiyat.mp3'},
+  {id:101,name:'القارعة',   ayat:11,  type:'makki',  f:'101_Al-Qariah.mp3'},
+  {id:102,name:'التكاثر',   ayat:8,   type:'makki',  f:'102_At-Takasur.mp3'},
+  {id:103,name:'العصر',     ayat:3,   type:'makki',  f:'103_Al-Asr.mp3'},
+  {id:104,name:'الهمزة',    ayat:9,   type:'makki',  f:'104_Al-Humazah.mp3'},
+  {id:105,name:'الفيل',     ayat:5,   type:'makki',  f:'105_Al-Fil.mp3'},
+  {id:106,name:'قريش',      ayat:4,   type:'makki',  f:'106_Quraysh.mp3'},
+  {id:107,name:'الماعون',   ayat:7,   type:'makki',  f:'107_Al-Maun.mp3'},
+  {id:108,name:'الكوثر',    ayat:3,   type:'makki',  f:'108_Al-Kawthar.mp3'},
+  {id:109,name:'الكافرون',  ayat:6,   type:'makki',  f:'109_Al-Kafirun.mp3'},
+  {id:110,name:'النصر',     ayat:3,   type:'madani', f:'110_An-Nasr.mp3'},
+  {id:111,name:'المسد',     ayat:5,   type:'makki',  f:'111_Al-Masad.mp3'},
+  {id:112,name:'الإخلاص',   ayat:4,   type:'makki',  f:'112_Al-Ikhlas.mp3'},
+  {id:113,name:'الفلق',     ayat:5,   type:'makki',  f:'113_Al-Falaq.mp3'},
+  {id:114,name:'الناس',     ayat:6,   type:'makki',  f:'114_An-Nas.mp3'},
+];
+
+// State
+let aud = null, curId = null, playing = false, progT = null, tab = 'all';
+let favs = JSON.parse(localStorage.getItem('sh_favs')||'[]');
+let pendingSeekPct = null, pendingSeekLabel = null;
+
+// ── PLAY ──
+function playSurah(id) {
+  const s = SURAHS.find(x=>x.id===id);
+  if (!s) return;
+  if (curId===id) { togglePlay(); return; }
+
+  // Save position of current surah before switching
+  if (aud && curId && aud.currentTime > 5) {
+    localStorage.setItem('sh_pos_'+curId, aud.currentTime);
+  }
+
+  curId = id;
+  playing = false;
+  hideErr();
+  setStatus('loading','جاري التحميل...');
+
+  if (aud) { aud.pause(); aud.src=''; clearInterval(progT); }
+
+  aud = new Audio();
+  aud.crossOrigin = 'anonymous';
+  aud.preload = 'metadata';
+
+  // Flag to prevent false error during normal load
+  let loadSucceeded = false;
+
+  aud.addEventListener('canplay', ()=>{
+    loadSucceeded = true;
+    hideErr();
+    aud.play().then(()=>{
+      playing = true;
+      setStatus('playing','جاري التشغيل');
+      document.getElementById('ts-pbtn').textContent='⏸';
+      document.getElementById('ts-pbtn').classList.remove('loading');
+      startProg();
+      render();
+    }).catch(e=>{ onErr('لم يمكن تشغيل الصوت'); });
+  },{once:true});
+
+  // Only show error if load truly failed (not just slow network)
+  aud.addEventListener('error', ()=>{
+    if (!loadSucceeded) onErr('تعذر تحميل هذه السورة');
+  }, {once:true});
+
+  aud.addEventListener('ended', ()=>{
+    // Save finished surah
+    if(curId) localStorage.removeItem('sh_pos_'+curId);
+    const nx=SURAHS.find(x=>x.id===id+1);
+    if(nx) playSurah(nx.id);
+    else { playing=false; render(); }
+  });
+
+  // Restore saved position OR jump to pending ayah
+  aud.addEventListener('loadedmetadata', ()=>{
+    if (pendingSeekPct !== null) {
+      aud.currentTime = pendingSeekPct * aud.duration;
+      sh_toast(pendingSeekLabel || '📖 تم الانتقال للآية');
+      pendingSeekPct = null; pendingSeekLabel = null;
+    } else {
+      const saved=parseFloat(localStorage.getItem('sh_pos_'+id)||'0');
+      if(saved>10 && saved<aud.duration-10) {
+        aud.currentTime=saved;
+        sh_toast('▶ استئناف من '+fmt(saved));
+      }
+    }
+  },{once:true});
+
+  aud.src = BASE + s.f;
+  aud.load();
+
+  document.getElementById('ts-pbtn').textContent='⏳';
+  document.getElementById('ts-pbtn').classList.add('loading');
+  document.getElementById('ts-ptitle').textContent = 'سورة '+s.name;
+  setStatus('loading','جاري التحميل...');
+  document.getElementById('ts-player').classList.add('show');
+  render();
+}
+
+function onErr(msg) {
+  playing = false;
+  document.getElementById('ts-pbtn').textContent='▶';
+  document.getElementById('ts-pbtn').classList.remove('loading');
+  setStatus('idle','خطأ');
+  showErr(msg);
+  render();
+}
+
+function togglePlay() {
+  if (!aud) return;
+  if (playing) {
+    aud.pause(); playing=false;
+    // Save position on manual pause
+    if(curId && aud.currentTime > 5) localStorage.setItem('sh_pos_'+curId, aud.currentTime);
+    document.getElementById('ts-pbtn').textContent='▶';
+    setStatus('idle','متوقف مؤقتاً');
+  } else {
+    aud.play().then(()=>{
+      playing=true;
+      document.getElementById('ts-pbtn').textContent='⏸';
+      setStatus('playing','جاري التشغيل');
+      startProg();
+    }).catch(()=>onErr('تعذر الاستئناف'));
+  }
+  render();
+}
+
+function closePlayer() {
+  if(aud){
+    if(curId && aud.currentTime > 5) localStorage.setItem('sh_pos_'+curId, aud.currentTime);
+    aud.pause(); aud.src='';
+  }
+  clearInterval(progT);
+  playing=false; curId=null;
+  document.getElementById('ts-player').classList.remove('show');
+  render();
+}
+
+function skip(s) { if(aud) aud.currentTime=Math.max(0,aud.currentTime+s); }
+
+function prevS() {
+  if(!curId) return;
+  const i=SURAHS.findIndex(x=>x.id===curId);
+  if(i>0) playSurah(SURAHS[i-1].id); else sh_toast('هذه أول سورة');
+}
+function nextS() {
+  if(!curId) return;
+  const i=SURAHS.findIndex(x=>x.id===curId);
+  if(i<SURAHS.length-1) playSurah(SURAHS[i+1].id); else sh_toast('وصلت لآخر سورة');
+}
+
+function openYT() {
+  if(!curId) return;
+  const s=SURAHS.find(x=>x.id===curId);
+  window.open('https://www.youtube.com/results?search_query='+encodeURIComponent('تفسير الشعراوي سورة '+s.name+' كاملة'),'_blank');
+}
+
+// ── PROGRESS ──
+function startProg() {
+  clearInterval(progT);
+  progT=setInterval(()=>{
+    if(!aud||aud.paused) return;
+    const p=aud.duration?(aud.currentTime/aud.duration*100):0;
+    document.getElementById('ts-pfill').style.width=p+'%';
+    document.getElementById('ts-tel').textContent=fmt(aud.currentTime);
+    document.getElementById('ts-tdur').textContent=aud.duration?fmt(aud.duration):'–:––';
+    // Save position every 5s
+    if(curId && Math.floor(aud.currentTime)%5===0 && aud.currentTime>5)
+      localStorage.setItem('sh_pos_'+curId,aud.currentTime);
+  },800);
+}
+
+function seekBar(e) {
+  if(!aud||!aud.duration) return;
+  const r=document.getElementById('ts-pbar').getBoundingClientRect();
+  // RTL: right = start
+  const pct=(r.right-e.clientX)/r.width;
+  aud.currentTime=Math.max(0,Math.min(1,pct))*aud.duration;
+}
+
+function fmt(s){
+  if(!s||isNaN(s)) return'0:00';
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=Math.floor(s%60);
+  return (h?h+':':'')+(m<10&&h?'0':'')+m+':'+(sec<10?'0':'')+sec;
+}
+
+// ── STATUS ──
+function setStatus(state,msg) {
+  const dot=document.getElementById('ts-pdot');
+  dot.className='pdot';
+  if(state==='playing') dot.classList.add('playing');
+  else if(state==='loading') dot.classList.add('loading');
+  document.getElementById('ts-psub').textContent=msg;
+}
+function showErr(msg){document.getElementById('ts-perr').classList.add('show');document.getElementById('ts-perrTxt').textContent=msg;}
+function hideErr(){document.getElementById('ts-perr').classList.remove('show');}
+
+// ── FAV ──
+function toggleFav(e,id){
+  e.stopPropagation();
+  favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];
+  localStorage.setItem('sh_favs',JSON.stringify(favs));
+  if(favs.includes(id)) sh_toast('⭐ أُضيفت للمفضلة');
+  render();
+}
+
+// ── TAB ──
+function setTab(t,btn){
+  tab=t;
+  document.querySelectorAll('.ts-tbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ── RENDER ──
+function render(){
+  const q=document.getElementById('ts-si').value.trim();
+  let data=SURAHS.filter(s=>{
+    const mq=!q||s.name.includes(q)||String(s.id)===q||String(s.ayat)===q||('سورة '+s.name).includes(q);
+    const mt=tab==='all'||(tab==='makki'&&s.type==='makki')||(tab==='madani'&&s.type==='madani')||(tab==='fav'&&favs.includes(s.id));
+    return mq&&mt;
+  });
+  const wrap=document.getElementById('ts-list');
+  if(!data.length){wrap.innerHTML=`<div class="ts-empty"><div class="empty-i">🔍</div><div>لا توجد نتائج</div></div>`;return;}
+  wrap.innerHTML=data.map((s,i)=>{
+    const act=s.id===curId, fav=favs.includes(s.id);
+    return `<div class="ts-card${act?' active':''}" onclick="sh_playSurah(${s.id})" style="animation-delay:${Math.min(i*.022,.4)}s">
+      <div class="ts-cnum"><span class="ts-nt">${s.id}</span><div class="ts-eq"><span></span><span></span><span></span></div></div>
+      <div class="ts-ci">
+        <div class="ts-cn">سورة ${s.name}</div>
+        <div class="ts-cm"><span class="ts-badge ts-${s.type}">${s.type==='makki'?'مكية':'مدنية'}</span><span class="ts-cay">${s.ayat} آية</span></div>
+      </div>
+      <button class="ts-fbtn${fav?' on':''}" onclick="sh_toggleFav(event,${s.id})">⭐</button>
+      <div class="ts-pia">${act?'⏸':'▶'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── TOAST ──
+function sh_toast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── SWIPE DOWN to close ──
+let ty0=0;
+const pl=document.getElementById('ts-player');
+pl.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY},{passive:true});
+pl.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-ty0>70)closePlayer()},{passive:true});
+
+// ── AYAH DATABASE (offline) ──
+// كل إدخال: { surahId, ayahNum, keys: ['كلمات مميزة', 'أسماء شهيرة'] }
+const AYAH_DB = [
+  // ── الفاتحة ──
+  {s:1,a:1,  k:['بسم الله','بسملة','البسملة']},
+  {s:1,a:2,  k:['الحمد لله رب العالمين','الحمد']},
+  {s:1,a:5,  k:['إياك نعبد','إياك نستعين','صراط مستقيم']},
+  {s:1,a:7,  k:['أنعمت عليهم','غير المغضوب']},
+  // ── البقرة ──
+  {s:2,a:1,  k:['الم']},
+  {s:2,a:2,  k:['ذلك الكتاب لا ريب','هدى للمتقين']},
+  {s:2,a:30, k:['إني جاعل في الأرض خليفة','خليفة']},
+  {s:2,a:31, k:['علم آدم الأسماء','أسماء']},
+  {s:2,a:102,k:['هاروت وماروت','هاروت','ماروت','السحر','ببابل']},
+  {s:2,a:143,k:['وسطا','أمة وسطا','شهداء على الناس']},
+  {s:2,a:153,k:['استعينوا بالصبر والصلاة','الصابرين']},
+  {s:2,a:163,k:['إلهكم إله واحد','الرحمن الرحيم']},
+  {s:2,a:177,k:['ليس البر أن تولوا','البر']},
+  {s:2,a:183,k:['كتب عليكم الصيام','الصيام']},
+  {s:2,a:185,k:['شهر رمضان','رمضان','القرآن هدى للناس']},
+  {s:2,a:186,k:['وإذا سألك عبادي عني','أجيب دعوة الداع']},
+  {s:2,a:255,k:['آية الكرسي','الله لا إله إلا هو الحي القيوم','الكرسي','لا تأخذه سنة ولا نوم','وسع كرسيه']},
+  {s:2,a:256,k:['لا إكراه في الدين','الرشد من الغي','العروة الوثقى']},
+  {s:2,a:257,k:['الله ولي الذين آمنوا','الظلمات إلى النور']},
+  {s:2,a:261,k:['مثل الذين ينفقون','سبع سنابل','حبة']},
+  {s:2,a:275,k:['الربا','أحل الله البيع','حرم الربا']},
+  {s:2,a:282,k:['آية الدين','آية المداينة','تداينتم','اكتبوه']},
+  {s:2,a:284,k:['لله ما في السماوات وما في الأرض']},
+  {s:2,a:285,k:['آمن الرسول','آمنا وأطعنا','غفرانك ربنا']},
+  {s:2,a:286,k:['لا يكلف الله نفسا','ربنا لا تؤاخذنا','ربنا لا تحملنا']},
+  // ── آل عمران ──
+  {s:3,a:7,  k:['آيات محكمات','المتشابهات','أم الكتاب']},
+  {s:3,a:14, k:['زين للناس حب الشهوات','الشهوات']},
+  {s:3,a:18, k:['شهد الله أنه لا إله إلا هو','شهد الله']},
+  {s:3,a:26, k:['اللهم مالك الملك','تؤتي الملك من تشاء']},
+  {s:3,a:31, k:['إن كنتم تحبون الله فاتبعوني','قل إن كنتم تحبون']},
+  {s:3,a:37, k:['زكريا','كلما دخل عليها زكريا']},
+  {s:3,a:38, k:['هب لي من لدنك ذرية','هنالك دعا زكريا']},
+  {s:3,a:96, k:['أول بيت وضع للناس','بكة','مباركا']},
+  {s:3,a:97, k:['من دخله كان آمنا','حج البيت','استطاع إليه سبيلا']},
+  {s:3,a:102,k:['اتقوا الله حق تقاته','ولا تموتن إلا وأنتم مسلمون']},
+  {s:3,a:103,k:['واعتصموا بحبل الله','حبل الله','ولا تفرقوا']},
+  {s:3,a:110,k:['كنتم خير أمة','تأمرون بالمعروف','تنهون عن المنكر']},
+  {s:3,a:133,k:['سارعوا إلى مغفرة','جنة عرضها السماوات والأرض']},
+  {s:3,a:185,k:['كل نفس ذائقة الموت','ذائقة الموت']},
+  {s:3,a:190,k:['إن في خلق السماوات والأرض','أولي الألباب']},
+  {s:3,a:191,k:['ربنا ما خلقت هذا باطلا','الذين يذكرون الله قياما وقعودا']},
+  {s:3,a:200,k:['اصبروا وصابروا ورابطوا','رابطوا']},
+  // ── النساء ──
+  {s:4,a:1,  k:['يا أيها الناس اتقوا ربكم','خلقكم من نفس واحدة']},
+  {s:4,a:11, k:['يوصيكم الله في أولادكم','للذكر مثل حظ الأنثيين','الميراث']},
+  {s:4,a:34, k:['الرجال قوامون على النساء','قوامون']},
+  {s:4,a:48, k:['إن الله لا يغفر أن يشرك به','لا يغفر الشرك']},
+  {s:4,a:59, k:['أطيعوا الله وأطيعوا الرسول','أولي الأمر']},
+  {s:4,a:103,k:['الصلاة كانت على المؤمنين كتابا موقوتا','موقوتا']},
+  {s:4,a:136,k:['يا أيها الذين آمنوا آمنوا']},
+  // ── المائدة ──
+  {s:5,a:3,  k:['اليوم أكملت لكم دينكم','أتممت عليكم نعمتي','رضيت لكم الإسلام دينا']},
+  {s:5,a:32, k:['من قتل نفسا','كأنما قتل الناس جميعا','كأنما أحيا الناس جميعا']},
+  {s:5,a:38, k:['السارق والسارقة فاقطعوا']},
+  {s:5,a:48, k:['لكل جعلنا منكم شرعة ومنهاجا','شرعة ومنهاجا']},
+  {s:5,a:55, k:['إنما وليكم الله ورسوله','وليكم الله']},
+  // ── الأنعام ──
+  {s:6,a:59, k:['عنده مفاتح الغيب','مفاتح الغيب']},
+  {s:6,a:103,k:['لا تدركه الأبصار','وهو يدرك الأبصار','اللطيف الخبير']},
+  {s:6,a:151,k:['قل تعالوا أتل ما حرم ربكم','لا تشركوا به شيئا']},
+  {s:6,a:162,k:['إن صلاتي ونسكي ومحياي ومماتي','لله رب العالمين']},
+  // ── الأعراف ──
+  {s:7,a:54, k:['إن ربكم الله الذي خلق السماوات','سبعة أيام','استوى على العرش']},
+  {s:7,a:156,k:['ورحمتي وسعت كل شيء','رحمتي وسعت']},
+  {s:7,a:172,k:['ألست بربكم قالوا بلى','ميثاق الذر','الذر']},
+  {s:7,a:179,k:['ولقد ذرأنا لجهنم كثيرا','كالأنعام بل هم أضل']},
+  // ── الأنفال ──
+  {s:8,a:2,  k:['إنما المؤمنون الذين إذا ذكر الله وجلت قلوبهم']},
+  {s:8,a:24, k:['يا أيها الذين آمنوا استجيبوا لله وللرسول']},
+  {s:8,a:46, k:['أطيعوا الله ورسوله ولا تنازعوا']},
+  // ── التوبة ──
+  {s:9,a:40, k:['إذ يقول لصاحبه لا تحزن','لا تحزن إن الله معنا','ثاني اثنين','الغار']},
+  {s:9,a:51, k:['لن يصيبنا إلا ما كتب الله لنا','مولانا']},
+  {s:9,a:71, k:['المؤمنون والمؤمنات بعضهم أولياء بعض']},
+  {s:9,a:105,k:['اعملوا فسيرى الله عملكم','سيرى الله عملكم']},
+  {s:9,a:128,k:['لقد جاءكم رسول من أنفسكم','عزيز عليه ما عنتم']},
+  {s:9,a:129,k:['فإن تولوا فقل حسبي الله','حسبي الله لا إله إلا هو','توكلت وهو رب العرش العظيم']},
+  // ── يونس ──
+  {s:10,a:57,k:['يا أيها الناس قد جاءتكم موعظة','شفاء لما في الصدور']},
+  {s:10,a:62,k:['ألا إن أولياء الله لا خوف عليهم','لا خوف عليهم ولا هم يحزنون']},
+  // ── هود ──
+  {s:11,a:6, k:['ما من دابة في الأرض إلا على الله رزقها','رزقها']},
+  {s:11,a:88,k:['إن أريد إلا الإصلاح ما استطعت','ما توفيقي إلا بالله']},
+  // ── يوسف ──
+  {s:12,a:2, k:['إنا أنزلناه قرآنا عربيا']},
+  {s:12,a:4, k:['رأيت أحد عشر كوكبا','رؤيا يوسف']},
+  {s:12,a:18,k:['فصبر جميل والله المستعان']},
+  {s:12,a:64,k:['فالله خير حافظا وهو أرحم الراحمين']},
+  {s:12,a:87,k:['لا تيأسوا من روح الله','ولا ييأس من روح الله']},
+  {s:12,a:111,k:['لقد كان في قصصهم عبرة']},
+  // ── الرعد ──
+  {s:13,a:11,k:['إن الله لا يغير ما بقوم','حتى يغيروا ما بأنفسهم']},
+  {s:13,a:13,k:['ويسبح الرعد بحمده','الرعد']},
+  {s:13,a:28,k:['ألا بذكر الله تطمئن القلوب','تطمئن القلوب']},
+  // ── إبراهيم ──
+  {s:14,a:7, k:['لئن شكرتم لأزيدنكم','لئن كفرتم إن عذابي لشديد']},
+  {s:14,a:24,k:['كلمة طيبة كشجرة طيبة','شجرة طيبة']},
+  {s:14,a:34,k:['وإن تعدوا نعمة الله لا تحصوها']},
+  {s:14,a:35,k:['رب اجعل هذا البلد آمنا','إبراهيم دعاء']},
+  {s:14,a:40,k:['رب اجعلني مقيم الصلاة']},
+  {s:14,a:41,k:['ربنا اغفر لي ولوالدي']},
+  // ── الحجر ──
+  {s:15,a:9, k:['إنا نحن نزلنا الذكر وإنا له لحافظون','حافظون']},
+  // ── النحل ──
+  {s:16,a:43,k:['فاسألوا أهل الذكر','أهل الذكر']},
+  {s:16,a:68,k:['وأوحى ربك إلى النحل','النحل']},
+  {s:16,a:90,k:['إن الله يأمر بالعدل والإحسان','ينهى عن الفحشاء والمنكر','يعظكم']},
+  {s:16,a:97,k:['من عمل صالحا من ذكر أو أنثى','حياة طيبة']},
+  {s:16,a:98,k:['فإذا قرأت القرآن فاستعذ بالله']},
+  // ── الإسراء ──
+  {s:17,a:1, k:['سبحان الذي أسرى بعبده','الإسراء','المسجد الأقصى','المسجد الحرام']},
+  {s:17,a:23,k:['قضى ربك ألا تعبدوا إلا إياه','وبالوالدين إحسانا','لا تقل لهما أف']},
+  {s:17,a:24,k:['واخفض لهما جناح الذل','ربي ارحمهما كما ربياني صغيرا']},
+  {s:17,a:36,k:['لا تقف ما ليس لك به علم','السمع والبصر والفؤاد']},
+  {s:17,a:44,k:['تسبح له السماوات السبع والأرض']},
+  {s:17,a:78,k:['أقم الصلاة لدلوك الشمس','لدلوك الشمس']},
+  {s:17,a:79,k:['ومن الليل فتهجد به نافلة','مقاما محمودا']},
+  {s:17,a:85,k:['يسألونك عن الروح','الروح من أمر ربي']},
+  // ── الكهف ──
+  {s:18,a:10,k:['إذ أوى الفتية إلى الكهف','أصحاب الكهف','الكهف']},
+  {s:18,a:18,k:['وتحسبهم أيقاظا وهم رقود']},
+  {s:18,a:23,k:['ولا تقولن لشيء إني فاعل ذلك غدا','إلا أن يشاء الله']},
+  {s:18,a:28,k:['واصبر نفسك مع الذين يدعون ربهم']},
+  {s:18,a:29,k:['فمن شاء فليؤمن ومن شاء فليكفر']},
+  {s:18,a:39,k:['لولا إذ دخلت جنتك قلت ما شاء الله','ما شاء الله لا قوة إلا بالله']},
+  {s:18,a:45,k:['واضرب لهم مثل الحياة الدنيا','كالنبات']},
+  {s:18,a:46,k:['المال والبنون زينة الحياة الدنيا','الباقيات الصالحات']},
+  {s:18,a:50,k:['إبليس كان من الجن','أبى واستكبر']},
+  {s:18,a:65,k:['فوجدا عبدا من عبادنا','الخضر','علمناه من لدنا علما']},
+  {s:18,a:109,k:['قل لو كان البحر مدادا','نفدت كلمات الله']},
+  {s:18,a:110,k:['قل إنما أنا بشر مثلكم','فمن كان يرجو لقاء ربه']},
+  // ── مريم ──
+  {s:19,a:2, k:['ذكر رحمة ربك عبده زكريا']},
+  {s:19,a:4, k:['رب إني وهن العظم مني','واشتعل الرأس شيبا']},
+  {s:19,a:16,k:['مريم','واذكر في الكتاب مريم']},
+  {s:19,a:30,k:['قال إني عبد الله آتاني الكتاب','كلام عيسى في المهد']},
+  {s:19,a:35,k:['ما كان لله أن يتخذ من ولد']},
+  // ── طه ──
+  {s:20,a:1, k:['طه']},
+  {s:20,a:14,k:['إنني أنا الله لا إله إلا أنا','وأقم الصلاة لذكري']},
+  {s:20,a:25,k:['رب اشرح لي صدري','دعاء موسى','ربي اشرح']},
+  {s:20,a:46,k:['إنني معكما أسمع وأرى']},
+  {s:20,a:114,k:['رب زدني علما','ربي زدني علما']},
+  {s:20,a:130,k:['فاصبر على ما يقولون','وسبح بحمد ربك']},
+  // ── الأنبياء ──
+  {s:21,a:30,k:['أولم ير الذين كفروا أن السماوات والأرض كانتا رتقا','رتقا ففتقناهما']},
+  {s:21,a:87,k:['لا إله إلا أنت سبحانك إني كنت من الظالمين','دعاء يونس','ذا النون']},
+  {s:21,a:105,k:['أن الأرض يرثها عبادي الصالحون']},
+  {s:21,a:107,k:['وما أرسلناك إلا رحمة للعالمين','رحمة للعالمين']},
+  // ── الحج ──
+  {s:22,a:27,k:['وأذن في الناس بالحج','الأذان بالحج']},
+  {s:22,a:46,k:['أفلم يسيروا في الأرض','تعمى القلوب']},
+  // ── المؤمنون ──
+  {s:23,a:1, k:['قد أفلح المؤمنون']},
+  {s:23,a:12,k:['ولقد خلقنا الإنسان من سلالة من طين','سلالة من طين']},
+  {s:23,a:97,k:['رب أعوذ بك من همزات الشياطين','همزات الشياطين']},
+  // ── النور ──
+  {s:24,a:2, k:['الزانية والزاني فاجلدوا']},
+  {s:24,a:30,k:['قل للمؤمنين يغضوا من أبصارهم','غض البصر']},
+  {s:24,a:31,k:['قل للمؤمنات يغضضن من أبصارهن','الخمار']},
+  {s:24,a:35,k:['آية النور','الله نور السماوات والأرض','مشكاة','زجاجة','نور على نور','زيتونة']},
+  {s:24,a:41,k:['ألم تر أن الله يسبح له من في السماوات']},
+  // ── الفرقان ──
+  {s:25,a:63,k:['عباد الرحمن','وعباد الرحمن الذين يمشون على الأرض هونا']},
+  {s:25,a:74,k:['ربنا هب لنا من أزواجنا وذرياتنا قرة أعين']},
+  // ── الشعراء ──
+  {s:26,a:83,k:['رب هب لي حكما وألحقني بالصالحين','دعاء إبراهيم']},
+  // ── النمل ──
+  {s:27,a:40,k:['قبل أن يرتد إليك طرفك','عرش بلقيس']},
+  {s:27,a:62,k:['أمن يجيب المضطر إذا دعاه','المضطر']},
+  // ── القصص ──
+  {s:28,a:24,k:['رب إني لما أنزلت إلي من خير فقير','دعاء موسى رب إني']},
+  {s:28,a:77,k:['وابتغ فيما آتاك الله الدار الآخرة','ولا تنس نصيبك من الدنيا']},
+  // ── العنكبوت ──
+  {s:29,a:2, k:['أحسب الناس أن يتركوا','أن يقولوا آمنا وهم لا يفتنون']},
+  {s:29,a:45,k:['اتل ما أوحي إليك من الكتاب وأقم الصلاة','الصلاة تنهى عن الفحشاء والمنكر']},
+  {s:29,a:69,k:['والذين جاهدوا فينا لنهدينهم سبلنا','جاهدوا فينا']},
+  // ── الروم ──
+  {s:30,a:21,k:['ومن آياته أن خلق لكم من أنفسكم أزواجا','لتسكنوا إليها','مودة ورحمة']},
+  {s:30,a:30,k:['فطرة الله التي فطر الناس عليها','فطرت الله','الفطرة']},
+  // ── لقمان ──
+  {s:31,a:13,k:['يا بني لا تشرك بالله','إن الشرك لظلم عظيم']},
+  {s:31,a:17,k:['يا بني أقم الصلاة وأمر بالمعروف','واصبر على ما أصابك']},
+  {s:31,a:34,k:['إن الله عنده علم الساعة','خمس لا يعلمها إلا الله']},
+  // ── السجدة ──
+  {s:32,a:17,k:['فلا تعلم نفس ما أخفي لهم من قرة أعين']},
+  // ── الأحزاب ──
+  {s:33,a:21,k:['لقد كان لكم في رسول الله أسوة حسنة','أسوة حسنة']},
+  {s:33,a:35,k:['إن المسلمين والمسلمات','المسلمين والمسلمات']},
+  {s:33,a:40,k:['ما كان محمد أبا أحد من رجالكم','خاتم النبيين']},
+  {s:33,a:56,k:['إن الله وملائكته يصلون على النبي','صلوا عليه وسلموا تسليما','الصلاة على النبي']},
+  {s:33,a:72,k:['إنا عرضنا الأمانة على السماوات والأرض','الأمانة']},
+  // ── سبأ ──
+  {s:34,a:15,k:['لقد كان لسبأ في مسكنهم آية','سبأ','جنتان']},
+  // ── فاطر ──
+  {s:35,a:15,k:['يا أيها الناس أنتم الفقراء إلى الله','الفقراء إلى الله']},
+  {s:35,a:32,k:['فمنهم ظالم لنفسه ومنهم مقتصد','سابق بالخيرات']},
+  // ── يس ──
+  {s:36,a:1, k:['يس']},
+  {s:36,a:12,k:['إنا نحن نحيي الموتى','ونكتب ما قدموا وآثارهم']},
+  {s:36,a:82,k:['إنما أمره إذا أراد شيئا أن يقول له كن فيكون','كن فيكون']},
+  // ── الصافات ──
+  {s:37,a:102,k:['يا بني إني أرى في المنام أني أذبحك','رؤيا إبراهيم الذبح']},
+  {s:37,a:103,k:['فلما أسلما وتله للجبين']},
+  // ── ص ──
+  {s:38,a:35,k:['رب اغفر لي وهب لي ملكا','دعاء سليمان']},
+  {s:38,a:82,k:['قال فبعزتك لأغوينهم أجمعين','إبليس قال فبعزتك']},
+  // ── الزمر ──
+  {s:39,a:9, k:['أمن هو قانت آناء الليل','هل يستوي الذين يعلمون']},
+  {s:39,a:22,k:['أفمن شرح الله صدره للإسلام','شرح صدره']},
+  {s:39,a:53,k:['قل يا عبادي الذين أسرفوا على أنفسهم','لا تقنطوا من رحمة الله','يغفر الذنوب جميعا']},
+  {s:39,a:67,k:['وما قدروا الله حق قدره','والأرض جميعا قبضته']},
+  // ── غافر ──
+  {s:40,a:60,k:['ادعوني أستجب لكم','ادعوني']},
+  // ── فصلت ──
+  {s:41,a:30,k:['إن الذين قالوا ربنا الله ثم استقاموا','تتنزل عليهم الملائكة']},
+  {s:41,a:34,k:['ولا تستوي الحسنة ولا السيئة','ادفع بالتي هي أحسن']},
+  {s:41,a:53,k:['سنريهم آياتنا في الآفاق وفي أنفسهم','في الآفاق']},
+  // ── الشورى ──
+  {s:42,a:11,k:['ليس كمثله شيء','وهو السميع البصير']},
+  {s:42,a:38,k:['وأمرهم شورى بينهم','الشورى']},
+  // ── الزخرف ──
+  {s:43,a:3, k:['إنا جعلناه قرآنا عربيا']},
+  // ── الدخان ──
+  {s:44,a:3, k:['إنا أنزلناه في ليلة مباركة','ليلة مباركة']},
+  // ── الجاثية ──
+  {s:45,a:23,k:['أفرأيت من اتخذ إلهه هواه','اتخذ إلهه هواه']},
+  // ── الأحقاف ──
+  {s:46,a:15,k:['ووصينا الإنسان بوالديه إحسانا','رب أوزعني أن أشكر نعمتك']},
+  // ── محمد ──
+  {s:47,a:7, k:['إن تنصروا الله ينصركم','ينصركم']},
+  {s:47,a:19,k:['فاعلم أنه لا إله إلا الله']},
+  // ── الفتح ──
+  {s:48,a:1, k:['إنا فتحنا لك فتحا مبينا','فتحا مبينا']},
+  {s:48,a:29,k:['محمد رسول الله والذين معه','أشداء على الكفار رحماء بينهم']},
+  // ── الحجرات ──
+  {s:49,a:10,k:['إنما المؤمنون إخوة','المؤمنون إخوة']},
+  {s:49,a:11,k:['يا أيها الذين آمنوا لا يسخر قوم']},
+  {s:49,a:12,k:['يا أيها الذين آمنوا اجتنبوا كثيرا من الظن','الغيبة']},
+  {s:49,a:13,k:['يا أيها الناس إنا خلقناكم من ذكر وأنثى','إن أكرمكم عند الله أتقاكم']},
+  // ── ق ──
+  {s:50,a:16,k:['ونحن أقرب إليه من حبل الوريد','حبل الوريد']},
+  // ── الذاريات ──
+  {s:51,a:56,k:['وما خلقت الجن والإنس إلا ليعبدون','إلا ليعبدون']},
+  {s:51,a:58,k:['إن الله هو الرزاق ذو القوة المتين']},
+  // ── الطور ──
+  {s:52,a:21,k:['ألحقنا بهم ذريتهم','ذريتهم بإيمان']},
+  // ── النجم ──
+  {s:53,a:3, k:['وما ينطق عن الهوى','إن هو إلا وحي يوحى']},
+  {s:53,a:39,k:['وأن ليس للإنسان إلا ما سعى','ما سعى']},
+  // ── القمر ──
+  {s:54,a:17,k:['ولقد يسرنا القرآن للذكر','يسرنا القرآن']},
+  // ── الرحمن ──
+  {s:55,a:13,k:['فبأي آلاء ربكما تكذبان','آلاء ربكما']},
+  {s:55,a:26,k:['كل من عليها فان','ويبقى وجه ربك']},
+  {s:55,a:60,k:['هل جزاء الإحسان إلا الإحسان']},
+  // ── الواقعة ──
+  {s:56,a:1, k:['إذا وقعت الواقعة']},
+  {s:56,a:79,k:['لا يمسه إلا المطهرون']},
+  // ── الحديد ──
+  {s:57,a:3, k:['هو الأول والآخر والظاهر والباطن','الأول والآخر']},
+  {s:57,a:20,k:['اعلموا أنما الحياة الدنيا لعب ولهو','متاع الغرور']},
+  // ── المجادلة ──
+  {s:58,a:11,k:['يرفع الله الذين آمنوا والذين أوتوا العلم درجات']},
+  // ── الحشر ──
+  {s:59,a:18,k:['يا أيها الذين آمنوا اتقوا الله ولتنظر نفس','ما قدمت لغد']},
+  {s:59,a:22,k:['هو الله الذي لا إله إلا هو عالم الغيب والشهادة','هو الله الذي لا إله']},
+  {s:59,a:23,k:['هو الله الذي لا إله إلا هو الملك القدوس','الملك القدوس السلام']},
+  {s:59,a:24,k:['هو الله الخالق البارئ المصور','الخالق البارئ']},
+  // ── الممتحنة ──
+  {s:60,a:4, k:['قد كانت لكم أسوة حسنة في إبراهيم','تبرأنا منكم']},
+  // ── الصف ──
+  {s:61,a:4, k:['إن الله يحب الذين يقاتلون في سبيله صفا','صفا كأنهم بنيان مرصوص']},
+  // ── الجمعة ──
+  {s:62,a:9, k:['يا أيها الذين آمنوا إذا نودي للصلاة من يوم الجمعة','الجمعة']},
+  // ── المنافقون ──
+  {s:63,a:1, k:['إذا جاءك المنافقون']},
+  // ── التغابن ──
+  {s:64,a:16,k:['فاتقوا الله ما استطعتم','اتقوا الله ما استطعتم']},
+  // ── الطلاق ──
+  {s:65,a:3, k:['ومن يتوكل على الله فهو حسبه','إن الله بالغ أمره','جعل الله لكل شيء قدرا']},
+  {s:65,a:7, k:['لا يكلف الله نفسا إلا ما آتاها']},
+  // ── التحريم ──
+  {s:66,a:6, k:['يا أيها الذين آمنوا قوا أنفسكم وأهليكم نارا','قوا أنفسكم']},
+  {s:66,a:8, k:['توبوا إلى الله توبة نصوحا','توبة نصوحا']},
+  // ── الملك ──
+  {s:67,a:1, k:['تبارك الذي بيده الملك','بيده الملك','الملك تبارك']},
+  {s:67,a:2, k:['خلق الموت والحياة ليبلوكم','أحسن عملا']},
+  {s:67,a:15,k:['هو الذي جعل لكم الأرض ذلولا','فامشوا في مناكبها']},
+  // ── القلم ──
+  {s:68,a:4, k:['وإنك لعلى خلق عظيم','خلق عظيم']},
+  // ── الحاقة ──
+  {s:69,a:1, k:['الحاقة ما الحاقة']},
+  // ── المعارج ──
+  {s:70,a:19,k:['إن الإنسان خلق هلوعا','هلوعا']},
+  // ── نوح ──
+  {s:71,a:10,k:['استغفروا ربكم إنه كان غفارا','يرسل السماء عليكم مدرارا']},
+  {s:71,a:28,k:['رب اغفر لي ولوالدي','دعاء نوح']},
+  // ── الجن ──
+  {s:72,a:1, k:['قل أوحي إلي أنه استمع نفر من الجن','الجن']},
+  // ── المزمل ──
+  {s:73,a:20,k:['إن ربك يعلم أنك تقوم أدنى من ثلثي الليل']},
+  // ── المدثر ──
+  {s:74,a:1, k:['يا أيها المدثر قم فأنذر']},
+  // ── القيامة ──
+  {s:75,a:22,k:['وجوه يومئذ ناضرة إلى ربها ناظرة','رؤية الله']},
+  // ── الإنسان ──
+  {s:76,a:8, k:['ويطعمون الطعام على حبه مسكينا ويتيما وأسيرا']},
+  // ── النبأ ──
+  {s:78,a:1, k:['عم يتساءلون','عم']},
+  // ── النازعات ──
+  {s:79,a:1, k:['والنازعات غرقا']},
+  // ── عبس ──
+  {s:80,a:1, k:['عبس وتولى','أن جاءه الأعمى']},
+  // ── الانفطار ──
+  {s:82,a:6, k:['يا أيها الإنسان ما غرك بربك الكريم','ما غرك']},
+  // ── الانشراح ──
+  {s:94,a:5, k:['فإن مع العسر يسرا','مع العسر يسرا']},
+  {s:94,a:1, k:['ألم نشرح لك صدرك','الشرح']},
+  // ── القدر ──
+  {s:97,a:1, k:['إنا أنزلناه في ليلة القدر','ليلة القدر']},
+  {s:97,a:3, k:['ليلة القدر خير من ألف شهر','خير من ألف شهر']},
+  // ── البينة ──
+  {s:98,a:5, k:['وما أمروا إلا ليعبدوا الله مخلصين له الدين','حنفاء']},
+  // ── الزلزلة ──
+  {s:99,a:7, k:['فمن يعمل مثقال ذرة خيرا يره','مثقال ذرة']},
+  // ── العاديات ──
+  {s:100,a:1,k:['والعاديات ضبحا']},
+  // ── التكاثر ──
+  {s:102,a:1,k:['ألهاكم التكاثر','التكاثر']},
+  // ── العصر ──
+  {s:103,a:1,k:['والعصر إن الإنسان لفي خسر','العصر']},
+  // ── الفيل ──
+  {s:105,a:1,k:['ألم تر كيف فعل ربك بأصحاب الفيل','الفيل']},
+  // ── الكوثر ──
+  {s:108,a:1,k:['إنا أعطيناك الكوثر','الكوثر']},
+  // ── الكافرون ──
+  {s:109,a:1,k:['قل يا أيها الكافرون','الكافرون']},
+  // ── النصر ──
+  {s:110,a:1,k:['إذا جاء نصر الله والفتح','نصر الله والفتح']},
+  // ── المسد ──
+  {s:111,a:1,k:['تبت يدا أبي لهب','أبو لهب','المسد']},
+  // ── الإخلاص ──
+  {s:112,a:1,k:['قل هو الله أحد','الله الصمد','لم يلد ولم يولد','الإخلاص']},
+  // ── الفلق ──
+  {s:113,a:1,k:['قل أعوذ برب الفلق','الفلق']},
+  // ── الناس ──
+  {s:114,a:1,k:['قل أعوذ برب الناس','الناس','ملك الناس','إله الناس']},
+];
+
+function searchAyahOffline(q) {
+  if (!q || q.length < 2) return null;
+  q = q.trim();
+
+  // 1. ابحث في قاعدة البيانات بالكلمات المفتاحية
+  let best = null, bestScore = 0;
+  for (const entry of AYAH_DB) {
+    for (const k of entry.k) {
+      if (k.includes(q) || q.includes(k)) {
+        const score = k.length; // الأطول = أدق
+        if (score > bestScore) { bestScore = score; best = entry; }
+      }
+    }
+  }
+  if (best) return best;
+
+  // 2. بحث جزئي — أي كلمة في الاستعلام موجودة في الكلمات
+  const words = q.split(/\s+/).filter(w => w.length > 2);
+  for (const entry of AYAH_DB) {
+    for (const k of entry.k) {
+      for (const w of words) {
+        if (k.includes(w)) return entry;
+      }
+    }
+  }
+  return null;
+}
+
+function openAyahModal() {
+  document.getElementById('ts-ayahModal').classList.add('show');
+  setTimeout(()=>document.getElementById('ts-ayahInput').focus(), 300);
+  document.getElementById('ts-modalResult').classList.remove('show');
+  document.getElementById('ts-ayahInput').value = '';
+}
+
+function closeAyahModal(e) {
+  if (e.target === document.getElementById('ts-ayahModal')) closeAyahModalDirect();
+}
+function closeAyahModalDirect() {
+  document.getElementById('ts-ayahModal').classList.remove('show');
+}
+
+function searchAyah() {
+  const q = document.getElementById('ts-ayahInput').value.trim();
+  if (!q) { sh_toast('اكتب نص الآية أولاً'); return; }
+
+  const found = searchAyahOffline(q);
+  if (!found) {
+    document.getElementById('ts-modalResult').classList.remove('show');
+    sh_toast('⚠️ لم أجد هذه الآية — جرب كلمات أخرى منها');
+    return;
+  }
+
+  const surah = SURAHS.find(s => s.id === found.s);
+  if (!surah) return;
+
+  const pct = Math.round((found.a / surah.ayat) * 100);
+  ayahResult = { surahId: surah.id, surahName: surah.name, ayahNum: found.a, totalAyat: surah.ayat };
+
+  document.getElementById('ts-mrSurah').textContent =
+    `سورة ${surah.name} — الآية ${found.a} من ${surah.ayat}`;
+  document.getElementById('ts-mrAyah').textContent = found.k[0];
+  document.getElementById('ts-mrGoto').textContent =
+    `▶ اذهب للتفسير  (~${pct}% من السورة)`;
+  document.getElementById('ts-modalResult').classList.add('show');
+}
+
+function gotoAyah() {
+  if (!ayahResult) return;
+  closeAyahModalDirect();
+
+  const surah = SURAHS.find(s => s.id === ayahResult.surahId);
+  if (!surah) { sh_toast('السورة غير موجودة'); return; }
+
+  // Store target position as percentage
+  const targetPct = ayahResult.ayahNum / ayahResult.totalAyat;
+
+  // If same surah already loaded, jump directly
+  if (curId === surah.id && aud && aud.duration) {
+    aud.currentTime = targetPct * aud.duration;
+    sh_toast(`📖 الآية ${ayahResult.ayahNum} — سورة ${ayahResult.surahName}`);
+    return;
+  }
+
+  // Otherwise play surah then seek after metadata loads
+  pendingSeekPct = targetPct;
+  pendingSeekLabel = `📖 الآية ${ayahResult.ayahNum} — سورة ${ayahResult.surahName}`;
+  playSurah(surah.id);
+}
+
+// ── INIT ──
+render();
+
+
+// Expose public API
+window.sh_playSurah    = playSurah;
+window.sh_togglePlay   = togglePlay;
+window.sh_closePlayer  = closePlayer;
+window.sh_prevS        = prevS;
+window.sh_nextS        = nextS;
+window.sh_skip         = skip;
+window.sh_openYT       = openYT;
+window.sh_seekBar      = seekBar;
+window.sh_setTab       = setTab;
+window.sh_toggleFav    = toggleFav;
+window.sh_openAyahModal     = openAyahModal;
+window.sh_closeAyahModal    = closeAyahModal;
+window.sh_closeAyahModalDirect = closeAyahModalDirect;
+window.sh_searchAyah   = searchAyah;
+window.sh_gotoAyah     = gotoAyah;
+window.sh_render       = render;
+window.sh_initTafseer  = render;
+
+})(); // end IIFE
 
 // ── INIT ──
 initTabs();
