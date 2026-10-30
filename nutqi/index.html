@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نُطقى الصح</title>
-<meta name="build" content="1.03">
+<meta name="build" content="1.04">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7c86">
 <link rel="icon" href="icon-192.png">
@@ -253,7 +253,36 @@ function pickVoice(){
          f(function(v){return norm(v.lang)===alt.toLowerCase();})||f(function(v){return norm(v.lang).indexOf("en")===0;});
 }
 function sp(w,slow,cb){speak(w.say,slow,cb);}
+/* ===== أصوات مسجّلة (ElevenLabs · Alice البريطانى) ===== */
+var AUDIO={"happy":"happy","sad":"sad","excited":"excited","angry":"angry","shy":"shy","tired":"tired","bored":"bored","scared":"scared","fence":"fence","team":"team","sound":"sound","hole":"hole","follow":"follow","jump":"jump","lick":"lick","solve":"solve","feel":"feel","felt":"felt","hear":"hear","heard":"heard","hold":"hold","held":"held","stuck in":"stuck-in","in trouble":"in-trouble","jump free":"jump-free","pull out":"pull-out","sunny":"sunny","knee":"knee","swing":"swing","zoo":"zoo","face":"face","park":"park","picture":"picture","movie":"movie","scary":"scary","friend":"friend","draw":"draw","drew":"drew","fall":"fall","fell":"fell","hurt":"hurt","say":"say","said":"said","smile at":"smile-at","on the swing":"on-the-swing","a helping hand":"a-helping-hand","stand up":"stand-up","nervous":"nervous","game":"game","match":"match","goal":"goal","gift":"gift","worried":"worried","when":"when","after":"after","before":"before","win":"win","start":"start","score":"score","receive":"receive","stop. stopped":"stop-stopped","make mistakes":"make-mistakes","worried about":"worried-about","city":"city","pencil":"pencil","nice":"nice","ice":"ice","cent":"cent","cat":"cat","cold":"cold","stuck":"stuck","cry":"cry","carry":"carry","carefully":"carefully","licked":"licked","come":"come","quickly":"quickly","dog":"dog","bird":"bird","fish":"fish","duck":"duck","horse":"horse","rabbit":"rabbit","monkey":"monkey","lion":"lion","elephant":"elephant","red":"red","blue":"blue","green":"green","yellow":"yellow","black":"black","white":"white","brown":"brown","pink":"pink","purple":"purple","orange":"orange","one":"one","two":"two","three":"three","four":"four","five":"five","six":"six","seven":"seven","eight":"eight","nine":"nine","ten":"ten","mother":"mother","father":"father","brother":"brother","sister":"sister","baby":"baby","grandma":"grandma","grandpa":"grandpa","family":"family","pen":"pen","book":"book","bag":"bag","ruler":"ruler","desk":"desk","teacher":"teacher","school":"school","board":"board","eraser":"eraser","head":"head","eye":"eye","ear":"ear","nose":"nose","mouth":"mouth","teeth":"teeth","hand":"hand","leg":"leg","foot":"foot","hair":"hair","apple":"apple","banana":"banana","bread":"bread","milk":"milk","egg":"egg","rice":"rice","cake":"cake","juice":"juice","water":"water","chicken":"chicken","shirt":"shirt","T-shirt":"t-shirt","dress":"dress","cap":"cap","hat":"hat","coat":"coat","shoes":"shoes","socks":"socks","rainy":"rainy","cloudy":"cloudy","windy":"windy","hot":"hot","snowy":"snowy","home":"home","shop":"shop","farm":"farm","hospital":"hospital","library":"library","garden":"garden","followed":"followed","jumped":"jumped","solved":"solved","cried":"cried","started":"started","scored":"scored","received":"received","stopped":"stopped","played":"played","walked":"walked","wanted":"wanted","needed":"needed","helped":"helped","opened":"opened","painted":"painted","cooked":"cooked","watched":"watched","cleaned":"cleaned","visited":"visited","landed":"landed","washed":"washed","kicked":"kicked","planted":"planted","pear":"pear","bear":"bear","bark":"bark","pin":"pin","bin":"bin","van":"van","fan":"fan","vine":"vine","fine":"fine","tree":"tree","mouse":"mouse","think":"think","sink":"sink"};
+var curAud=null,audTok=0;
+function stopAud(){audTok++;if(curAud){try{curAud.pause();}catch(e){}curAud=null;}}
+function clipsFor(text){
+  var t=text.trim();if(AUDIO[t])return [AUDIO[t]];
+  var parts=t.split(". "),out=[];
+  for(var i=0;i<parts.length;i++){var p=parts[i].replace(/[.]$/,"");if(!AUDIO[p])return null;out.push(AUDIO[p]);}
+  return out;
+}
+function playClips(list,slow,cb,fallback){
+  var tok=++audTok,i=0,done=false;
+  function fin(){if(done)return;done=true;if(cb)cb();}
+  function next(){
+    if(tok!==audTok)return;
+    if(i>=list.length){fin();return;}
+    var a=new Audio("audio/"+list[i]+".mp3");i++;curAud=a;
+    a.playbackRate=slow?0.65:1;try{a.preservesPitch=true;a.mozPreservesPitch=true;a.webkitPreservesPitch=true;}catch(e){}
+    a.onended=function(){setTimeout(next,i<list.length?350:0);};
+    a.onerror=function(){if(i===1&&tok===audTok){fallback();}else{next();}};
+    var pr=a.play();if(pr&&pr.catch)pr.catch(function(){if(i===1&&tok===audTok)fallback();});
+  }
+  next();
+}
 function speak(text,slow,cb){
+  stopAud();if(synth)synth.cancel();
+  if(S.accent==="en-GB"){var cl=clipsFor(text);if(cl){playClips(cl,slow,cb,function(){ttsSpeak(text,slow,cb);});return;}}
+  ttsSpeak(text,slow,cb);
+}
+function ttsSpeak(text,slow,cb){
   if(!synth){toast("الجهاز ده مش بيدعم نطق الكلام. جرّب Chrome.");return;}
   var v=pickVoice();
   if(!v&&voices.length){toast("مفيش صوت إنجليزى على الجهاز ده.");return;}
@@ -264,7 +293,7 @@ function speak(text,slow,cb){
   if(cb){var done=false;var fin=function(){if(!done){done=true;cb();}};u.onend=fin;u.onerror=fin;setTimeout(fin,Math.max(2500,text.length*260));}
   synth.speak(u);
 }
-document.addEventListener("visibilitychange",function(){if(document.hidden&&synth)synth.cancel();});
+document.addEventListener("visibilitychange",function(){if(document.hidden){if(synth)synth.cancel();stopAud();}});
 
 /* ===== التعرّف على الكلام (عند توفّره) ===== */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
@@ -281,7 +310,7 @@ function score(target,alts){
 function listen(word,out,btn){
   if(!micOK){return;}
   try{if(rec)rec.abort();}catch(e){}
-  if(synth)synth.cancel();
+  if(synth)synth.cancel();stopAud();
   rec=new SR(); rec.lang=S.accent; rec.maxAlternatives=5; rec.interimResults=false; rec.continuous=false;
   btn.classList.add("on"); btn.lastChild.textContent=" بسمعك…";
   out.className="result"; out.innerHTML="<span>قول الكلمة دلوقتى</span>";
@@ -351,7 +380,7 @@ function renderWords(){
   });
   V.appendChild(g);
   var set=el("div","set");set.appendChild(el("span",null,"النطق:"));
-  [["en-GB","بريطانى"],["en-US","أمريكى"]].forEach(function(a){var c=el("button","chip",a[1]);c.setAttribute("aria-pressed",S.accent===a[0]?"true":"false");c.onclick=function(){S.accent=a[0];save();renderWords();speak("Hello",false);};set.appendChild(c);});
+  [["en-GB","بريطانى (صوت مسجّل)"],["en-US","أمريكى (صوت الجهاز)"]].forEach(function(a){var c=el("button","chip",a[1]);c.setAttribute("aria-pressed",S.accent===a[0]?"true":"false");c.onclick=function(){S.accent=a[0];save();renderWords();speak("happy",false);};set.appendChild(c);});
   var leg=el("span",null," · النقطة الحمرا على الكارت = فيها صوت محتاج انتباه");set.appendChild(leg);
   V.appendChild(set);
 }
@@ -563,7 +592,7 @@ function recorder(w){
   var mr=null,chunks=[],stopT=null,stream=null;
   rb.onclick=function(){
     if(mr&&mr.state==="recording"){mr.stop();return;}
-    if(synth)synth.cancel();
+    if(synth)synth.cancel();stopAud();
     navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
       stream=st;chunks=[];
       try{mr=new MediaRecorder(st);}catch(e){st.getTracks().forEach(function(t){t.stop();});note.textContent="التسجيل مش مدعوم على الجهاز ده.";return;}
@@ -641,7 +670,7 @@ function renderStars(){
 var tabs=document.querySelectorAll(".tab");
 function setTab(name,silent){
   Array.prototype.forEach.call(tabs,function(t){t.setAttribute("aria-current",t.getAttribute("data-tab")===name?"true":"false");});
-  if(synth)synth.cancel();
+  if(synth)synth.cancel();stopAud();
   if(silent)return;
   if(name==="words")renderWords();else if(name==="quiz"){Q=null;GAME=null;renderQuiz();}else if(name==="pairs")renderPairs();else renderStars();
 }
