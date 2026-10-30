@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نُطقى الصح</title>
-<meta name="build" content="1.04">
+<meta name="build" content="1.05">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7c86">
 <link rel="icon" href="icon-192.png">
@@ -234,7 +234,7 @@ CATS.forEach(function(c){c.list=c.w.map(function(s){var a=s.split("|");var o={en
 /* ===== التخزين المحلى (محمى) ===== */
 var KEY="nutqi_v1";
 var S={best:{},accent:"en-GB",games:{}};
-try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.accent=p.accent||"en-GB";S.games=p.games||{};}}}catch(e){}
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.games=p.games||{};}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function totalStars(){var t=0;for(var k in S.best){t+=S.best[k];}return t;}
 function setBest(w,n){if(!S.best[w]||S.best[w]<n){S.best[w]=n;save();}refreshStars();}
@@ -246,7 +246,7 @@ function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];}
 if(synth){loadVoices();try{synth.addEventListener("voiceschanged",loadVoices);}catch(e){synth.onvoiceschanged=loadVoices;}}
 function pickVoice(){
   if(!voices.length)loadVoices();
-  var want=S.accent,alt=want==="en-GB"?"en-US":"en-GB";
+  var want="en-GB",alt="en-GB";
   function f(fn){for(var i=0;i<voices.length;i++){if(fn(voices[i]))return voices[i];}return null;}
   function norm(l){return (l||"").replace("_","-").toLowerCase();}
   return f(function(v){return norm(v.lang)===want.toLowerCase()&&v.localService;})||f(function(v){return norm(v.lang)===want.toLowerCase();})||
@@ -379,9 +379,8 @@ function renderWords(){
     g.appendChild(b);
   });
   V.appendChild(g);
-  var set=el("div","set");set.appendChild(el("span",null,"النطق:"));
-  [["en-GB","بريطانى (صوت مسجّل)"],["en-US","أمريكى (صوت الجهاز)"]].forEach(function(a){var c=el("button","chip",a[1]);c.setAttribute("aria-pressed",S.accent===a[0]?"true":"false");c.onclick=function(){S.accent=a[0];save();renderWords();speak("happy",false);};set.appendChild(c);});
-  var leg=el("span",null," · النقطة الحمرا على الكارت = فيها صوت محتاج انتباه");set.appendChild(leg);
+  var set=el("div","set");
+  var leg=el("span",null,"النقطة الحمرا على الكارت = فيها صوت محتاج انتباه");set.appendChild(leg);
   V.appendChild(set);
 }
 function renderCard(cat,i){
