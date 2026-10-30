@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نُطقى الصح</title>
-<meta name="build" content="1.05">
+<meta name="build" content="1.06">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7c86">
 <link rel="icon" href="icon-192.png">
@@ -38,6 +38,7 @@
   --ok:#5ccf8a; --ok-soft:#173a28; --warn:#f0a35a; --warn-soft:#3d2a17; --red:#f07a6c; --red-soft:#3f1f1c;
   --shadow:0 2px 0 #0d171e, 0 6px 18px rgba(0,0,0,.3); color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-ar);line-height:1.7;
   background-image:repeating-linear-gradient(to bottom,transparent 0 35px,var(--rule) 35px 36px);}
 .wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 120px}
@@ -52,6 +53,32 @@ header p{margin:0;color:var(--ink-2);font-size:14px}
 .install p{margin:0;flex:1;font-size:14px;min-width:0}
 .install .btn{min-height:44px;padding:8px 16px}
 .install .x{border:0;background:none;color:var(--ink-2);font-size:22px;cursor:pointer;min-width:44px;min-height:44px}
+.stars-pill.fire{color:var(--warn)}
+.stars-pill.fire + .stars-pill{margin-inline-start:0}
+.daily{display:flex;align-items:center;gap:12px;background:var(--sun-soft);border:1.5px solid var(--sun);border-radius:var(--r);padding:12px 16px;margin-bottom:12px}
+.daily .em{font-size:32px;flex:none}
+.daily div{flex:1;min-width:0}
+.daily b{display:block;font-size:16px}
+.daily span{font-size:13px;color:var(--ink-2)}
+.daily.done{background:var(--ok-soft);border-color:var(--ok)}
+.story{display:grid;gap:12px}
+.sline{background:var(--sheet);border:1.5px solid var(--rule);border-radius:18px;padding:12px 16px;box-shadow:var(--shadow);display:grid;gap:8px}
+.sline.active{border-color:var(--teal);background:var(--teal-soft)}
+.stext{font-family:var(--f-en);font-size:22px;line-height:1.6;direction:ltr;text-align:left;font-weight:500}
+.stext span{border-radius:6px;padding:0 2px;transition:background .1s}
+.stext span.v{color:var(--teal);font-weight:700;text-decoration:underline;text-decoration-color:var(--sun);text-decoration-thickness:3px;text-underline-offset:4px;cursor:pointer}
+.stext span.now{background:var(--sun);color:#1d3a4a}
+.sar{color:var(--ink-2);font-size:15px}
+.srow{display:flex;gap:8px;flex-wrap:wrap}
+.srow .btn{min-height:44px;padding:6px 14px;font-size:14px}
+.cq{font-family:var(--f-en);font-size:26px;line-height:1.5;direction:ltr;text-align:center;font-weight:600}
+.cq .gap{display:inline-block;min-width:3.5em;border-bottom:4px solid var(--sun);color:var(--teal)}
+.cq .gap.bad{color:var(--red);border-color:var(--red)}
+.copts{display:grid;gap:10px;width:100%;max-width:420px}
+.copts button{display:flex;align-items:center;gap:12px;font:600 22px var(--f-en);min-height:60px;border-radius:16px;border:2px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer;padding:8px 16px;direction:ltr}
+.copts button i{font-style:normal;color:var(--muted);font-size:18px}
+.copts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.copts button.wrong{border-color:var(--red);background:var(--red-soft)}
 .notice{background:var(--sun-soft);border:1px dashed var(--sun);border-radius:14px;padding:10px 14px;font-size:14px;margin-bottom:16px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
@@ -169,6 +196,7 @@ nav.tabs{position:fixed;inset-inline:0;bottom:0;background:var(--sheet);border-t
   <header class="top">
     <div class="logo" aria-hidden="true">Aa</div>
     <div><h1>نُطقى الصح</h1><p>نطق كلمات الإنجليزى — الصف الثالث الابتدائى</p></div>
+    <div class="stars-pill fire" id="streakPill" title="أيام متتالية" hidden><span>🔥</span><span id="streakN">0</span></div>
     <div class="stars-pill" title="مجموع النجوم"><span class="s">★</span><span id="starTotal">0</span></div>
   </header>
   <div id="install" class="install" hidden><img src="icon-192.png" alt=""><p id="installTxt">ثبّت «نطقى» على الجهاز ويشتغل من غير نت.</p><button id="installBtn" class="btn main" hidden>ثبّت</button><button id="installX" class="x" aria-label="إخفاء">×</button></div>
@@ -234,11 +262,16 @@ CATS.forEach(function(c){c.list=c.w.map(function(s){var a=s.split("|");var o={en
 /* ===== التخزين المحلى (محمى) ===== */
 var KEY="nutqi_v1";
 var S={best:{},accent:"en-GB",games:{}};
-try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.games=p.games||{};}}}catch(e){}
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.games=p.games||{};S.streak=p.streak||{};}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function totalStars(){var t=0;for(var k in S.best){t+=S.best[k];}return t;}
 function setBest(w,n){if(!S.best[w]||S.best[w]<n){S.best[w]=n;save();}refreshStars();}
-function refreshStars(){document.getElementById("starTotal").textContent=totalStars();}
+function refreshStars(){document.getElementById("starTotal").textContent=totalStars();refreshStreak();}
+function dayStr(d){d=d||new Date();var m=d.getMonth()+1,x=d.getDate();return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(x<10?"0":"")+x;}
+function streakNow(){var st=S.streak||{};if(!st.last)return 0;var y=new Date();y.setDate(y.getDate()-1);return (st.last===dayStr()||st.last===dayStr(y))?(st.n||0):0;}
+function refreshStreak(){var n=streakNow();var p=document.getElementById("streakPill");if(!p)return;p.hidden=n<1;document.getElementById("streakN").textContent=n;}
+function markReview(){var st=S.streak||{};var t=dayStr();if(st.last===t)return;var y=new Date();y.setDate(y.getDate()-1);
+  S.streak={last:t,n:(st.last===dayStr(y)?(st.n||0)+1:1)};save();refreshStreak();}
 
 /* ===== الصوت (mwri-voice): انتظار الأصوات، cancel قبل كل نطق، صوت إنجليزى فقط ===== */
 var synth=window.speechSynthesis||null,voices=[];
@@ -254,7 +287,7 @@ function pickVoice(){
 }
 function sp(w,slow,cb){speak(w.say,slow,cb);}
 /* ===== أصوات مسجّلة (ElevenLabs · Alice البريطانى) ===== */
-var AUDIO={"happy":"happy","sad":"sad","excited":"excited","angry":"angry","shy":"shy","tired":"tired","bored":"bored","scared":"scared","fence":"fence","team":"team","sound":"sound","hole":"hole","follow":"follow","jump":"jump","lick":"lick","solve":"solve","feel":"feel","felt":"felt","hear":"hear","heard":"heard","hold":"hold","held":"held","stuck in":"stuck-in","in trouble":"in-trouble","jump free":"jump-free","pull out":"pull-out","sunny":"sunny","knee":"knee","swing":"swing","zoo":"zoo","face":"face","park":"park","picture":"picture","movie":"movie","scary":"scary","friend":"friend","draw":"draw","drew":"drew","fall":"fall","fell":"fell","hurt":"hurt","say":"say","said":"said","smile at":"smile-at","on the swing":"on-the-swing","a helping hand":"a-helping-hand","stand up":"stand-up","nervous":"nervous","game":"game","match":"match","goal":"goal","gift":"gift","worried":"worried","when":"when","after":"after","before":"before","win":"win","start":"start","score":"score","receive":"receive","stop. stopped":"stop-stopped","make mistakes":"make-mistakes","worried about":"worried-about","city":"city","pencil":"pencil","nice":"nice","ice":"ice","cent":"cent","cat":"cat","cold":"cold","stuck":"stuck","cry":"cry","carry":"carry","carefully":"carefully","licked":"licked","come":"come","quickly":"quickly","dog":"dog","bird":"bird","fish":"fish","duck":"duck","horse":"horse","rabbit":"rabbit","monkey":"monkey","lion":"lion","elephant":"elephant","red":"red","blue":"blue","green":"green","yellow":"yellow","black":"black","white":"white","brown":"brown","pink":"pink","purple":"purple","orange":"orange","one":"one","two":"two","three":"three","four":"four","five":"five","six":"six","seven":"seven","eight":"eight","nine":"nine","ten":"ten","mother":"mother","father":"father","brother":"brother","sister":"sister","baby":"baby","grandma":"grandma","grandpa":"grandpa","family":"family","pen":"pen","book":"book","bag":"bag","ruler":"ruler","desk":"desk","teacher":"teacher","school":"school","board":"board","eraser":"eraser","head":"head","eye":"eye","ear":"ear","nose":"nose","mouth":"mouth","teeth":"teeth","hand":"hand","leg":"leg","foot":"foot","hair":"hair","apple":"apple","banana":"banana","bread":"bread","milk":"milk","egg":"egg","rice":"rice","cake":"cake","juice":"juice","water":"water","chicken":"chicken","shirt":"shirt","T-shirt":"t-shirt","dress":"dress","cap":"cap","hat":"hat","coat":"coat","shoes":"shoes","socks":"socks","rainy":"rainy","cloudy":"cloudy","windy":"windy","hot":"hot","snowy":"snowy","home":"home","shop":"shop","farm":"farm","hospital":"hospital","library":"library","garden":"garden","followed":"followed","jumped":"jumped","solved":"solved","cried":"cried","started":"started","scored":"scored","received":"received","stopped":"stopped","played":"played","walked":"walked","wanted":"wanted","needed":"needed","helped":"helped","opened":"opened","painted":"painted","cooked":"cooked","watched":"watched","cleaned":"cleaned","visited":"visited","landed":"landed","washed":"washed","kicked":"kicked","planted":"planted","pear":"pear","bear":"bear","bark":"bark","pin":"pin","bin":"bin","van":"van","fan":"fan","vine":"vine","fine":"fine","tree":"tree","mouse":"mouse","think":"think","sink":"sink"};
+var AUDIO={"happy":"happy","sad":"sad","excited":"excited","angry":"angry","shy":"shy","tired":"tired","bored":"bored","scared":"scared","fence":"fence","team":"team","sound":"sound","hole":"hole","follow":"follow","jump":"jump","lick":"lick","solve":"solve","feel":"feel","felt":"felt","hear":"hear","heard":"heard","hold":"hold","held":"held","stuck in":"stuck-in","in trouble":"in-trouble","jump free":"jump-free","pull out":"pull-out","sunny":"sunny","knee":"knee","swing":"swing","zoo":"zoo","face":"face","park":"park","picture":"picture","movie":"movie","scary":"scary","friend":"friend","draw":"draw","drew":"drew","fall":"fall","fell":"fell","hurt":"hurt","say":"say","said":"said","smile at":"smile-at","on the swing":"on-the-swing","a helping hand":"a-helping-hand","stand up":"stand-up","nervous":"nervous","game":"game","match":"match","goal":"goal","gift":"gift","worried":"worried","when":"when","after":"after","before":"before","win":"win","start":"start","score":"score","receive":"receive","stop. stopped":"stop-stopped","make mistakes":"make-mistakes","worried about":"worried-about","city":"city","pencil":"pencil","nice":"nice","ice":"ice","cent":"cent","cat":"cat","cold":"cold","stuck":"stuck","cry":"cry","carry":"carry","carefully":"carefully","licked":"licked","come":"come","quickly":"quickly","dog":"dog","bird":"bird","fish":"fish","duck":"duck","horse":"horse","rabbit":"rabbit","monkey":"monkey","lion":"lion","elephant":"elephant","red":"red","blue":"blue","green":"green","yellow":"yellow","black":"black","white":"white","brown":"brown","pink":"pink","purple":"purple","orange":"orange","one":"one","two":"two","three":"three","four":"four","five":"five","six":"six","seven":"seven","eight":"eight","nine":"nine","ten":"ten","mother":"mother","father":"father","brother":"brother","sister":"sister","baby":"baby","grandma":"grandma","grandpa":"grandpa","family":"family","pen":"pen","book":"book","bag":"bag","ruler":"ruler","desk":"desk","teacher":"teacher","school":"school","board":"board","eraser":"eraser","head":"head","eye":"eye","ear":"ear","nose":"nose","mouth":"mouth","teeth":"teeth","hand":"hand","leg":"leg","foot":"foot","hair":"hair","apple":"apple","banana":"banana","bread":"bread","milk":"milk","egg":"egg","rice":"rice","cake":"cake","juice":"juice","water":"water","chicken":"chicken","shirt":"shirt","T-shirt":"t-shirt","dress":"dress","cap":"cap","hat":"hat","coat":"coat","shoes":"shoes","socks":"socks","rainy":"rainy","cloudy":"cloudy","windy":"windy","hot":"hot","snowy":"snowy","home":"home","shop":"shop","farm":"farm","hospital":"hospital","library":"library","garden":"garden","followed":"followed","jumped":"jumped","solved":"solved","cried":"cried","started":"started","scored":"scored","received":"received","stopped":"stopped","played":"played","walked":"walked","wanted":"wanted","needed":"needed","helped":"helped","opened":"opened","painted":"painted","cooked":"cooked","watched":"watched","cleaned":"cleaned","visited":"visited","landed":"landed","washed":"washed","kicked":"kicked","planted":"planted","pear":"pear","bear":"bear","bark":"bark","pin":"pin","bin":"bin","van":"van","fan":"fan","vine":"vine","fine":"fine","tree":"tree","mouse":"mouse","think":"think","sink":"sink","Omar was nervous before his first football match.":"s-omar-was-nervous-before-his-first-footba","When the match started, he was worried about making mistakes.":"s-when-the-match-started-he-was-worried-ab","But after he scored a goal, Omar felt proud of himself.":"s-but-after-he-scored-a-goal-omar-felt-pro","He was happy when his team won the game.":"s-he-was-happy-when-his-team-won-the-game","I received five gifts for my birthday.":"s-i-received-five-gifts-for-my-birthday","He was happy when his team won.":"s-he-was-happy-when-his-team-won","Omar was worried about making mistakes.":"s-omar-was-worried-about-making-mistakes","He scored two goals last match.":"s-he-scored-two-goals-last-match","The cat was stuck in the hole.":"s-the-cat-was-stuck-in-the-hole","I was excited when I went to the zoo.":"s-i-was-excited-when-i-went-to-the-zoo","My knee hurt when I fell.":"s-my-knee-hurt-when-i-fell","Dina drew a picture of a cat.":"s-dina-drew-a-picture-of-a-cat","Ali felt scared at night.":"s-ali-felt-scared-at-night","The boy is tired. He wants to sleep.":"s-the-boy-is-tired-he-wants-to-sleep","Let's play on the swing in the park.":"s-let-s-play-on-the-swing-in-the-park","She said thank you to her friend.":"s-she-said-thank-you-to-her-friend","I heard a strange sound last night.":"s-i-heard-a-strange-sound-last-night","His friend gave him a helping hand.":"s-his-friend-gave-him-a-helping-hand","The children were bored at home.":"s-the-children-were-bored-at-home"};
 var curAud=null,audTok=0;
 function stopAud(){audTok++;if(curAud){try{curAud.pause();}catch(e){}curAud=null;}}
 function clipsFor(text){
@@ -361,6 +394,12 @@ function starsStr(n){return n?"★★★".slice(0,n):"";}
 var curCat="u4l1",curGrp="book";
 function renderWords(){
   clear();
+  var dd=el("div","daily"+((S.streak&&S.streak.last===dayStr())?" done":""));
+  if(S.streak&&S.streak.last===dayStr()){dd.appendChild(el("span","em","✅"));var t1=el("div");t1.appendChild(el("b",null,"خلّصت مراجعة النهارده"));t1.appendChild(el("span",null,"تعالى بكرة علشان الـ🔥 تكبر. ممكن تراجع تانى لو حابب."));dd.appendChild(t1);
+    var again=el("button","btn","راجع تانى");again.onclick=startReview;dd.appendChild(again);}
+  else{dd.appendChild(el("span","em","🔥"));var t2=el("div");t2.appendChild(el("b",null,"مراجعة اليوم"));t2.appendChild(el("span",null,"٥ كلمات بس، دقيقة واحدة"));dd.appendChild(t2);
+    var go=el("button","btn sun","ابدأ");go.onclick=startReview;dd.appendChild(go);}
+  V.appendChild(dd);
   var seg=el("div","seg");
   [["book","كتاب المدرسة — الوحدة ٤"],["extra","كلمات عامة"]].forEach(function(a){var b=el("button",null,a[1]);b.setAttribute("aria-pressed",curGrp===a[0]?"true":"false");
     b.onclick=function(){if(curGrp===a[0])return;curGrp=a[0];curCat=CATS.filter(function(c){return c.g===a[0];})[0].id;renderWords();};seg.appendChild(b);});
@@ -412,9 +451,18 @@ function renderCard(cat,i){
 
 /* ===== اسمع واختار ===== */
 var Q=null;
+function reviewWords(){
+  var weak=[],fresh=[],rest=[];
+  WORDS.forEach(function(w){var b=S.best[w.key]||0;var g=CATS.filter(function(c){return c.id===w.cat;})[0].g;
+    if(b>0&&b<3)weak.push(w);else if(!b&&g==="book")fresh.push(w);else rest.push(w);});
+  var out=[],seen={};
+  shuffle(weak).concat(shuffle(fresh)).concat(shuffle(rest)).forEach(function(w){if(out.length<5&&!seen[w.say]){seen[w.say]=1;out.push(w);}});
+  return out;
+}
+function startReview(){newQuiz("review");GAME="pick";setTab("quiz",true);renderPick();playQ();}
 function newQuiz(catId){
-  var pool=catId==="all"?WORDS:CATS.filter(function(c){return c.id===catId;})[0].list;
-  var qs=shuffle(pool).slice(0,Math.min(8,pool.length)).map(function(w){
+  var pool=catId==="all"?WORDS:(catId==="review"?reviewWords():CATS.filter(function(c){return c.id===catId;})[0].list);
+  var qs=(catId==="review"?pool:shuffle(pool).slice(0,Math.min(8,pool.length))).map(function(w){
     var same=WORDS.filter(function(x){return x.cat===w.cat&&x.key!==w.key;});
     var opts=shuffle([w].concat(shuffle(same).slice(0,2)));return {w:w,opts:opts};});
   Q={cat:catId,qs:qs,i:0,right:0,answered:false};
@@ -430,6 +478,7 @@ function renderPick(){
     V.appendChild(chips);return;
   }
   if(Q.i>=Q.qs.length){
+    if(Q.cat==="review"&&!Q.marked){Q.marked=true;markReview();}
     var sh=el("div","sheet");var fc=el("div","fc");
     fc.appendChild(el("div","em",Q.right>=Q.qs.length-1?"🏆":(Q.right>=Q.qs.length/2?"👏":"💪")));
     fc.appendChild(el("h2","sec","جبت "+Q.right+" من "+Q.qs.length));
@@ -446,7 +495,7 @@ function renderPick(){
   var opts=el("div","opts");opts.style.width="100%";
   q.opts.forEach(function(o){var b=el("button","opt");b.appendChild(el("span","em",o.em));var lab=el("span","ar",o.ar);b.appendChild(lab);
     b.onclick=function(){if(Q.answered)return;Q.answered=true;var ok=o.key===q.w.key;
-      b.classList.add(ok?"right":"wrong");if(ok){Q.right++;}
+      b.classList.add(ok?"right":"wrong");if(ok){Q.right++;if(Q.cat==="review"){S.best[q.w.key]=Math.min(3,(S.best[q.w.key]||0)+1);save();refreshStars();}}
       Array.prototype.forEach.call(opts.children,function(c,k){if(q.opts[k].key===q.w.key){c.classList.add("right");}var x=el("span","enx",q.opts[k].en);c.appendChild(x);});
       ding(ok);
       var nx=el("button","btn main",Q.i===Q.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){Q.i++;Q.answered=false;renderPick();if(Q.i<Q.qs.length)playQ();};
@@ -463,15 +512,19 @@ function renderQuiz(){
   if(GAME==="pick"){renderPick();return;}
   if(GAME==="spell"){renderSpell();return;}
   if(GAME==="ed"){renderEd();return;}
+  if(GAME==="choose"){renderChoose();return;}
+  if(GAME==="story"){renderStory();return;}
   clear();
   V.appendChild(el("h2","sec","تمارين"));
   var h=el("div","hub");
   [["pick","🎧","اسمع واختار","تسمع الكلمة وتختار صورتها"],
    ["spell","✍️","اسمع واكتب الحرف الناقص","زى تمرين Pop Quiz فى الكتاب"],
-   ["ed","🧺","سلال ed","jumped ولا cried ولا started؟"]].forEach(function(g){
+   ["ed","🧺","سلال ed","jumped ولا cried ولا started؟"],
+   ["choose","✅","اختار الإجابة الصح","Choose the correct answer زى الامتحان"],
+   ["story","📖","قصة عمر والماتش","اسمع القصة واقرا معاها"]].forEach(function(g){
     var b=el("button","hcard");b.appendChild(el("span","em",g[1]));var t=el("div");t.appendChild(el("b",null,g[2]));t.appendChild(el("span",null,g[3]));b.appendChild(t);
     if(S.games[g[0]]){b.appendChild(el("span","best","أحسن نتيجة "+S.games[g[0]]));}
-    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;renderQuiz();};h.appendChild(b);});
+    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;if(g[0]==="choose")CH=null;renderQuiz();};h.appendChild(b);});
   V.appendChild(h);
 }
 function saveGame(id,score,total){var v=score+" / "+total;var old=S.games[id];var o=old?parseInt(old,10):-1;if(score>=o){S.games[id]=v;save();}}
@@ -604,6 +657,98 @@ function recorder(w){
   };
   r.appendChild(rb);r.appendChild(pb);r.appendChild(cb);box.appendChild(r);box.appendChild(note);refresh();
   return box;
+}
+
+/* ===== اختار الإجابة الصح ===== */
+var CQS=[["I received five ___ for my birthday.","gifts","mistakes","استلمت ٥ هدايا فى عيد ميلادى."],
+ ["He was happy when his team ___.","won","took","كان مبسوط لما فريقه كسب."],
+ ["Omar was ___ about making mistakes.","worried","nice","عمر كان قلقان إنه يغلط."],
+ ["He scored two ___ last match.","goals","teams","جاب جونين فى الماتش اللى فات."],
+ ["The cat was ___ in the hole.","stuck","sunny","القطة كانت عالقة فى الحفرة."],
+ ["I was ___ when I went to the zoo.","excited","scary","كنت متحمس لما رحت جنينة الحيوانات."],
+ ["My knee ___ when I fell.","hurt","drew","ركبتى وجعتنى لما وقعت."],
+ ["Dina ___ a picture of a cat.","drew","fell","دينا رسمت صورة قطة."],
+ ["Ali felt ___ at night.","scared","sunny","على كان خايف بالليل."],
+ ["The boy is ___. He wants to sleep.","tired","excited","الولد تعبان، عايز ينام."],
+ ["Let's play on the ___ in the park.","swing","knee","يلا نلعب على المرجيحة فى الجنينة."],
+ ["She ___ thank you to her friend.","said","heard","قالت شكراً لصاحبتها."],
+ ["I ___ a strange sound last night.","heard","said","سمعت صوت غريب امبارح بالليل."],
+ ["His friend gave him a helping ___.","hand","face","صاحبه مدّ له إيد المساعدة."],
+ ["The children were ___ at home.","bored","team","الأطفال كانوا زهقانين فى البيت."]];
+var CH=null;
+function newChoose(){CH={qs:shuffle(CQS).slice(0,8).map(function(q){return {q:q,opts:shuffle([q[1],q[2]])};}),i:0,right:0,answered:false};}
+function fullSent(q){return q[0].replace("___",q[1]);}
+function renderChoose(){
+  clear();V.appendChild(hubBack());
+  if(!CH)newChoose();
+  if(CH.i>=CH.qs.length){saveGame("choose",CH.right,CH.qs.length);endScreen(CH.right,CH.qs.length,function(){CH=null;renderChoose();});return;}
+  var it=CH.qs[CH.i],q=it.q;progressHead(CH.i,CH.qs.length,CH.right);
+  var sh=el("div","sheet");var fc=el("div","fc");
+  fc.appendChild(el("p",null,"اختار الكلمة اللى تكمّل الجملة:"));
+  var cq=el("div","cq");cq.lang="en";var parts=q[0].split("___");
+  cq.appendChild(document.createTextNode(parts[0]));var gap=el("span","gap"," ");cq.appendChild(gap);cq.appendChild(document.createTextNode(parts[1]));
+  fc.appendChild(cq);
+  var ar=el("div","ar","");fc.appendChild(ar);
+  var O=el("div","copts");
+  it.opts.forEach(function(o,k){var b=el("button");b.appendChild(el("i",null,["a.","b."][k]));b.appendChild(document.createTextNode(o));
+    b.onclick=function(){if(CH.answered)return;CH.answered=true;var ok=o===q[1];b.classList.add(ok?"right":"wrong");
+      Array.prototype.forEach.call(O.children,function(c,j){if(it.opts[j]===q[1])c.classList.add("right");});
+      gap.textContent=q[1];if(!ok)gap.className="gap bad";if(ok)CH.right++;ding(ok);ar.textContent=q[3];
+      speak(fullSent(q),false);
+      var r=el("div","row");var again=el("button","btn","🔊 اسمع الجملة");again.onclick=function(){speak(fullSent(q),false);};
+      var nx=el("button","btn main",CH.i===CH.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){CH.i++;CH.answered=false;renderChoose();};
+      r.appendChild(again);r.appendChild(nx);fc.appendChild(r);};O.appendChild(b);});
+  fc.appendChild(O);sh.appendChild(fc);V.appendChild(sh);
+}
+
+/* ===== قصة عمر والماتش ===== */
+var STORY=[["Omar was nervous before his first football match.","عمر كان متوتر قبل أول ماتش كورة ليه."],
+ ["When the match started, he was worried about making mistakes.","لما الماتش بدأ، كان قلقان إنه يغلط."],
+ ["But after he scored a goal, Omar felt proud of himself.","بس بعد ما جاب جون، عمر حس إنه فخور بنفسه."],
+ ["He was happy when his team won the game.","كان مبسوط لما فريقه كسب الماتش."]];
+var SVOC={nervous:"nervous",match:"match",worried:"worried",mistakes:"make mistakes",scored:"score. scored",goal:"goal",team:"team",happy:"happy",started:"start. started",when:"when",after:"after",before:"before"};
+var showAr=false;
+function renderStory(){
+  clear();V.appendChild(hubBack());
+  V.appendChild(el("h2","sec","قصة عمر والماتش"));
+  var r=el("div","row");r.style.justifyContent="flex-start";r.style.marginBottom="12px";
+  var pa=el("button","btn main","▶️ اسمع القصة كلها");var ps=el("button","btn sun","🐢 بالراحة");var tr=el("button","btn",showAr?"اخفى المعنى":"اعرض المعنى");
+  r.appendChild(pa);r.appendChild(ps);r.appendChild(tr);V.appendChild(r);
+  var box=el("div","story");var rows=[];
+  STORY.forEach(function(st,i){
+    var line=el("div","sline");var tx=el("div","stext");tx.lang="en";var spans=[];
+    st[0].split(" ").forEach(function(wd,k){var clean=wd.toLowerCase().replace(/[^a-z]/g,"");var sp1=el("span",SVOC[clean]?"v":null,wd);
+      if(SVOC[clean]){sp1.onclick=function(e){e.stopPropagation();speak(SVOC[clean],false);};}
+      tx.appendChild(sp1);spans.push(sp1);if(k<st[0].split(" ").length-1)tx.appendChild(document.createTextNode(" "));});
+    line.appendChild(tx);
+    var a=el("div","sar",st[1]);a.hidden=!showAr;line.appendChild(a);
+    var sr=el("div","srow");var b1=el("button","btn","🔊 الجملة دى");b1.onclick=function(){playStory(i,i,false);};sr.appendChild(b1);line.appendChild(sr);
+    if(recOK){line.appendChild(recorder({key:"story"+i,say:st[0]}));}
+    box.appendChild(line);rows.push({line:line,spans:spans,ar:a});
+  });
+  V.appendChild(box);
+  V.appendChild(el("p",null,"الكلمات الملوّنة من مفردات الدرس — دوس عليها تسمعها لوحدها."));
+  pa.onclick=function(){playStory(0,STORY.length-1,false);};ps.onclick=function(){playStory(0,STORY.length-1,true);};
+  tr.onclick=function(){showAr=!showAr;tr.textContent=showAr?"اخفى المعنى":"اعرض المعنى";rows.forEach(function(x){x.ar.hidden=!showAr;});};
+  function clearHL(){rows.forEach(function(x){x.line.classList.remove("active");x.spans.forEach(function(s2){s2.classList.remove("now");});});}
+  function playStory(from,to,slow){
+    stopAud();if(synth)synth.cancel();clearHL();var tok=++audTok;
+    function one(i){
+      if(tok!==audTok)return;if(i>to){clearHL();return;}
+      var row=rows[i],txt=STORY[i][0],file=AUDIO[txt];clearHL();row.line.classList.add("active");
+      try{row.line.scrollIntoView({block:"nearest",behavior:"smooth"});}catch(e){}
+      if(!file){speak(txt,slow,function(){one(i+1);});return;}
+      var a=new Audio("audio/"+file+".mp3");curAud=a;a.playbackRate=slow?0.7:1;try{a.preservesPitch=true;a.webkitPreservesPitch=true;}catch(e){}
+      var lens=row.spans.map(function(s2){return s2.textContent.length+1;});var tot=lens.reduce(function(x,y){return x+y;},0);
+      a.ontimeupdate=function(){if(tok!==audTok||!a.duration)return;var f=a.currentTime/a.duration*tot,acc=0,idx=0;
+        for(var k=0;k<lens.length;k++){acc+=lens[k];if(f<acc){idx=k;break;}idx=k;}
+        row.spans.forEach(function(s2,k){s2.classList.toggle("now",k===idx);});};
+      a.onended=function(){row.spans.forEach(function(s2){s2.classList.remove("now");});setTimeout(function(){one(i+1);},500);};
+      a.onerror=function(){speak(txt,slow,function(){one(i+1);});};
+      var pr=a.play();if(pr&&pr.catch)pr.catch(function(){speak(txt,slow,function(){one(i+1);});});
+    }
+    one(from);
+  }
 }
 
 function playQ(){if(Q&&Q.qs[Q.i])sp(Q.qs[Q.i].w,false);}
