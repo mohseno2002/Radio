@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نُطقى الصح</title>
-<meta name="build" content="1.02">
+<meta name="build" content="1.03">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7c86">
 <link rel="icon" href="icon-192.png">
@@ -67,6 +67,27 @@ header p{margin:0;color:var(--ink-2);font-size:14px}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--sheet);border:1.5px solid var(--rule);border-radius:16px;padding:4px;margin-bottom:12px}
 .seg button{border:0;border-radius:12px;background:none;color:var(--ink-2);font:800 15px var(--f-ar);min-height:44px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--sun);color:#1d3a4a}
+.hub{display:grid;gap:12px}
+.hcard{display:flex;gap:16px;align-items:center;background:var(--sheet);border:1.5px solid var(--rule);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);cursor:pointer;font:inherit;color:inherit;text-align:start;min-height:88px}
+.hcard .em{font-size:40px;flex:none;width:56px;text-align:center}
+.hcard b{display:block;font-size:18px}
+.hcard span{color:var(--ink-2);font-size:14px}
+.hcard .best{margin-inline-start:auto;flex:none;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;font-size:14px}
+.spell{font-family:var(--f-en);font-weight:700;font-size:48px;direction:ltr;letter-spacing:2px;line-height:1.2}
+.spell .gap{display:inline-block;min-width:1.1em;border-bottom:5px solid var(--sun);color:var(--teal);margin:0 2px}
+.spell .gap.bad{color:var(--red);border-color:var(--red)}
+.letters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:420px}
+.letters button{font:700 28px var(--f-en);min-height:64px;border-radius:16px;border:2px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.letters button.right{border-color:var(--ok);background:var(--ok-soft)}
+.letters button.wrong{border-color:var(--red);background:var(--red-soft)}
+.baskets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:440px}
+.basket{border:2px solid var(--rule);background:var(--sheet);border-radius:18px;min-height:96px;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.basket b{font-size:30px;line-height:1.3}
+.basket span{font-family:var(--f-en);font-size:15px;color:var(--ink-2);direction:ltr}
+.basket.right{border-color:var(--ok);background:var(--ok-soft)}
+.basket.wrong{border-color:var(--red);background:var(--red-soft)}
+.recbox{display:flex;flex-direction:column;align-items:center;gap:8px;border-top:1.5px dashed var(--rule);padding-top:12px;width:100%}
+.recbox small{color:var(--ink-2);font-size:13px}
 .wcard .ar{color:var(--ink-2);font-size:14px}
 .wcard .mini{position:absolute;top:8px;inset-inline-end:10px;font-size:13px;color:var(--sun);letter-spacing:1px}
 .wcard .tipdot{position:absolute;top:10px;inset-inline-start:10px;width:10px;height:10px;border-radius:50%;background:var(--margin)}
@@ -157,7 +178,7 @@ nav.tabs{position:fixed;inset-inline:0;bottom:0;background:var(--sheet);border-t
 
 <nav class="tabs" aria-label="أقسام التطبيق">
   <button class="tab" data-tab="words" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h6M8 11h6"/></svg>الكلمات</button>
-  <button class="tab" data-tab="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></svg>اسمع واختار</button>
+  <button class="tab" data-tab="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></svg>تمارين</button>
   <button class="tab" data-tab="pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M17 4v16M3 8l4-4 4 4M13 16l4 4 4-4"/></svg>أصوات صعبة</button>
   <button class="tab" data-tab="stars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>نجومى</button>
 </nav>
@@ -212,8 +233,8 @@ CATS.forEach(function(c){c.list=c.w.map(function(s){var a=s.split("|");var o={en
 
 /* ===== التخزين المحلى (محمى) ===== */
 var KEY="nutqi_v1";
-var S={best:{},accent:"en-GB"};
-try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.accent=p.accent||"en-GB";}}}catch(e){}
+var S={best:{},accent:"en-GB",games:{}};
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.accent=p.accent||"en-GB";S.games=p.games||{};}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function totalStars(){var t=0;for(var k in S.best){t+=S.best[k];}return t;}
 function setBest(w,n){if(!S.best[w]||S.best[w]<n){S.best[w]=n;save();}refreshStars();}
@@ -231,8 +252,8 @@ function pickVoice(){
   return f(function(v){return norm(v.lang)===want.toLowerCase()&&v.localService;})||f(function(v){return norm(v.lang)===want.toLowerCase();})||
          f(function(v){return norm(v.lang)===alt.toLowerCase();})||f(function(v){return norm(v.lang).indexOf("en")===0;});
 }
-function sp(w,slow){speak(w.say,slow);}
-function speak(text,slow){
+function sp(w,slow,cb){speak(w.say,slow,cb);}
+function speak(text,slow,cb){
   if(!synth){toast("الجهاز ده مش بيدعم نطق الكلام. جرّب Chrome.");return;}
   var v=pickVoice();
   if(!v&&voices.length){toast("مفيش صوت إنجليزى على الجهاز ده.");return;}
@@ -240,6 +261,7 @@ function speak(text,slow){
   var u=new SpeechSynthesisUtterance(text);
   u.lang=v?v.lang:S.accent; if(v)u.voice=v;
   u.rate=slow?0.5:0.85; u.pitch=1.05;
+  if(cb){var done=false;var fin=function(){if(!done){done=true;cb();}};u.onend=fin;u.onerror=fin;setTimeout(fin,Math.max(2500,text.length*260));}
   synth.speak(u);
 }
 document.addEventListener("visibilitychange",function(){if(document.hidden&&synth)synth.cancel();});
@@ -352,6 +374,7 @@ function renderCard(cat,i){
     var r2=el("div","row");r2.appendChild(b3);fc.appendChild(r2);out.innerHTML="<span>اسمع الكلمة، وبعدين دوس «قولها أنت»</span>";}
   else{renderSelf(out,w);}
   fc.appendChild(out);
+  if(recOK){fc.appendChild(recorder(w));}
   sh.appendChild(fc);V.appendChild(sh);
   var nav=el("div","navrow");
   var prev=el("button","btn","→ اللى قبلها");prev.disabled=i===0;prev.style.opacity=i===0?.4:1;prev.onclick=function(){renderCard(cat,i-1);sp(cat.list[i-1],false);};
@@ -368,21 +391,22 @@ function newQuiz(catId){
     var opts=shuffle([w].concat(shuffle(same).slice(0,2)));return {w:w,opts:opts};});
   Q={cat:catId,qs:qs,i:0,right:0,answered:false};
 }
-function renderQuiz(){
+function renderPick(){
   clear();
+  V.appendChild(hubBack());
   if(!Q){
     V.appendChild(el("h2","sec","اسمع الكلمة واختار صورتها"));
     V.appendChild(el("p",null,"هتسمع ٨ كلمات. دوس على الصورة الصح."));
     var chips=el("div","chips");chips.style.flexWrap="wrap";
-    [{id:"all",ar:"كل الكلمات"}].concat(CATS).forEach(function(c){var b=el("button","chip",c.ar);b.onclick=function(){newQuiz(c.id);renderQuiz();playQ();};chips.appendChild(b);});
+    [{id:"all",ar:"كل الكلمات"}].concat(CATS).forEach(function(c){var b=el("button","chip",c.ar);b.onclick=function(){newQuiz(c.id);renderPick();playQ();};chips.appendChild(b);});
     V.appendChild(chips);return;
   }
   if(Q.i>=Q.qs.length){
     var sh=el("div","sheet");var fc=el("div","fc");
     fc.appendChild(el("div","em",Q.right>=Q.qs.length-1?"🏆":(Q.right>=Q.qs.length/2?"👏":"💪")));
     fc.appendChild(el("h2","sec","جبت "+Q.right+" من "+Q.qs.length));
-    var r=el("div","row");var a=el("button","btn main","العب تانى");a.onclick=function(){newQuiz(Q.cat);renderQuiz();playQ();};
-    var b=el("button","btn","اختار مجموعة تانية");b.onclick=function(){Q=null;renderQuiz();};r.appendChild(a);r.appendChild(b);fc.appendChild(r);
+    var r=el("div","row");var a=el("button","btn main","العب تانى");a.onclick=function(){newQuiz(Q.cat);renderPick();playQ();};
+    var b=el("button","btn","اختار مجموعة تانية");b.onclick=function(){Q=null;renderPick();};r.appendChild(a);r.appendChild(b);fc.appendChild(r);
     sh.appendChild(fc);V.appendChild(sh);return;
   }
   var q=Q.qs[Q.i];
@@ -397,11 +421,163 @@ function renderQuiz(){
       b.classList.add(ok?"right":"wrong");if(ok){Q.right++;}
       Array.prototype.forEach.call(opts.children,function(c,k){if(q.opts[k].key===q.w.key){c.classList.add("right");}var x=el("span","enx",q.opts[k].en);c.appendChild(x);});
       ding(ok);
-      var nx=el("button","btn main",Q.i===Q.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){Q.i++;Q.answered=false;renderQuiz();if(Q.i<Q.qs.length)playQ();};
+      var nx=el("button","btn main",Q.i===Q.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){Q.i++;Q.answered=false;renderPick();if(Q.i<Q.qs.length)playQ();};
       var rw=el("div","row");rw.style.marginTop="16px";rw.appendChild(nx);fc2.appendChild(rw);};
     opts.appendChild(b);});
   fc2.appendChild(opts);sh2.appendChild(fc2);V.appendChild(sh2);
 }
+
+/* ===== مركز التمارين ===== */
+var GAME=null;
+if(!S.games)S.games={};
+function hubBack(){var b=el("button","back","→ رجوع للتمارين");b.onclick=function(){GAME=null;Q=null;renderQuiz();};return b;}
+function renderQuiz(){
+  if(GAME==="pick"){renderPick();return;}
+  if(GAME==="spell"){renderSpell();return;}
+  if(GAME==="ed"){renderEd();return;}
+  clear();
+  V.appendChild(el("h2","sec","تمارين"));
+  var h=el("div","hub");
+  [["pick","🎧","اسمع واختار","تسمع الكلمة وتختار صورتها"],
+   ["spell","✍️","اسمع واكتب الحرف الناقص","زى تمرين Pop Quiz فى الكتاب"],
+   ["ed","🧺","سلال ed","jumped ولا cried ولا started؟"]].forEach(function(g){
+    var b=el("button","hcard");b.appendChild(el("span","em",g[1]));var t=el("div");t.appendChild(el("b",null,g[2]));t.appendChild(el("span",null,g[3]));b.appendChild(t);
+    if(S.games[g[0]]){b.appendChild(el("span","best","أحسن نتيجة "+S.games[g[0]]));}
+    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;renderQuiz();};h.appendChild(b);});
+  V.appendChild(h);
+}
+function saveGame(id,score,total){var v=score+" / "+total;var old=S.games[id];var o=old?parseInt(old,10):-1;if(score>=o){S.games[id]=v;save();}}
+function endScreen(score,total,again){
+  var sh=el("div","sheet");var fc=el("div","fc");
+  fc.appendChild(el("div","em",score>=total-1?"🏆":(score>=total/2?"👏":"💪")));
+  fc.appendChild(el("h2","sec","جبت "+score+" من "+total));
+  var r=el("div","row");var a=el("button","btn main","العب تانى");a.onclick=again;
+  var b=el("button","btn","التمارين");b.onclick=function(){GAME=null;renderQuiz();};r.appendChild(a);r.appendChild(b);fc.appendChild(r);
+  sh.appendChild(fc);V.appendChild(sh);
+}
+function progressHead(i,n,right){
+  var head=el("div","qhead");head.appendChild(el("span",null,"سؤال "+(i+1)+" من "+n));head.appendChild(el("span",null,"✔ "+right));V.appendChild(head);
+  var bar=el("div","qbar");var bi=document.createElement("i");bi.style.width=(i/n*100)+"%";bar.appendChild(bi);V.appendChild(bar);
+}
+
+/* ===== اسمع واكتب الحرف الناقص ===== */
+var SP=null;
+var CONF={c:["c","s","k","ss"],ck:["ck","k","c","kk"],kn:["kn","n","cn","k"],p:["p","b","pp","d"],v:["v","f","b","w"],th:["th","s","t","z"],gh:["gh","g","h","ch"]};
+function blankFor(w){
+  var e=w.en.toLowerCase(),tips=(w.tip||"").split("+"),pick=null;
+  function has(k){return tips.indexOf(k)>-1;}
+  if((has("ck")||has("cs"))&&e.indexOf("ck")>-1)pick="ck";
+  else if(has("cs")||has("ck"))pick=e.indexOf("c")>-1?"c":null;
+  if(!pick&&has("kn"))pick="kn";
+  if(!pick&&(has("th")||has("dh"))&&e.indexOf("th")>-1)pick="th";
+  if(!pick&&has("gh")&&e.indexOf("gh")>-1)pick="gh";
+  if(!pick&&has("v")&&e.indexOf("v")>-1)pick="v";
+  if(!pick&&has("p")&&e.indexOf("p")>-1)pick="p";
+  var at,opts;
+  if(pick){at=e.indexOf(pick);opts=CONF[pick].slice();}
+  else{
+    var idx=[];for(var i=1;i<e.length;i++){if(/[a-z]/.test(e[i]))idx.push(i);}
+    at=idx[Math.floor(Math.random()*idx.length)];pick=e[at];
+    var pool="aeioubdgmnrstlh".split("").filter(function(x){return x!==pick;});
+    opts=[pick].concat(shuffle(pool).slice(0,3));
+  }
+  return {pre:w.en.slice(0,at),ans:pick,post:w.en.slice(at+pick.length),opts:shuffle(opts)};
+}
+function newSpell(){
+  var pool=WORDS.filter(function(w){return /^[a-zA-Z]{3,10}$/.test(w.en);});
+  var book=pool.filter(function(w){return CATS.filter(function(c){return c.id===w.cat;})[0].g==="book";});
+  var seen={},qs=[];
+  shuffle(book).concat(shuffle(pool)).forEach(function(w){if(qs.length<8&&!seen[w.en]){seen[w.en]=1;qs.push({w:w,b:blankFor(w)});}});
+  SP={qs:qs,i:0,right:0,answered:false};
+}
+function renderSpell(){
+  clear();V.appendChild(hubBack());
+  if(!SP)newSpell();
+  if(SP.i>=SP.qs.length){saveGame("spell",SP.right,SP.qs.length);endScreen(SP.right,SP.qs.length,function(){SP=null;renderSpell();playSpell();});return;}
+  var q=SP.qs[SP.i];progressHead(SP.i,SP.qs.length,SP.right);
+  var sh=el("div","sheet");var fc=el("div","fc");
+  fc.appendChild(el("div","em",q.w.em));
+  var word=el("div","spell");word.lang="en";
+  word.appendChild(document.createTextNode(q.b.pre));var gap=el("span","gap"," ");word.appendChild(gap);word.appendChild(document.createTextNode(q.b.post));
+  fc.appendChild(word);fc.appendChild(el("div","ar",q.w.ar));
+  var r=el("div","row");var a=el("button","btn main","🔊 اسمع");a.onclick=function(){sp(q.w,false);};var b=el("button","btn sun","🐢 بالراحة");b.onclick=function(){sp(q.w,true);};r.appendChild(a);r.appendChild(b);fc.appendChild(r);
+  var L=el("div","letters");
+  q.b.opts.forEach(function(o){var x=el("button",null,o);x.lang="en";x.onclick=function(){if(SP.answered)return;SP.answered=true;var ok=o===q.b.ans;
+    x.classList.add(ok?"right":"wrong");Array.prototype.forEach.call(L.children,function(c){if(c.textContent===q.b.ans)c.classList.add("right");});
+    gap.textContent=q.b.ans;if(!ok)gap.className="gap bad";if(ok)SP.right++;ding(ok);sp(q.w,false);
+    var nx=el("button","btn main",SP.i===SP.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){SP.i++;SP.answered=false;renderSpell();if(SP.i<SP.qs.length)playSpell();};
+    var rw=el("div","row");rw.style.marginTop="8px";rw.appendChild(nx);fc.appendChild(rw);};L.appendChild(x);});
+  fc.appendChild(L);sh.appendChild(fc);V.appendChild(sh);
+}
+function playSpell(){if(SP&&SP.qs[SP.i])sp(SP.qs[SP.i].w,false);}
+
+/* ===== سلال ed ===== */
+var ED_LIST=[["follow","followed","يتبع","d"],["jump","jumped","يقفز","t"],["lick","licked","يلعق","t"],["solve","solved","يحل","d"],["cry","cried","يعيّط","d"],
+ ["start","started","يبدأ","id"],["score","scored","يجيب جون","d"],["receive","received","يستلم","d"],["stop","stopped","يوقف","t"],
+ ["play","played","يلعب","d"],["walk","walked","يمشى","t"],["want","wanted","يريد","id"],["need","needed","يحتاج","id"],["help","helped","يساعد","t"],
+ ["open","opened","يفتح","d"],["paint","painted","يلوّن","id"],["cook","cooked","يطبخ","t"],["watch","watched","يتفرج","t"],["clean","cleaned","ينضّف","d"],
+ ["visit","visited","يزور","id"],["land","landed","تهبط","id"],["wash","washed","يغسل","t"],["kick","kicked","يشوت","t"],["plant","planted","يزرع","id"]];
+var ED_WHY={t:"الفعل خلصان بصوت ساكت مافيهوش زنّة (p · k · s · sh · ch · f)، فالـ ed بتتقال «ت».",
+ d:"الفعل خلصان بصوت فيه زنّة (حرف متحرك أو b · g · l · m · n · r · v · z)، فالـ ed بتتقال «د».",
+ id:"الفعل خلصان بحرف t أو d، فالـ ed بتتقال «إد» ونزوّد مقطع."};
+var ED=null;
+function newEd(){var by={t:[],d:[],id:[]};shuffle(ED_LIST).forEach(function(x){by[x[3]].push(x);});
+  var qs=by.t.slice(0,3).concat(by.d.slice(0,4)).concat(by.id.slice(0,3));ED={qs:shuffle(qs),i:0,right:0,answered:false};}
+function edSay(q,slow){speak(q[1],slow);}
+function renderEd(){
+  clear();V.appendChild(hubBack());
+  if(!ED)newEd();
+  if(ED.i>=ED.qs.length){saveGame("ed",ED.right,ED.qs.length);endScreen(ED.right,ED.qs.length,function(){ED=null;renderEd();playEd();});return;}
+  var q=ED.qs[ED.i];progressHead(ED.i,ED.qs.length,ED.right);
+  var sh=el("div","sheet");var fc=el("div","fc");
+  var en=el("div","en long",q[0]+" → "+q[1]);en.lang="en";fc.appendChild(en);
+  fc.appendChild(el("div","ar",q[2]));
+  var r=el("div","row");var a=el("button","btn main","🔊 اسمع الماضى");a.onclick=function(){edSay(q,false);};var b=el("button","btn sun","🐢 بالراحة");b.onclick=function(){edSay(q,true);};r.appendChild(a);r.appendChild(b);fc.appendChild(r);
+  fc.appendChild(el("p",null,"الـ ed فى آخرها بتتقال إزاى؟"));
+  var B=el("div","baskets");var why=el("div","result");
+  [["t","«ت»","jumped"],["d","«د»","cried"],["id","«إد»","started"]].forEach(function(k){
+    var x=el("button","basket");x.appendChild(el("b",null,k[1]));x.appendChild(el("span",null,"زى "+k[2]));
+    x.onclick=function(){if(ED.answered)return;ED.answered=true;var ok=k[0]===q[3];x.classList.add(ok?"right":"wrong");
+      Array.prototype.forEach.call(B.children,function(c,j){if(["t","d","id"][j]===q[3])c.classList.add("right");});
+      if(ok)ED.right++;ding(ok);edSay(q,false);
+      why.className="result "+(ok?"ok":"no");why.innerHTML="";why.appendChild(el("span",null,ok?"صح!":"لأ"));why.appendChild(el("small",null,ED_WHY[q[3]]));
+      var nx=el("button","btn main",ED.i===ED.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){ED.i++;ED.answered=false;renderEd();if(ED.i<ED.qs.length)playEd();};
+      var rw=el("div","row");rw.appendChild(nx);fc.appendChild(rw);};B.appendChild(x);});
+  fc.appendChild(B);fc.appendChild(why);sh.appendChild(fc);V.appendChild(sh);
+}
+function playEd(){if(ED&&ED.qs[ED.i])edSay(ED.qs[ED.i],false);}
+
+/* ===== سجّل صوتك وقارن ===== */
+var recOK=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
+var MYREC={};
+function recorder(w){
+  var box=el("div","recbox");
+  var r=el("div","row");
+  var rb=el("button","btn rec","🎙️ سجّل صوتك");
+  var pb=el("button","btn","▶️ صوتى");var cb=el("button","btn sun","⚖️ قارن");
+  var note=el("small",null,"سجّل نفسك وانت بتقول الكلمة، وبعدين قارن صوتك بالنطق الصح.");
+  function refresh(){pb.hidden=!MYREC[w.key];cb.hidden=!MYREC[w.key];}
+  function playMine(){if(!MYREC[w.key])return;var a=new Audio(MYREC[w.key]);a.play().catch(function(){});}
+  pb.onclick=playMine;
+  cb.onclick=function(){note.textContent="الأول النطق الصح… وبعدين صوتك";sp(w,false,function(){setTimeout(playMine,300);});};
+  var mr=null,chunks=[],stopT=null,stream=null;
+  rb.onclick=function(){
+    if(mr&&mr.state==="recording"){mr.stop();return;}
+    if(synth)synth.cancel();
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+      stream=st;chunks=[];
+      try{mr=new MediaRecorder(st);}catch(e){st.getTracks().forEach(function(t){t.stop();});note.textContent="التسجيل مش مدعوم على الجهاز ده.";return;}
+      mr.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data);};
+      mr.onstop=function(){clearTimeout(stopT);stream.getTracks().forEach(function(t){t.stop();});rb.classList.remove("on");rb.textContent="🎙️ سجّل تانى";
+        if(chunks.length){if(MYREC[w.key]){try{URL.revokeObjectURL(MYREC[w.key]);}catch(e){}}MYREC[w.key]=URL.createObjectURL(new Blob(chunks,{type:mr.mimeType||"audio/webm"}));note.textContent="اتسجّل! دوس «قارن» واسمع الفرق.";refresh();}};
+      mr.start();rb.classList.add("on");rb.textContent="⏹ وقّف";note.textContent="بسجّل… قول الكلمة";
+      stopT=setTimeout(function(){if(mr&&mr.state==="recording")mr.stop();},4000);
+    }).catch(function(){note.textContent="الميكروفون مش متاح. اسمح للتطبيق باستخدام الميكروفون من إعدادات المتصفح.";});
+  };
+  r.appendChild(rb);r.appendChild(pb);r.appendChild(cb);box.appendChild(r);box.appendChild(note);refresh();
+  return box;
+}
+
 function playQ(){if(Q&&Q.qs[Q.i])sp(Q.qs[Q.i].w,false);}
 
 /* ===== الأصوات الصعبة ===== */
@@ -467,7 +643,7 @@ function setTab(name,silent){
   Array.prototype.forEach.call(tabs,function(t){t.setAttribute("aria-current",t.getAttribute("data-tab")===name?"true":"false");});
   if(synth)synth.cancel();
   if(silent)return;
-  if(name==="words")renderWords();else if(name==="quiz"){Q=null;renderQuiz();}else if(name==="pairs")renderPairs();else renderStars();
+  if(name==="words")renderWords();else if(name==="quiz"){Q=null;GAME=null;renderQuiz();}else if(name==="pairs")renderPairs();else renderStars();
 }
 Array.prototype.forEach.call(tabs,function(t){t.onclick=function(){setTab(t.getAttribute("data-tab"));};});
 if(!micOK)showNotice();

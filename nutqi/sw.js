@@ -1,4 +1,4 @@
-var VERSION='nutqi-v1.02';
+var VERSION='nutqi-v1.03';
 var CORE=['./','index.html','manifest.json','icon-192.png','icon-512.png','icon-maskable-512.png','apple-touch-icon.png'];
 var FONTS='nutqi-fonts-v1';
 self.addEventListener('install',function(e){e.waitUntil(caches.open(VERSION).then(function(c){return c.addAll(CORE);}));self.skipWaiting();});
