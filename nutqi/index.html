@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نُطقى الصح</title>
-<meta name="build" content="1.07">
+<meta name="build" content="1.08">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7c86">
 <link rel="icon" href="icon-192.png">
@@ -78,6 +78,8 @@ header p{margin:0;color:var(--ink-2);font-size:14px}
 .copts button{display:flex;align-items:center;gap:12px;font:600 22px var(--f-en);min-height:60px;border-radius:16px;border:2px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer;padding:8px 16px;direction:ltr}
 .copts button i{font-style:normal;color:var(--muted);font-size:18px}
 .copts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.copts.arb button{direction:rtl;font-family:inherit;font-size:20px}
+.cq.lvar{font-family:inherit;direction:rtl}
 .copts button.wrong{border-color:var(--red);background:var(--red-soft)}
 .notice{background:var(--sun-soft);border:1px dashed var(--sun);border-radius:14px;padding:10px 14px;font-size:14px;margin-bottom:16px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;scrollbar-width:none}
@@ -527,6 +529,7 @@ function renderQuiz(){
   if(GAME==="spell"){renderSpell();return;}
   if(GAME==="ed"){renderEd();return;}
   if(GAME==="choose"){renderChoose();return;}
+  if(GAME==="lvl"){renderLv();return;}
   if(GAME==="story"||GAME==="sheet"){renderStory();return;}
   clear();
   V.appendChild(el("h2","sec","تمارين"));
@@ -534,12 +537,13 @@ function renderQuiz(){
   [["pick","🎧","اسمع واختار","تسمع الكلمة وتختار صورتها"],
    ["spell","✍️","اسمع واكتب الحرف الناقص","زى تمرين Pop Quiz فى الكتاب"],
    ["ed","🧺","سلال ed","jumped ولا cried ولا started؟"],
+   ["lvl","🎯","أسئلة تدريب A-level","١٠ أسئلة متنوعة على Unit 1 وUnit 2"],
    ["choose","✅","اختار الإجابة الصح","Choose the correct answer زى الامتحان"],
    ["story","📖","قصة عمر والماتش","اسمع القصة واقرا معاها"],
    ["sheet","📝","جمل الورقة: ترجم","جمل Translate into Arabic من ورق A-level"]].forEach(function(g){
     var b=el("button","hcard");b.appendChild(el("span","em",g[1]));var t=el("div");t.appendChild(el("b",null,g[2]));t.appendChild(el("span",null,g[3]));b.appendChild(t);
     if(S.games[g[0]]){b.appendChild(el("span","best","أحسن نتيجة "+S.games[g[0]]));}
-    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;if(g[0]==="choose"){CH=null;CHSET=null;}renderQuiz();};h.appendChild(b);});
+    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;if(g[0]==="choose"){CH=null;CHSET=null;}if(g[0]==="lvl"){LV=null;LVSET=null;}renderQuiz();};h.appendChild(b);});
   V.appendChild(h);
 }
 function saveGame(id,score,total){var v=score+" / "+total;var old=S.games[id];var o=old?parseInt(old,10):-1;if(score>=o){S.games[id]=v;save();}}
@@ -736,6 +740,79 @@ function renderChoose(){
       var r=el("div","row");var again=el("button","btn","🔊 اسمع الجملة");again.onclick=function(){speak(fullSent(q),false);};
       var nx=el("button","btn main",CH.i===CH.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){CH.i++;CH.answered=false;renderChoose();};
       r.appendChild(again);r.appendChild(nx);fc.appendChild(r);};O.appendChild(b);});
+  fc.appendChild(O);sh.appendChild(fc);V.appendChild(sh);
+}
+
+/* ===== أسئلة تدريب A-level ===== */
+var LVU={a1:["a1i","a1m","a1v","a1g"],a2:["a2a","a2b","a2c","a2d","a2v"]};
+var ODDG=[["آلات موسيقية",["guitar","drums","keyboard","recorder","violin","trumpet","cello","flute","saxophone","clarinet","piano","cymbals"]],
+ ["أكل",["cheese","olives","eggs","strawberries","pasta","yoghurt","mushrooms","onions","prawns","pineapple","spinach","tuna","chicken","fish","meat","bread","rice","pancakes","sandwich","burger","noodles","pizza"]],
+ ["أدوات السفرة",["knife","fork","spoon","chopsticks","bowl","plate"]],
+ ["خضار",["courgette","pumpkin","pepper","carrot","onions","spinach"]],
+ ["أنواع موسيقى",["pop music","folk music","classical music","hip-hop","rock music","reggae"]]];
+var LV=null,LVSET=null;
+function lvPool(set){var ids=set==="all"?LVU.a1.concat(LVU.a2):LVU[set];return WORDS.filter(function(w){return ids.indexOf(w.cat)>=0;});}
+function pickOthers(pool,w,n,key){var seen={};seen[w[key]]=1;var out=[];shuffle(pool).forEach(function(x){if(out.length<n&&!seen[x[key]]&&x.en!==w.en&&x.ar.split(" ")[0]!==w.ar.split(" ")[0]){seen[x[key]]=1;out.push(x);}});return out;}
+function misspell(s){var out={},t=0;var V5="aeiou";
+  while(Object.keys(out).length<3&&t<60){t++;var a=s.split(""),i=1+Math.floor(Math.random()*(a.length-2)),k=Math.floor(Math.random()*4),r;
+    if(k===0){var x=a[i];a[i]=a[i+1];a[i+1]=x;r=a.join("");}
+    else if(k===1){a.splice(i,1);r=a.join("");}
+    else if(k===2){a.splice(i,0,a[i]);r=a.join("");}
+    else{var vs=[];a.forEach(function(c,j){if(V5.indexOf(c)>=0&&j>0)vs.push(j);});if(!vs.length)continue;var j2=vs[Math.floor(Math.random()*vs.length)];var nv=V5.replace(a[j2],"");a[j2]=nv[Math.floor(Math.random()*nv.length)];r=a.join("");}
+    if(r!==s&&r.indexOf(" ")<0)out[r]=1;}
+  return Object.keys(out);}
+var ODDF=["m","f","t","f","m"];
+function lvOdd(pool){var avail={};pool.forEach(function(w){avail[w.en]=w;});
+  var idx=shuffle(ODDG.map(function(g,i){return i;}).filter(function(i){return ODDG[i][1].filter(function(e){return avail[e];}).length>=3;}));
+  for(var n=0;n<idx.length;n++){var gi=idx[n],g=ODDG[gi];var inG=shuffle(g[1].filter(function(e){return avail[e];})).slice(0,3);
+    var other=[];ODDG.forEach(function(h,j){if(ODDF[j]!==ODDF[gi])h[1].forEach(function(e){if(avail[e]&&other.indexOf(e)<0)other.push(e);});});
+    if(other.length){var odd=avail[shuffle(other)[0]];return {t:"odd",w:odd,grp:g[0],opts:shuffle(inG.concat([odd.en])),ans:odd.en};}}
+  return null;}
+function newLv(){var pool=lvPool(LVSET),qs=[];var sents=CQS.filter(function(q){return LVSET==="all"?(q[4]==="a1"||q[4]==="a2"):q[4]===LVSET;});
+  var types=shuffle(["mean","mean","rev","rev","hear","hear","spell","odd","sent","sent"]);
+  var used={};
+  types.forEach(function(t){
+    if(t==="sent"){var s=shuffle(sents).filter(function(q){return !used[q[0]];})[0];if(s){used[s[0]]=1;qs.push({t:"sent",q:s,opts:shuffle([s[1],s[2]]),ans:s[1]});return;}t="mean";}
+    if(t==="odd"){var o=lvOdd(pool);if(o){qs.push(o);return;}t="rev";}
+    var cand=shuffle(pool).filter(function(w){return !used[w.en]&&(t!=="spell"||(w.en.indexOf(" ")<0&&w.en.length>=4));});
+    var w=cand[0];if(!w)return;used[w.en]=1;
+    if(t==="spell"){qs.push({t:t,w:w,opts:shuffle([w.en].concat(misspell(w.en))),ans:w.en});return;}
+    var key=t==="mean"?"ar":"en";var ot=pickOthers(pool,w,3,key);
+    qs.push({t:t,w:w,opts:shuffle([w].concat(ot)).map(function(x){return x[key];}),ans:w[key]});});
+  LV={qs:qs,i:0,right:0,answered:false};}
+function renderLv(){
+  clear();V.appendChild(hubBack());
+  if(!LV&&!LVSET){
+    V.appendChild(el("h2","sec","أسئلة تدريب A-level"));
+    V.appendChild(el("p",null,"١٠ أسئلة متنوعة كل مرة: المعنى، اسمع واختار، التهجئة الصح، الكلمة الغريبة، وكمّل الجملة."));
+    var ch=el("div","chips");ch.style.flexWrap="wrap";
+    [["a1","Unit 1: الموسيقى"],["a2","Unit 2: الأكل"],["all","الاتنين مع بعض"]].forEach(function(x){var b=el("button","chip",x[1]);b.onclick=function(){LVSET=x[0];LV=null;renderLv();};ch.appendChild(b);});
+    V.appendChild(ch);return;}
+  if(!LV)newLv();
+  if(LV.i>=LV.qs.length){saveGame("lvl",LV.right,LV.qs.length);endScreen(LV.right,LV.qs.length,function(){LV=null;renderLv();});return;}
+  var it=LV.qs[LV.i];progressHead(LV.i,LV.qs.length,LV.right);
+  var sh=el("div","sheet");var fc=el("div","fc");var gap=null;
+  if(it.t==="mean"){fc.appendChild(el("p",null,"يعنى إيه الكلمة دى؟"));var c1=el("div","cq",it.w.en);c1.lang="en";fc.appendChild(c1);
+    var s1=el("button","btn","🔊 اسمعها");s1.onclick=function(){speak(it.w.say,false);};fc.appendChild(s1);speak(it.w.say,false);}
+  else if(it.t==="rev"){fc.appendChild(el("p",null,"إيه الكلمة الإنجليزى اللى معناها:"));fc.appendChild(el("div","em",it.w.em));fc.appendChild(el("div","cq lvar",it.w.ar));}
+  else if(it.t==="hear"){fc.appendChild(el("p",null,"اسمع كويس واختار الكلمة اللى سمعتها:"));var s2=el("button","btn main","🔊 اسمع تانى");s2.onclick=function(){speak(it.w.say,false);};fc.appendChild(s2);
+    var s3=el("button","btn sun","🐢 بالراحة");s3.onclick=function(){speak(it.w.say,true);};fc.appendChild(s3);speak(it.w.say,false);}
+  else if(it.t==="spell"){fc.appendChild(el("p",null,"أنهى كلمة مكتوبة صح؟"));fc.appendChild(el("div","em",it.w.em));fc.appendChild(el("div","cq lvar",it.w.ar));
+    var s4=el("button","btn","🔊 اسمعها");s4.onclick=function(){speak(it.w.say,false);};fc.appendChild(s4);}
+  else if(it.t==="odd"){fc.appendChild(el("p",null,"Odd one out: أنهى كلمة مش من نفس المجموعة؟"));}
+  else{fc.appendChild(el("p",null,"اختار الكلمة اللى تكمّل الجملة:"));var cq=el("div","cq");cq.lang="en";var parts=it.q[0].split("___");
+    cq.appendChild(document.createTextNode(parts[0]));gap=el("span","gap"," ");cq.appendChild(gap);cq.appendChild(document.createTextNode(parts[1]));fc.appendChild(cq);}
+  var info=el("div","ar","");fc.appendChild(info);
+  var O=el("div","copts");if(it.t==="mean")O.classList.add("arb");
+  it.opts.forEach(function(o,k){var b=el("button");b.appendChild(el("i",null,["a.","b.","c.","d."][k]));b.appendChild(document.createTextNode(o));
+    b.onclick=function(){if(LV.answered)return;LV.answered=true;var ok=o===it.ans;b.classList.add(ok?"right":"wrong");
+      Array.prototype.forEach.call(O.children,function(c,j){if(it.opts[j]===it.ans)c.classList.add("right");});
+      if(ok)LV.right++;ding(ok);
+      if(it.t==="sent"){gap.textContent=it.ans;if(!ok)gap.className="gap bad";info.textContent=it.q[3];speak(fullSent(it.q),false);}
+      else if(it.t==="odd"){var rest=it.opts.filter(function(x){return x!==it.ans;});info.textContent="";var l1=el("div",null,"الباقيين "+it.grp+":");var l2=el("div",null,rest.join(" · "));l2.dir="ltr";var l3=el("div",null,it.w.em+" "+it.w.ar+" = ");var b3=el("b",null,it.w.en);b3.lang="en";l3.appendChild(b3);l3.appendChild(document.createTextNode(" ← دى الغريبة"));info.appendChild(l1);info.appendChild(l2);info.appendChild(l3);speak(it.w.say,false);}
+      else{info.textContent=it.w.em+" "+it.w.en+" = "+it.w.ar;speak(it.w.say,false);}
+      var r=el("div","row");var nx=el("button","btn main",LV.i===LV.qs.length-1?"النتيجة ←":"اللى بعده ←");nx.onclick=function(){LV.i++;LV.answered=false;renderLv();};
+      r.appendChild(nx);fc.appendChild(r);};O.appendChild(b);});
   fc.appendChild(O);sh.appendChild(fc);V.appendChild(sh);
 }
 
