@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نُطقى الصح</title>
-<meta name="build" content="1.06">
+<meta name="build" content="1.07">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7c86">
 <link rel="icon" href="icon-192.png">
@@ -91,7 +91,7 @@ header p{margin:0;color:var(--ink-2);font-size:14px}
 .wcard .en{font-family:var(--f-en);font-weight:600;font-size:22px;direction:ltr}
 .wcard .en.long{font-size:16px;line-height:1.3}
 .fc .en.long{font-size:34px}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--sheet);border:1.5px solid var(--rule);border-radius:16px;padding:4px;margin-bottom:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;background:var(--sheet);border:1.5px solid var(--rule);border-radius:16px;padding:4px;margin-bottom:12px}
 .seg button{border:0;border-radius:12px;background:none;color:var(--ink-2);font:800 15px var(--f-ar);min-height:44px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--sun);color:#1d3a4a}
 .hub{display:grid;gap:12px}
@@ -224,6 +224,15 @@ var CATS=[
  {id:"u4l3",g:"book",ar:"درس ٣: الماتش",w:["nervous|متوتر|😬|نِرڤَس|v","game|ماتش / لعبة|🎮|جيم|e","match|ماتش|⚽|ماتش|","goal|جون / هدف|🥅|جول|","gift|هدية|🎁|جِفت|","worried|قلقان|😟|وَرِيد|ed_d","when|عندما|⏰|وِن|","after|بعد|⏭️|آفتَر|","before|قبل|⏮️|بِفور|e","win|يكسب / يفوز|🏆|وِن|"]},
  {id:"u4l3v",g:"book",ar:"درس ٣: أفعال وتعبيرات",w:["start → started|يبدأ ← بدأ|🏁|ستارت ← ستارتِد|ed_id|start. started","score → scored|يجيب جون ← جاب جون|🥅|سكور ← سكورد|ed_d|score. scored","receive → received|يستلم ← استلم|📦|ريسيڤ ← ريسيڤد|ed_d+cs|receive. received","stop → stopped|يوقف ← وقف|🛑|ستوپ ← ستوپت|ed_t+p|stop. stopped","make mistakes|يغلط|❌|ميك مِستيكس|e","worried about|قلقان من|😟|وَرِيد أباوت|"]},
  {id:"phc",g:"book",ar:"صوت حرف C",w:["face|وش|🙂|فيس|cs","city|مدينة|🏙️|سِتى|cs","pencil|قلم رصاص|✏️|پِنسِل|cs","nice|لطيف|👍|نايس|cs","ice|تلج|🧊|آيس|cs","cent|سِنت|🪙|سِنت|cs","cat|قطة|🐱|كات|ck","cold|برد|🥶|كولد|ck","stuck|عالق|😖|ستاك|ck","cry|يعيّط|😭|كراى|ck","carry|يشيل|🧳|كارى|ck","carefully|بحرص|🤲|كيرفولى|ck","licked|لعق|👅|لِكت|ck","come|ييجى|👋|كام|ck","quickly|بسرعة|⚡|كويكلى|ck"]},
+ {id:"a1i",g:"alevel",ar:"Unit 1: الآلات",w:["guitar|جيتار|🎸|جيتار|","drums|طبول|🥁|درامز|","keyboard|أورج|🎹|كيبورد|","recorder|ناى|🪈|ريكوردَر|","cymbals|صاجات|🔔|سِمبَلز|cs","violin|كمان|🎻|ڤايولِن|v","trumpet|بوق|🎺|ترامپِت|p","cello|تشيلو|🎻|تشِلو|cel","flute|فلوت (مزمار)|🪈|فلوت|e","saxophone|ساكسفون|🎷|ساكسَفون|ph","clarinet|كلارينيت|🎶|كلارِنِت|","piano|بيانو|🎹|پيانو|p","musical instrument|آلة موسيقية|🎼|ميوزِكَل إنسترومِنت|"]},
+ {id:"a1m",g:"alevel",ar:"Unit 1: الموسيقى",w:["music|موسيقى|🎵|ميوزِك|","fun|متعة|😄|فان|","dance|يرقص|💃|دانس|cs","kinds of music|أنواع الموسيقى|🎶|كايندز أوڤ ميوزِك|v","pop music|موسيقى البوب|🎤|پوپ ميوزِك|p","folk music|موسيقى شعبية|🪕|فوك ميوزِك|lsil","classical music|موسيقى كلاسيكية|🎻|كلاسِكَل ميوزِك|","hip-hop|هيب هوب|🧢|هِپ هوپ|p","rock music|موسيقى الروك|🎸|روك ميوزِك|ck","reggae|ريجى|🌴|ريجاى|","ticket|تذكرة|🎟️|تِكِت|ck","concert|حفلة موسيقية|🏟️|كونسِرت|ck+cs","band|فرقة|👨‍🎤|باند|","festival|احتفال / مهرجان|🎪|فِستِڤَل|v"]},
+ {id:"a1v",g:"alevel",ar:"Unit 1: أفعال وصفات",w:["have fun|يستمتع|🥳|هاڤ فان|v","practice|يتمرّن|🔁|پراكتِس|p+cs","perform|يؤدّى على المسرح|🎭|پِرفورم|p","play|يلعب / يعزف|▶️|پلاى|p","sing|يغنّى|🎤|سِنج|","like|يحب|👍|لايك|e","find|يجد|🔍|فايند|","difficult|صعب|😣|دِفِكَلت|","fantastic|رائع|🤩|فانتاستِك|","great|عظيم|👏|جريت|","good ideas|أفكار جيدة|💡|جود آيدياز|"]},
+ {id:"a1g",g:"alevel",ar:"Unit 1: خضار",w:["courgette|كوسة|🥒|كورچيت|","pumpkin|قرع|🎃|پامپكِن|p","pepper|فلفل|🫑|پِپَر|p","carrot|جزر|🥕|كارَت|ck"]},
+ {id:"a2a",g:"alevel",ar:"Unit 2: الأكل ١",w:["cheese|جبنة|🧀|تشيز|","olives|زيتون|🫒|أولِڤز|v","green peppers|فلفل أخضر|🫑|جرين پِپَرز|p","eggs|بيض|🥚|إجز|","cream|قشطة|🍦|كريم|","strawberries|فراولة|🍓|سترو بيريز|","pasta|مكرونة|🍝|پاستا|p","yoghurt|زبادى|🥣|يوجَرت|hs","mushrooms|مشروم|🍄|ماشرومز|"]},
+ {id:"a2b",g:"alevel",ar:"Unit 2: الأكل ٢",w:["onions|بصل|🧅|أنيَنز|","prawns|جمبرى|🦐|پرونز|p","pineapple|أناناس|🍍|پاين آپِل|p","sweetcorn|ذرة حلوة|🌽|سويت كورن|ck","spinach|سبانخ|🥬|سپِنِتش|p","tuna|تونة|🐟|تيونا|","chicken|فراخ|🍗|تشِكِن|","fish|سمك|🐠|فيش|"]},
+ {id:"a2c",g:"alevel",ar:"Unit 2: وجبات",w:["meat|لحمة|🥩|ميت|","bread|عيش|🍞|برِد|","rice|رز|🍚|رايس|e","pancakes|بان كيك|🥞|پان كيكس|p","lemon|ليمون|🍋|لِمَن|","sandwich|ساندويتش|🥪|ساندوِتش|","curry|كارى|🍛|كارى|ck","burger|برجر|🍔|بِرجَر|","noodles|نودلز|🍜|نودِلز|","chips|بطاطس محمّرة|🍟|تشِپس|p","pizza|بيتزا|🍕|پيتسا|zz","pizza toppings|إضافات البيتزا|🧀|پيتسا توپِنجز|zz"]},
+ {id:"a2d",g:"alevel",ar:"Unit 2: المطعم والسفرة",w:["restaurant|مطعم|🍽️|رِستَرونت|","menu|منيو (قائمة الطعام)|📜|مِنيو|","table|ترابيزة|🪑|تيبِل|","knife|سكينة|🔪|نايف|kn","fork|شوكة|🍴|فورك|","spoon|معلقة|🥄|سپون|p","chopsticks|عيدان الأكل|🥢|تشوپستِكس|p","bowl|سلطانية|🥣|بول|","dish|طبق (أكلة)|🍲|دِش|","plate|طبق|🫓|پليت|p","delicious food|أكل لذيذ|😋|دِلِيشَس فود|","camera|كاميرا|📷|كامِرا|ck"]},
+ {id:"a2v",g:"alevel",ar:"Unit 2: أفعال وكلمات",w:["enjoy|يستمتع|😊|إنجوى|","cook|يطبخ|👩‍🍳|كوك|ck","make|يصنع / يعدّ|🛠️|ميك|e","taste|يتذوّق|👅|تيست|e","Chinese|صينى|🥟|تشاينيز|","country|دولة|🌍|كانترى|ck","different|مختلف|🔀|دِفرَنت|"]},
  {id:"animals",g:"extra",ar:"الحيوانات",w:["cat|قطة|🐱|كات|","dog|كلب|🐶|دوج|","bird|عصفور|🐦|بيرد|","fish|سمكة|🐟|فيش|","duck|بطة|🦆|داك|","horse|حصان|🐴|هورس|e","rabbit|أرنب|🐰|رابِت|","monkey|قرد|🐵|مانكى|","lion|أسد|🦁|لايَن|","elephant|فيل|🐘|إلِفَنت|"]},
  {id:"colors",g:"extra",ar:"الألوان",w:["red|أحمر|🟥|رِد|","blue|أزرق|🟦|بلو|","green|أخضر|🟩|جرين|","yellow|أصفر|🟨|يِلو|","black|أسود|⬛|بلاك|","white|أبيض|⬜|وايت|e","brown|بنى|🟫|براون|","pink|بمبى|🌸|پينك|p","purple|بنفسجى|🟪|پيرپِل|p","orange|برتقالى|🟧|أورِنج|"]},
  {id:"numbers",g:"extra",ar:"الأرقام",w:["one|واحد|1️⃣|وَن|","two|اتنين|2️⃣|تو|","three|تلاتة|3️⃣|ثرى|th","four|أربعة|4️⃣|فور|","five|خمسة|5️⃣|فايڤ|v","six|ستة|6️⃣|سِكس|","seven|سبعة|7️⃣|سِڤِن|v","eight|تمانية|8️⃣|إيت|gh","nine|تسعة|9️⃣|ناين|e","ten|عشرة|🔟|تِن|"]},
@@ -241,6 +250,11 @@ var TIPS={
  ed_id:["ed","الـ ed هنا بتتقال «إد» لأن الفعل خلصان بحرف t أو d."],
  irr:["!","فعل شاذ: الماضى بيتغيّر خالص، فاحفظ نطقه زى ما هو."],
  said:["said","said بتتقال «سِد» قصيرة، مش «سيد»."],
+ ph:["ph","الحرفين ph بيتقالوا «ف»: ساكسَفون."],
+ lsil:["l","حرف l ساكت هنا: بنقول «فوك» من غير لام."],
+ zz:["zz","الـ zz فى pizza بتتقال «تس»: پيتسا."],
+ cel:["c","حرف c فى cello بيتقال «تش»: تشِلّو (الكلمة أصلها إيطالى)."],
+ hs:["h","حرف h ساكت فى yoghurt: «يوجَرت»."],
  cs:["C","حرف c هنا صوته «س» لأن بعده e أو i أو y."],
  ck:["C","حرف c هنا صوته «ك» لأن بعده a أو o أو u، وck فى آخر الكلمة بتتقال «ك» واحدة."],
  kn:["kn","حرف k فى أول الكلمة ساكت، بنقول «نى» على طول."],
@@ -262,7 +276,7 @@ CATS.forEach(function(c){c.list=c.w.map(function(s){var a=s.split("|");var o={en
 /* ===== التخزين المحلى (محمى) ===== */
 var KEY="nutqi_v1";
 var S={best:{},accent:"en-GB",games:{}};
-try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.games=p.games||{};S.streak=p.streak||{};}}}catch(e){}
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.best=p.best||{};S.games=p.games||{};S.grp=p.grp;S.streak=p.streak||{};}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function totalStars(){var t=0;for(var k in S.best){t+=S.best[k];}return t;}
 function setBest(w,n){if(!S.best[w]||S.best[w]<n){S.best[w]=n;save();}refreshStars();}
@@ -287,7 +301,7 @@ function pickVoice(){
 }
 function sp(w,slow,cb){speak(w.say,slow,cb);}
 /* ===== أصوات مسجّلة (ElevenLabs · Alice البريطانى) ===== */
-var AUDIO={"happy":"happy","sad":"sad","excited":"excited","angry":"angry","shy":"shy","tired":"tired","bored":"bored","scared":"scared","fence":"fence","team":"team","sound":"sound","hole":"hole","follow":"follow","jump":"jump","lick":"lick","solve":"solve","feel":"feel","felt":"felt","hear":"hear","heard":"heard","hold":"hold","held":"held","stuck in":"stuck-in","in trouble":"in-trouble","jump free":"jump-free","pull out":"pull-out","sunny":"sunny","knee":"knee","swing":"swing","zoo":"zoo","face":"face","park":"park","picture":"picture","movie":"movie","scary":"scary","friend":"friend","draw":"draw","drew":"drew","fall":"fall","fell":"fell","hurt":"hurt","say":"say","said":"said","smile at":"smile-at","on the swing":"on-the-swing","a helping hand":"a-helping-hand","stand up":"stand-up","nervous":"nervous","game":"game","match":"match","goal":"goal","gift":"gift","worried":"worried","when":"when","after":"after","before":"before","win":"win","start":"start","score":"score","receive":"receive","stop. stopped":"stop-stopped","make mistakes":"make-mistakes","worried about":"worried-about","city":"city","pencil":"pencil","nice":"nice","ice":"ice","cent":"cent","cat":"cat","cold":"cold","stuck":"stuck","cry":"cry","carry":"carry","carefully":"carefully","licked":"licked","come":"come","quickly":"quickly","dog":"dog","bird":"bird","fish":"fish","duck":"duck","horse":"horse","rabbit":"rabbit","monkey":"monkey","lion":"lion","elephant":"elephant","red":"red","blue":"blue","green":"green","yellow":"yellow","black":"black","white":"white","brown":"brown","pink":"pink","purple":"purple","orange":"orange","one":"one","two":"two","three":"three","four":"four","five":"five","six":"six","seven":"seven","eight":"eight","nine":"nine","ten":"ten","mother":"mother","father":"father","brother":"brother","sister":"sister","baby":"baby","grandma":"grandma","grandpa":"grandpa","family":"family","pen":"pen","book":"book","bag":"bag","ruler":"ruler","desk":"desk","teacher":"teacher","school":"school","board":"board","eraser":"eraser","head":"head","eye":"eye","ear":"ear","nose":"nose","mouth":"mouth","teeth":"teeth","hand":"hand","leg":"leg","foot":"foot","hair":"hair","apple":"apple","banana":"banana","bread":"bread","milk":"milk","egg":"egg","rice":"rice","cake":"cake","juice":"juice","water":"water","chicken":"chicken","shirt":"shirt","T-shirt":"t-shirt","dress":"dress","cap":"cap","hat":"hat","coat":"coat","shoes":"shoes","socks":"socks","rainy":"rainy","cloudy":"cloudy","windy":"windy","hot":"hot","snowy":"snowy","home":"home","shop":"shop","farm":"farm","hospital":"hospital","library":"library","garden":"garden","followed":"followed","jumped":"jumped","solved":"solved","cried":"cried","started":"started","scored":"scored","received":"received","stopped":"stopped","played":"played","walked":"walked","wanted":"wanted","needed":"needed","helped":"helped","opened":"opened","painted":"painted","cooked":"cooked","watched":"watched","cleaned":"cleaned","visited":"visited","landed":"landed","washed":"washed","kicked":"kicked","planted":"planted","pear":"pear","bear":"bear","bark":"bark","pin":"pin","bin":"bin","van":"van","fan":"fan","vine":"vine","fine":"fine","tree":"tree","mouse":"mouse","think":"think","sink":"sink","Omar was nervous before his first football match.":"s-omar-was-nervous-before-his-first-footba","When the match started, he was worried about making mistakes.":"s-when-the-match-started-he-was-worried-ab","But after he scored a goal, Omar felt proud of himself.":"s-but-after-he-scored-a-goal-omar-felt-pro","He was happy when his team won the game.":"s-he-was-happy-when-his-team-won-the-game","I received five gifts for my birthday.":"s-i-received-five-gifts-for-my-birthday","He was happy when his team won.":"s-he-was-happy-when-his-team-won","Omar was worried about making mistakes.":"s-omar-was-worried-about-making-mistakes","He scored two goals last match.":"s-he-scored-two-goals-last-match","The cat was stuck in the hole.":"s-the-cat-was-stuck-in-the-hole","I was excited when I went to the zoo.":"s-i-was-excited-when-i-went-to-the-zoo","My knee hurt when I fell.":"s-my-knee-hurt-when-i-fell","Dina drew a picture of a cat.":"s-dina-drew-a-picture-of-a-cat","Ali felt scared at night.":"s-ali-felt-scared-at-night","The boy is tired. He wants to sleep.":"s-the-boy-is-tired-he-wants-to-sleep","Let's play on the swing in the park.":"s-let-s-play-on-the-swing-in-the-park","She said thank you to her friend.":"s-she-said-thank-you-to-her-friend","I heard a strange sound last night.":"s-i-heard-a-strange-sound-last-night","His friend gave him a helping hand.":"s-his-friend-gave-him-a-helping-hand","The children were bored at home.":"s-the-children-were-bored-at-home"};
+var AUDIO={"like":"like","perform":"perform","blue":"blue","rainy":"rainy","keyboard":"keyboard","musical instrument":"musical-instrument","fence":"fence","delicious food":"delicious-food","visited":"visited","tuna":"tuna","pin":"pin","happy":"happy","cake":"cake","strawberries":"strawberries","bark":"bark","sing":"sing","water":"water","folk music":"folk-music","classical music":"classical-music","good ideas":"good-ideas","pizza toppings":"pizza-toppings","bird":"bird","dish":"dish","farm":"farm","van":"van","carry":"carry","red":"red","trumpet":"trumpet","jumped":"jumped","spinach":"spinach","baby":"baby","hurt":"hurt","bear":"bear","snowy":"snowy","cold":"cold","hole":"hole","drew":"drew","different":"different","father":"father","say":"say","nine":"nine","curry":"curry","burger":"burger","brother":"brother","kinds of music":"kinds-of-music","three":"three","carefully":"carefully","cap":"cap","enjoy":"enjoy","chicken":"chicken","cook":"cook","have fun":"have-fun","practice":"practice","black":"black","grandma":"grandma","scary":"scary","juice":"juice","think":"think","restaurant":"restaurant","hear":"hear","gift":"gift","fall":"fall","held":"held","lemon":"lemon","sandwich":"sandwich","angry":"angry","chips":"chips","country":"country","difficult":"difficult","smile at":"smile-at","needed":"needed","pancakes":"pancakes","piano":"piano","foot":"foot","cooked":"cooked","cat":"cat","eraser":"eraser","washed":"washed","fell":"fell","start":"start","solve":"solve","vine":"vine","lick":"lick","sister":"sister","fork":"fork","apple":"apple","face":"face","come":"come","feel":"feel","game":"game","worried about":"worried-about","bin":"bin","cried":"cried","make mistakes":"make-mistakes","mushrooms":"mushrooms","sad":"sad","nose":"nose","fan":"fan","egg":"egg","cello":"cello","stop":"stop","school":"school","picture":"picture","pink":"pink","one":"one","socks":"socks","ice":"ice","stuck in":"stuck-in","plate":"plate","dog":"dog","pop music":"pop-music","rabbit":"rabbit","find":"find","ten":"ten","movie":"movie","carrot":"carrot","duck":"duck","fish":"fish","stopped":"stopped","stuck":"stuck","banana":"banana","hot":"hot","nice":"nice","teacher":"teacher","leg":"leg","quickly":"quickly","shirt":"shirt","stand up":"stand-up","great":"great","library":"library","prawns":"prawns","after":"after","play":"play","pepper":"pepper","yoghurt":"yoghurt","family":"family","shop":"shop","scored":"scored","coat":"coat","cry":"cry","monkey":"monkey","band":"band","desk":"desk","walked":"walked","shy":"shy","cheese":"cheese","orange":"orange","guitar":"guitar","chopsticks":"chopsticks","win":"win","book":"book","bread":"bread","six":"six","teeth":"teeth","before":"before","pencil":"pencil","hip-hop":"hip-hop","painted":"painted","cleaned":"cleaned","dance":"dance","cymbals":"cymbals","head":"head","make":"make","camera":"camera","knee":"knee","friend":"friend","table":"table","hospital":"hospital","rice":"rice","cloudy":"cloudy","saxophone":"saxophone","eye":"eye","violin":"violin","hair":"hair","excited":"excited","taste":"taste","mother":"mother","meat":"meat","five":"five","sink":"sink","Chinese":"chinese","pumpkin":"pumpkin","fantastic":"fantastic","pen":"pen","drums":"drums","recorder":"recorder","opened":"opened","watched":"watched","nervous":"nervous","licked":"licked","when":"when","team":"team","pull out":"pull-out","four":"four","lion":"lion","T-shirt":"t-shirt","in trouble":"in-trouble","wanted":"wanted","music":"music","shoes":"shoes","garden":"garden","pineapple":"pineapple","said":"said","bowl":"bowl","scared":"scared","match":"match","purple":"purple","cent":"cent","concert":"concert","sound":"sound","pasta":"pasta","solved":"solved","fun":"fun","bored":"bored","knife":"knife","horse":"horse","noodles":"noodles","played":"played","landed":"landed","jump free":"jump-free","eggs":"eggs","sweetcorn":"sweetcorn","follow":"follow","home":"home","heard":"heard","clarinet":"clarinet","worried":"worried","receive":"receive","white":"white","flute":"flute","helped":"helped","fine":"fine","zoo":"zoo","seven":"seven","ruler":"ruler","milk":"milk","menu":"menu","started":"started","bag":"bag","jump":"jump","spoon":"spoon","kicked":"kicked","courgette":"courgette","on the swing":"on-the-swing","tired":"tired","onions":"onions","received":"received","hand":"hand","hat":"hat","green":"green","cream":"cream","score":"score","hold":"hold","goal":"goal","yellow":"yellow","city":"city","mouse":"mouse","dress":"dress","a helping hand":"a-helping-hand","sunny":"sunny","ticket":"ticket","elephant":"elephant","pizza":"pizza","eight":"eight","tree":"tree","followed":"followed","draw":"draw","rock music":"rock-music","grandpa":"grandpa","windy":"windy","felt":"felt","brown":"brown","reggae":"reggae","ear":"ear","two":"two","pear":"pear","festival":"festival","green peppers":"green-peppers","planted":"planted","board":"board","mouth":"mouth","park":"park","swing":"swing","olives":"olives","I received five gifts for my birthday.":"s-i-received-five-gifts-for-my-birthday","He was happy when his team won.":"s-he-was-happy-when-his-team-won","Omar was worried about making mistakes.":"s-omar-was-worried-about-making-mistakes","He scored two goals last match.":"s-he-scored-two-goals-last-match","The cat was stuck in the hole.":"s-the-cat-was-stuck-in-the-hole","I was excited when I went to the zoo.":"s-i-was-excited-when-i-went-to-the-zoo","My knee hurt when I fell.":"s-my-knee-hurt-when-i-fell","Dina drew a picture of a cat.":"s-dina-drew-a-picture-of-a-cat","Ali felt scared at night.":"s-ali-felt-scared-at-night","The boy is tired. He wants to sleep.":"s-the-boy-is-tired-he-wants-to-sleep","Let's play on the swing in the park.":"s-let-s-play-on-the-swing-in-the-park","She said thank you to her friend.":"s-she-said-thank-you-to-her-friend","I heard a strange sound last night.":"s-i-heard-a-strange-sound-last-night","His friend gave him a helping hand.":"s-his-friend-gave-him-a-helping-hand","The children were bored at home.":"s-the-children-were-bored-at-home","He plays the guitar in the music room at school.":"s-he-plays-the-guitar-in-the-music-room-at","She plays the drums in the band.":"s-she-plays-the-drums-in-the-band","Playing an instrument is fun.":"s-playing-an-instrument-is-fun","I often listen to rock music.":"s-i-often-listen-to-rock-music","We bought tickets for the concert.":"s-we-bought-tickets-for-the-concert","She can play the piano and the violin.":"s-she-can-play-the-piano-and-the-violin","I practice the trumpet every day.":"s-i-practice-the-trumpet-every-day","My sister likes to sing pop songs.":"s-my-sister-likes-to-sing-pop-songs","Making pizza is fun.":"s-making-pizza-is-fun","We enjoy going to restaurants.":"s-we-enjoy-going-to-restaurants","I eat soup with a spoon.":"s-i-eat-soup-with-a-spoon","People in China eat noodles with chopsticks.":"s-people-in-china-eat-noodles-with-chopsti","Can I see the menu, please?":"s-can-i-see-the-menu-please","This pizza is delicious!":"s-this-pizza-is-delicious","I like cheese and olives on my pizza.":"s-i-like-cheese-and-olives-on-my-pizza","My mum cooks dinner every day.":"s-my-mum-cooks-dinner-every-day","Omar was nervous before his first football match.":"s-omar-was-nervous-before-his-first-footba","When the match started, he was worried about making mistakes.":"s-when-the-match-started-he-was-worried-ab","But after he scored a goal, Omar felt proud of himself.":"s-but-after-he-scored-a-goal-omar-felt-pro","He was happy when his team won the game.":"s-he-was-happy-when-his-team-won-the-game"};
 var curAud=null,audTok=0;
 function stopAud(){audTok++;if(curAud){try{curAud.pause();}catch(e){}curAud=null;}}
 function clipsFor(text){
@@ -391,7 +405,7 @@ function clear(){V.innerHTML="";window.scrollTo(0,0);}
 function starsStr(n){return n?"★★★".slice(0,n):"";}
 
 /* ===== قسم الكلمات ===== */
-var curCat="u4l1",curGrp="book";
+var curGrp=(S.grp==="book"||S.grp==="extra"||S.grp==="alevel")?S.grp:"alevel";var curCat=CATS.filter(function(c){return c.g===curGrp;})[0].id;
 function renderWords(){
   clear();
   var dd=el("div","daily"+((S.streak&&S.streak.last===dayStr())?" done":""));
@@ -401,8 +415,8 @@ function renderWords(){
     var go=el("button","btn sun","ابدأ");go.onclick=startReview;dd.appendChild(go);}
   V.appendChild(dd);
   var seg=el("div","seg");
-  [["book","كتاب المدرسة — الوحدة ٤"],["extra","كلمات عامة"]].forEach(function(a){var b=el("button",null,a[1]);b.setAttribute("aria-pressed",curGrp===a[0]?"true":"false");
-    b.onclick=function(){if(curGrp===a[0])return;curGrp=a[0];curCat=CATS.filter(function(c){return c.g===a[0];})[0].id;renderWords();};seg.appendChild(b);});
+  [["alevel","A-level"],["book","الوحدة ٤"],["extra","كلمات عامة"]].forEach(function(a){var b=el("button",null,a[1]);b.setAttribute("aria-pressed",curGrp===a[0]?"true":"false");
+    b.onclick=function(){if(curGrp===a[0])return;curGrp=a[0];S.grp=a[0];save();curCat=CATS.filter(function(c){return c.g===a[0];})[0].id;renderWords();};seg.appendChild(b);});
   V.appendChild(seg);
   var chips=el("div","chips");
   CATS.filter(function(c){return c.g===curGrp;}).forEach(function(c){var b=el("button","chip",c.ar);b.setAttribute("aria-pressed",c.id===curCat?"true":"false");b.onclick=function(){curCat=c.id;renderWords();};chips.appendChild(b);});
@@ -454,7 +468,7 @@ var Q=null;
 function reviewWords(){
   var weak=[],fresh=[],rest=[];
   WORDS.forEach(function(w){var b=S.best[w.key]||0;var g=CATS.filter(function(c){return c.id===w.cat;})[0].g;
-    if(b>0&&b<3)weak.push(w);else if(!b&&g==="book")fresh.push(w);else rest.push(w);});
+    if(b>0&&b<3)weak.push(w);else if(!b&&g!=="extra")fresh.push(w);else rest.push(w);});
   var out=[],seen={};
   shuffle(weak).concat(shuffle(fresh)).concat(shuffle(rest)).forEach(function(w){if(out.length<5&&!seen[w.say]){seen[w.say]=1;out.push(w);}});
   return out;
@@ -513,7 +527,7 @@ function renderQuiz(){
   if(GAME==="spell"){renderSpell();return;}
   if(GAME==="ed"){renderEd();return;}
   if(GAME==="choose"){renderChoose();return;}
-  if(GAME==="story"){renderStory();return;}
+  if(GAME==="story"||GAME==="sheet"){renderStory();return;}
   clear();
   V.appendChild(el("h2","sec","تمارين"));
   var h=el("div","hub");
@@ -521,10 +535,11 @@ function renderQuiz(){
    ["spell","✍️","اسمع واكتب الحرف الناقص","زى تمرين Pop Quiz فى الكتاب"],
    ["ed","🧺","سلال ed","jumped ولا cried ولا started؟"],
    ["choose","✅","اختار الإجابة الصح","Choose the correct answer زى الامتحان"],
-   ["story","📖","قصة عمر والماتش","اسمع القصة واقرا معاها"]].forEach(function(g){
+   ["story","📖","قصة عمر والماتش","اسمع القصة واقرا معاها"],
+   ["sheet","📝","جمل الورقة: ترجم","جمل Translate into Arabic من ورق A-level"]].forEach(function(g){
     var b=el("button","hcard");b.appendChild(el("span","em",g[1]));var t=el("div");t.appendChild(el("b",null,g[2]));t.appendChild(el("span",null,g[3]));b.appendChild(t);
     if(S.games[g[0]]){b.appendChild(el("span","best","أحسن نتيجة "+S.games[g[0]]));}
-    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;if(g[0]==="choose")CH=null;renderQuiz();};h.appendChild(b);});
+    b.onclick=function(){GAME=g[0];if(g[0]==="spell")SP=null;if(g[0]==="ed")ED=null;if(g[0]==="choose"){CH=null;CHSET=null;}renderQuiz();};h.appendChild(b);});
   V.appendChild(h);
 }
 function saveGame(id,score,total){var v=score+" / "+total;var old=S.games[id];var o=old?parseInt(old,10):-1;if(score>=o){S.games[id]=v;save();}}
@@ -566,7 +581,7 @@ function blankFor(w){
 }
 function newSpell(){
   var pool=WORDS.filter(function(w){return /^[a-zA-Z]{3,10}$/.test(w.en);});
-  var book=pool.filter(function(w){return CATS.filter(function(c){return c.id===w.cat;})[0].g==="book";});
+  var book=pool.filter(function(w){return CATS.filter(function(c){return c.id===w.cat;})[0].g!=="extra";});
   var seen={},qs=[];
   shuffle(book).concat(shuffle(pool)).forEach(function(w){if(qs.length<8&&!seen[w.en]){seen[w.en]=1;qs.push({w:w,b:blankFor(w)});}});
   SP={qs:qs,i:0,right:0,answered:false};
@@ -675,11 +690,34 @@ var CQS=[["I received five ___ for my birthday.","gifts","mistakes","استلم�
  ["I ___ a strange sound last night.","heard","said","سمعت صوت غريب امبارح بالليل."],
  ["His friend gave him a helping ___.","hand","face","صاحبه مدّ له إيد المساعدة."],
  ["The children were ___ at home.","bored","team","الأطفال كانوا زهقانين فى البيت."]];
+CQS.forEach(function(q){q[4]="u4";});
+[["He plays the ___ in the music room at school.","guitar","pizza","هو بيعزف جيتار فى أوضة الموسيقى فى المدرسة.","a1"],
+ ["She plays the drums in the ___.","band","menu","هى بتعزف طبول فى الفرقة.","a1"],
+ ["Playing an instrument is ___.","fun","bowl","العزف على آلة موسيقية ممتع.","a1"],
+ ["I often listen to ___ music.","rock","carrot","أنا غالباً بسمع موسيقى الروك.","a1"],
+ ["We bought ___ for the concert.","tickets","spoons","اشترينا تذاكر للحفلة.","a1"],
+ ["She can play the piano and the ___.","violin","lemon","هى تعرف تعزف بيانو وكمان.","a1"],
+ ["I ___ the trumpet every day.","practice","taste","بتمرّن على البوق كل يوم.","a1"],
+ ["My sister likes to ___ pop songs.","sing","cook","أختى بتحب تغنّى أغانى بوب.","a1"],
+ ["Making ___ is fun.","pizza","drums","عمل البيتزا ممتع.","a2"],
+ ["We ___ going to restaurants.","enjoy","find","إحنا بنستمتع بالخروج للمطاعم.","a2"],
+ ["I eat soup with a ___.","spoon","knife","باكل الشوربة بالمعلقة.","a2"],
+ ["People in China eat noodles with ___.","chopsticks","plates","الناس فى الصين بياكلوا النودلز بالعيدان.","a2"],
+ ["Can I see the ___, please?","menu","camera","ممكن أشوف المنيو لو سمحت؟","a2"],
+ ["This pizza is ___!","delicious","difficult","البيتزا دى لذيذة!","a2"],
+ ["I like cheese and ___ on my pizza.","olives","cymbals","بحب الجبنة والزيتون على البيتزا.","a2"],
+ ["My mum ___ dinner every day.","cooks","sings","ماما بتطبخ العشا كل يوم.","a2"]].forEach(function(q){CQS.push(q);});
+var CHSET=null;
 var CH=null;
-function newChoose(){CH={qs:shuffle(CQS).slice(0,8).map(function(q){return {q:q,opts:shuffle([q[1],q[2]])};}),i:0,right:0,answered:false};}
+function newChoose(){var pool=CQS.filter(function(q){return CHSET==="all"||q[4]===CHSET;});CH={qs:shuffle(pool).slice(0,8).map(function(q){return {q:q,opts:shuffle([q[1],q[2]])};}),i:0,right:0,answered:false};}
 function fullSent(q){return q[0].replace("___",q[1]);}
 function renderChoose(){
   clear();V.appendChild(hubBack());
+  if(!CH&&!CHSET){
+    V.appendChild(el("h2","sec","اختار الإجابة الصح"));V.appendChild(el("p",null,"اختار الأسئلة من أنهى جزء:"));
+    var ch=el("div","chips");ch.style.flexWrap="wrap";
+    [["a1","A-level Unit 1: الموسيقى"],["a2","A-level Unit 2: الأكل"],["u4","الوحدة ٤ (كتاب المدرسة)"],["all","كله مع بعض"]].forEach(function(x){var b=el("button","chip",x[1]);b.onclick=function(){CHSET=x[0];CH=null;renderChoose();};ch.appendChild(b);});
+    V.appendChild(ch);return;}
   if(!CH)newChoose();
   if(CH.i>=CH.qs.length){saveGame("choose",CH.right,CH.qs.length);endScreen(CH.right,CH.qs.length,function(){CH=null;renderChoose();});return;}
   var it=CH.qs[CH.i],q=it.q;progressHead(CH.i,CH.qs.length,CH.right);
@@ -707,12 +745,22 @@ var STORY=[["Omar was nervous before his first football match.","عمر كان �
  ["But after he scored a goal, Omar felt proud of himself.","بس بعد ما جاب جون، عمر حس إنه فخور بنفسه."],
  ["He was happy when his team won the game.","كان مبسوط لما فريقه كسب الماتش."]];
 var SVOC={nervous:"nervous",match:"match",worried:"worried",mistakes:"make mistakes",scored:"score. scored",goal:"goal",team:"team",happy:"happy",started:"start. started",when:"when",after:"after",before:"before"};
+var SHEET=[["He plays the guitar in the music room at school.","هو بيعزف جيتار فى أوضة الموسيقى فى المدرسة."],
+ ["She plays the drums in the band.","هى بتعزف طبول فى الفرقة."],
+ ["Playing an instrument is fun.","العزف على آلة موسيقية ممتع."],
+ ["I often listen to rock music.","أنا غالباً بسمع موسيقى الروك."],
+ ["Making pizza is fun.","عمل البيتزا ممتع."],
+ ["We enjoy going to restaurants.","إحنا بنستمتع بالخروج للمطاعم."]];
+function autoVocab(data){var m={};data.forEach(function(d){d[0].split(" ").forEach(function(wd){var c=wd.toLowerCase().replace(/[^a-z]/g,"");if(c.length>2&&AUDIO[c])m[c]=c;});});return m;}
+var READS={story:{title:"قصة عمر والماتش",data:STORY,vocab:SVOC,all:"▶️ اسمع القصة كلها",note:"الكلمات الملوّنة من مفردات الدرس — دوس عليها تسمعها لوحدها."},
+ sheet:{title:"جمل الورقة: ترجم للعربى",data:SHEET,vocab:autoVocab(SHEET),all:"▶️ اسمع الجمل كلها",note:"اقرا الجملة وحاول تترجمها فى دماغك، وبعدين دوس «اعرض المعنى» واتأكد. الكلمات الملوّنة دوس عليها تسمعها."}};
 var showAr=false;
 function renderStory(){
+  var RD=READS[GAME]||READS.story,STORY=RD.data,SVOC=RD.vocab;
   clear();V.appendChild(hubBack());
-  V.appendChild(el("h2","sec","قصة عمر والماتش"));
+  V.appendChild(el("h2","sec",RD.title));
   var r=el("div","row");r.style.justifyContent="flex-start";r.style.marginBottom="12px";
-  var pa=el("button","btn main","▶️ اسمع القصة كلها");var ps=el("button","btn sun","🐢 بالراحة");var tr=el("button","btn",showAr?"اخفى المعنى":"اعرض المعنى");
+  var pa=el("button","btn main",RD.all);var ps=el("button","btn sun","🐢 بالراحة");var tr=el("button","btn",showAr?"اخفى المعنى":"اعرض المعنى");
   r.appendChild(pa);r.appendChild(ps);r.appendChild(tr);V.appendChild(r);
   var box=el("div","story");var rows=[];
   STORY.forEach(function(st,i){
@@ -723,11 +771,11 @@ function renderStory(){
     line.appendChild(tx);
     var a=el("div","sar",st[1]);a.hidden=!showAr;line.appendChild(a);
     var sr=el("div","srow");var b1=el("button","btn","🔊 الجملة دى");b1.onclick=function(){playStory(i,i,false);};sr.appendChild(b1);line.appendChild(sr);
-    if(recOK){line.appendChild(recorder({key:"story"+i,say:st[0]}));}
+    if(recOK){line.appendChild(recorder({key:GAME+i,say:st[0]}));}
     box.appendChild(line);rows.push({line:line,spans:spans,ar:a});
   });
   V.appendChild(box);
-  V.appendChild(el("p",null,"الكلمات الملوّنة من مفردات الدرس — دوس عليها تسمعها لوحدها."));
+  V.appendChild(el("p",null,RD.note));
   pa.onclick=function(){playStory(0,STORY.length-1,false);};ps.onclick=function(){playStory(0,STORY.length-1,true);};
   tr.onclick=function(){showAr=!showAr;tr.textContent=showAr?"اخفى المعنى":"اعرض المعنى";rows.forEach(function(x){x.ar.hidden=!showAr;});};
   function clearHL(){rows.forEach(function(x){x.line.classList.remove("active");x.spans.forEach(function(s2){s2.classList.remove("now");});});}
